@@ -40,6 +40,7 @@ fi
 # Clone the dotfiles to ~/.dotfiles (if not already cloned)
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/jordanhoare/dotfiles.git $HOME/.dotfiles
+    cd $HOME/.dotfiles
     
     if [[ "$OS" == "Linux" ]]; then
         $BREW_PATH bundle
