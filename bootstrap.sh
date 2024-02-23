@@ -40,10 +40,14 @@ fi
 # Clone the dotfiles to ~/.dotfiles (if not already cloned)
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/jordanhoare/dotfiles.git $HOME/.dotfiles
+    
+    if [[ "$OS" == "Linux" ]]; then
+        $BREW_PATH bundle
+    else
+        brew bundle
+    fi
+
+    # Create symbolic links for the configuration files 
+    stow --dir=$HOME/.dotfiles/ --target=$HOME zsh
+
 fi
-
-# Create symbolic links for the configuration files 
-stow --dir=$HOME/.dotfiles/ --target=$HOME zsh
-
-# Change the active shell to Z Shell
-exec zsh
