@@ -34,7 +34,7 @@ install_package stow
 
 # Change the default shell to Zsh (if not already changed)
 if [ "$SHELL" != "$(which zsh)" ]; then
-    chsh -s $(which zsh)
+    sudo chsh -s $(which zsh)
 fi
 
 # Clone the dotfiles to ~/.dotfiles (if not already cloned)
