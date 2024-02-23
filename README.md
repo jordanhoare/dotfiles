@@ -4,7 +4,7 @@ Two-step process to initialise a development environment on a fresh install of e
 
 1. Installs brew, git, zsh (sets to default), and sym links a clone @ ~/.dotfiles:
 ```bash
-curl -sSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/bootstrap.sh | bash
+sudo curl -sSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/bootstrap.sh | bash
 ```
 2. Sets up development environment:
 ```zsh
