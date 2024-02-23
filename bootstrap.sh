@@ -11,8 +11,7 @@ if ! command -v brew &> /dev/null; then
     
     # For Linux, append Homebrew to the current session's PATH
     if [[ "$OS" == "Linux" ]]; then
-        echo 'eval $($BREW_PATH shellenv)'
-        eval $($BREW_PATH shellenv)
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     fi
 fi
 
