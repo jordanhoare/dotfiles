@@ -36,6 +36,7 @@ fi
 # Clone the dotfiles to ~/.dotfiles (if not already cloned)
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/jordanhoare/dotfiles.git $HOME/.dotfiles
+    git clone https://github.com/alacritty/alacritty-theme $HOME/.config/alacritty/themes
 
     # Install Brew applications/libraries from Brewfile
     brew bundle --file="$BREWFILE"
@@ -43,3 +44,10 @@ if [ ! -d "$HOME/.dotfiles" ]; then
     # Create symbolic links for the configuration files 
     stow --dir=$HOME/.dotfiles/ --target=$HOME zsh
 fi
+
+export XDG_CONFIG_HOME="$HOME"/.config
+mkdir -p "$XDG_CONFIG_HOME"/alacritty
+mkdir -p "$XDG_CONFIG_HOME"/alacritty/themes
+git clone https://github.com/alacritty/alacritty-theme "$XDG_CONFIG_HOME"/alacritty/themes
+
+exec zsh
