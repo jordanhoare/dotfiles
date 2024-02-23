@@ -3,7 +3,7 @@ set -eu
 
 # Determine OS
 OS="$(uname -s)"
-BREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
+BREWFILE="$HOME/.dotfiles/Brewfile"
 
 # Install brew (if not already installed)
 if ! command -v brew &> /dev/null; then
@@ -19,11 +19,7 @@ fi
 install_package() {
     local package=$1
     if ! command -v $package &> /dev/null; then
-        if [[ "$OS" == "Linux" ]]; then
-            $BREW_PATH install $package
-        else
-            brew install $package
-        fi
+        brew install $package
     fi
 }
 
@@ -40,15 +36,10 @@ fi
 # Clone the dotfiles to ~/.dotfiles (if not already cloned)
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/jordanhoare/dotfiles.git $HOME/.dotfiles
-    cd $HOME/.dotfiles
-    
-    if [[ "$OS" == "Linux" ]]; then
-        $BREW_PATH bundle
-    else
-        brew bundle
-    fi
+
+    # Install Brew applications/libraries from Brewfile
+    brew bundle --file="$BREWFILE"
 
     # Create symbolic links for the configuration files 
     stow --dir=$HOME/.dotfiles/ --target=$HOME zsh
-
 fi
