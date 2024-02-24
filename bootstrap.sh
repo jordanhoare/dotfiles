@@ -2,10 +2,6 @@
 set -eu
 
 
-DOTFILES_DIR="$HOME/.dotfiles"
-SHELL_FUNCTIONS_DIR="$DOTFILES_DIR/shell/functions"
-
-
 ################################################################################
 # Ask for root password upfront and keep updating the existing `sudo`
 # timestamp on a background process until the script finishes. Note that
@@ -17,6 +13,16 @@ while true; do
   sleep 30
   kill -0 "$$" || exit
 done 2>/dev/null &
+
+
+################################################################################
+# Directories
+################################################################################
+export XDG_CONFIG_HOME="$HOME"/.config
+mkdir -p "$XDG_CONFIG_HOME"/alacritty
+mkdir -p "$XDG_CONFIG_HOME"/alacritty/themes
+DOTFILES_DIR="$HOME/.dotfiles"
+SHELL_FUNCTIONS_DIR="$DOTFILES_DIR/shell/functions"
 
 
 ################################################################################
@@ -88,11 +94,19 @@ source "$SHELL_FUNCTIONS_DIR/reboot.sh"
 log_info "Installing packages from Brewfile..."
 brew bundle --file="$DOTFILES_DIR/Brewfile"
 
-if [[ "$(uname -s)" == "Linux" ]]; then
-    sudo snap install firefox
-    cargo install alacritty
+if [ ! -d "$HOME/.config/alacritty" ]; then
+    mkdir -p "$XDG_CONFIG_HOME"/alacritty
+    mkdir -p "$XDG_CONFIG_HOME"/alacritty/themes
+    git clone https://github.com/alacritty/alacritty-theme "$XDG_CONFIG_HOME"/alacritty/themes
 fi
 
+if [[ "$(uname -s)" == "Linux" ]]; then
+    sudo snap install firefox
+fi
+
+if [[ "$(uname -s)" == "Linux" ]]; then
+    cargo install alacritty
+fi
 
 ################################################################################
 # Shell tools
