@@ -1,11 +1,16 @@
-# dotfiles
+# .dotfiles
 
-Two-step process to initialise a development environment on a fresh install of either Linux or macOS.
+A streamlined, single-step setup to initialize a comprehensive development environment on fresh installations of Linux or macOS.
 
-1. Sets up development environment, and sym links a clone @ ~/.dotfiles:
+## Quick Start
+
+Execute the following command in your terminal to set up your development environment automatically:
+
 ```bash
 sudo curl -sSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/bootstrap.sh | bash
 ```
+
+This script will prompt you for your password to gain necessary permissions, then proceed to configure your system with essential development tools and configurations.
 
 <br>
 
@@ -21,22 +26,7 @@ sudo curl -sSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/boots
 ## Virtualisation and distros 
 
 ### VMWare
-MacOS (ARM): https://www.vmware.com/products/fusion/fusion-evaluation.html
-Windows: https://ubuntu.com/download/server/arm
+- MacOS: https://www.vmware.com/products/fusion/fusion-evaluation.html
 
-### Ubuntu (ARM)
-Distro: https://ubuntu.com/download/server/arm
-
-#### Installation
-
-You can install the complete ubuntu-desktop task in Ubuntu Server by running the following command:
-
-sudo apt install -y ubuntu-desktop^
-
-Here are some additional tips for installing an Ubuntu desktop using VMware Fusion 13 player for macOS.
-
-- Use the Ubuntu Server 22.04.2 LTS ARM64 ISO to install an Ubuntu 22.04 virtual machine.
-- After the installation of Ubuntu 22.04 is finished convert the Ubuntu Server using the tasksel program which can be installed by `sudo apt install tasksel`. Install the Ubuntu desktop task by selecting it with the space key in tasksel and remove every server task that you don't want to keep.
-- Install the open-vm-tools-desktop package in Ubuntu with `sudo apt install open-vm-tools-desktop~`.
-- `serverx`
-
+### Distrubutions
+- Ubuntu (ARM): https://ubuntu.com/download/server/arm
