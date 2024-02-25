@@ -140,7 +140,7 @@ git restore .
 # Set default shell
 ################################################################################
 if [ "$SHELL" != "$(which zsh)" ]; then
-    sudo chsh -s "$(which zsh)"
+    chsh -s "$(which zsh)"
 fi
 
 
