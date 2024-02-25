@@ -75,7 +75,7 @@ source "$FUNCTIONS_DIR/reboot.sh"
 ################################################################################
 if [[ "$(uname -s)" == "Linux" ]]; then
     sudo apt-get update && sudo apt-get upgrade -y
-    sudo apt-get install -y git zsh stow gh lazygit
+    sudo apt-get install -y git zsh stow
 fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
