@@ -23,7 +23,7 @@ mkdir -p "$HOME"/.config/alacritty/themes
 
 DOTFILES_DIR="$HOME/.dotfiles"
 FUNCTIONS_DIR="$DOTFILES_DIR/shell/functions"
-SCRIPTS_DIR="$DOTFILES_DIR/shell/functions"
+SCRIPTS_DIR="$DOTFILES_DIR/shell/scripts"
 
 
 ################################################################################
@@ -79,14 +79,16 @@ fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
     brew update && brew upgrade
-    brew bundle --file="$DOTFILES_DIR/Brewfile"
+    brew bundle --file="$DOTFILES_DIR/brew/Brewfile"
 fi
 
 
 ################################################################################
 # Terminal and workspace tools
 ################################################################################
-# Call ./zsh/setup.sh
+run_script "$SCRIPTS_DIR/bitwarden.sh"
+run_script "$SCRIPTS_DIR/firefox.sh"
+run_script "$SCRIPTS_DIR/zsh.sh"
 # Call ./alacritty/setup.sh
 # Call ./nvim/setup.sh
 # Call ./tmux/setup.sh
@@ -100,12 +102,6 @@ fi
 # Call ./rust/setup.sh
 # Call ./npm/setup.sh
 # Call ./dotnet/setup.sh
-
-
-################################################################################
-# Symbolic linking for configuration files 
-################################################################################
-stow --dir=$HOME/.dotfiles/ --target=$HOME zsh alacritty tmux
 
 
 ################################################################################
@@ -129,6 +125,12 @@ if [[ "$(uname -m)" == *"arm"* ]] || [[ "$(uname -m)" == "aarch64" ]]; then
     sudo apt install open-vm-tools-desktop -y
   fi
 fi
+
+
+################################################################################
+# Symbolic linking for configuration files 
+################################################################################
+stow --dir=$HOME/.dotfiles/ --target=$HOME zsh alacritty tmux
 
 
 ###############################################################################
