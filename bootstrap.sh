@@ -114,9 +114,21 @@ stow --dir=$HOME/.dotfiles/ --target=$HOME zsh alacritty tmux
 ################################################################################
 if [[ "$(uname -m)" == *"arm"* ]] || [[ "$(uname -m)" == "aarch64" ]]; then
   sudo apt update -y
-  dpkg -l tasksel &>/dev/null || sudo apt install tasksel -y
-  dpkg -l ubuntu-desktop &>/dev/null || sudo apt install 'ubuntu-desktop^' -y
-  dpkg -l open-vm-tools-desktop &>/dev/null || sudo apt install open-vm-tools-desktop -y
+
+  # Check and install tasksel if needed
+  if ! dpkg-query -W tasksel &>/dev/null; then
+    sudo apt install tasksel -y
+  fi
+
+  # Check and install ubuntu-desktop if needed
+  if ! dpkg-query -W ubuntu-desktop &>/dev/null; then
+    sudo apt install 'ubuntu-desktop^' -y
+  fi
+
+  # Check and install open-vm-tools-desktop if needed
+  if ! dpkg-query -W open-vm-tools-desktop &>/dev/null; then
+    sudo apt install open-vm-tools-desktop -y
+  fi
 fi
 
 
@@ -125,3 +137,6 @@ fi
 ###############################################################################
 log_warning "❗❗ It is recommended to reboot your machine after running this script. ❗❗"
 suggest_reboot
+
+
+dpkg-query -W ubuntu-desktop &>/dev/null && echo "y" || echo "n"
