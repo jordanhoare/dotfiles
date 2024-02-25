@@ -18,11 +18,12 @@ done 2>/dev/null &
 ################################################################################
 # Directories
 ################################################################################
-export XDG_CONFIG_HOME="$HOME"/.config
-mkdir -p "$XDG_CONFIG_HOME"/alacritty
-mkdir -p "$XDG_CONFIG_HOME"/alacritty/themes
+mkdir -p "$HOME"/.config/alacritty
+mkdir -p "$HOME"/.config/alacritty/themes
+
 DOTFILES_DIR="$HOME/.dotfiles"
-SHELL_FUNCTIONS_DIR="$DOTFILES_DIR/shell/functions"
+FUNCTIONS_DIR="$DOTFILES_DIR/shell/functions"
+SCRIPTS_DIR="$DOTFILES_DIR/shell/functions"
 
 
 ################################################################################
@@ -64,25 +65,23 @@ fi
 ################################################################################
 # Import helper logging functions
 ################################################################################
-source "$SHELL_FUNCTIONS_DIR/logging.sh"
-source "$SHELL_FUNCTIONS_DIR/misc.sh"
-source "$SHELL_FUNCTIONS_DIR/reboot.sh"
+source "$FUNCTIONS_DIR/logging.sh"
+source "$FUNCTIONS_DIR/misc.sh"
+source "$FUNCTIONS_DIR/reboot.sh"
 
 
 ################################################################################
 # Applications and dependencies
 ################################################################################
 if [[ "$(uname -s)" == "Linux" ]]; then
-    echo ".."
+    sudo apt-get update && sudo apt-get upgrade -y
+    sudo apt-get install -y git zsh stow gh lazygit
 fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
     brew update && brew upgrade
     brew bundle --file="$DOTFILES_DIR/Brewfile"
 fi
-
-# Create symbolic links for the configuration files 
-stow --dir=$HOME/.dotfiles/ --target=$HOME zsh
 
 
 ################################################################################
@@ -102,6 +101,23 @@ stow --dir=$HOME/.dotfiles/ --target=$HOME zsh
 # Call ./rust/setup.sh
 # Call ./npm/setup.sh
 # Call ./dotnet/setup.sh
+
+
+################################################################################
+# Symbolic linking for configuration files 
+################################################################################
+stow --dir=$HOME/.dotfiles/ --target=$HOME zsh alacritty tmux
+
+
+################################################################################
+# VMware fusion (only applicable for Linux ARM servers)
+################################################################################
+if [[ "$(uname -m)" == *"arm"* ]]; then
+  sudo apt update -y
+  dpkg -l tasksel &>/dev/null || sudo apt install tasksel -y
+  dpkg -l ubuntu-desktop &>/dev/null || sudo apt install 'ubuntu-desktop^' -y
+  dpkg -l open-vm-tools-desktop &>/dev/null || sudo apt install open-vm-tools-desktop -y
+fi
 
 
 ###############################################################################

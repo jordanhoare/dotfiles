@@ -31,12 +31,12 @@ Distro: https://ubuntu.com/download/server/arm
 
 You can install the complete ubuntu-desktop task in Ubuntu Server by running the following command:
 
-sudo apt install 'ubuntu-desktop^'
+sudo apt install -y ubuntu-desktop^
 
 Here are some additional tips for installing an Ubuntu desktop using VMware Fusion 13 player for macOS.
 
 - Use the Ubuntu Server 22.04.2 LTS ARM64 ISO to install an Ubuntu 22.04 virtual machine.
 - After the installation of Ubuntu 22.04 is finished convert the Ubuntu Server using the tasksel program which can be installed by `sudo apt install tasksel`. Install the Ubuntu desktop task by selecting it with the space key in tasksel and remove every server task that you don't want to keep.
-- Install the open-vm-tools-desktop package in Ubuntu with `sudo apt install open-vm-tools-desktop`.
+- Install the open-vm-tools-desktop package in Ubuntu with `sudo apt install open-vm-tools-desktop~`.
 - `serverx`
 
