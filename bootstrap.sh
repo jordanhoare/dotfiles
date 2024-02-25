@@ -65,6 +65,7 @@ fi
 ################################################################################
 # Import helper logging functions
 ################################################################################
+chmod +x $HOME/.dotfiles/shell/scripts/*.sh
 source "$FUNCTIONS_DIR/logging.sh"
 source "$FUNCTIONS_DIR/misc.sh"
 
