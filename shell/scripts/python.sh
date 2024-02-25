@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu
 
+POETRY_HOME="/usr/local/bin/poetry"
+
 # Install pyenv
 if ! command -v pyenv &> /dev/null; then
     git clone https://github.com/pyenv/pyenv.git $HOME/.pyenv
@@ -14,9 +16,6 @@ fi
 # Set the global Python version to the newest one.
 $HOME/.pyenv/bin/pyenv global "${py_versions[-1]}"
 
-# curl -sSL https://install.python-poetry.org | POETRY_HOME=/etc/poetry python3 -
-# # Install poetry
-# if ! command -v poetry &> /dev/null; then
-#     POETRY_HOME="/usr/local/bin/poetry"
-#     curl -sSL https://install.python-poetry.org | python3 -
-
+# Install poetry
+if ! command -v poetry &> /dev/null; then
+    curl -sSL https://install.python-poetry.org | POETRY_HOME=$HOME/.poetry python -
