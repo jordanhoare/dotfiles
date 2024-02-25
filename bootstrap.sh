@@ -87,8 +87,8 @@ fi
 ################################################################################
 # Terminal and workspace tools
 ################################################################################
-run_script "$SCRIPTS_DIR/bitwarden.sh"
 # run_script "$SCRIPTS_DIR/firefox.sh"
+run_script "$SCRIPTS_DIR/bitwarden.sh"
 run_script "$SCRIPTS_DIR/zsh.sh"
 # Call ./alacritty/setup.sh
 # Call ./nvim/setup.sh
