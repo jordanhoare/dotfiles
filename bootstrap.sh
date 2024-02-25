@@ -132,7 +132,8 @@ fi
 # Symbolic linking for configuration files 
 ################################################################################
 stow --dir=$HOME/.dotfiles/ --target=$HOME --adopt zsh tmux
-cd $DOTFILES_DIR && git restore . 
+cd $DOTFILES_DIR
+git restore .
 
 
 ################################################################################
