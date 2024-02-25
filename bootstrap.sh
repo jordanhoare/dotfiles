@@ -67,7 +67,6 @@ fi
 ################################################################################
 source "$FUNCTIONS_DIR/logging.sh"
 source "$FUNCTIONS_DIR/misc.sh"
-source "$FUNCTIONS_DIR/reboot.sh"
 
 
 ################################################################################
@@ -133,7 +132,6 @@ fi
 
 
 ###############################################################################
-# Reboot
+# Reboot warning
 ###############################################################################
 log_warning "❗❗ It is recommended to reboot your machine after running this script. ❗❗"
-sudo suggest_reboot
