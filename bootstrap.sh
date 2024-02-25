@@ -98,7 +98,7 @@ run_script "$SCRIPTS_DIR/zsh.sh"
 ################################################################################
 # Development ecosystem
 ################################################################################
-# Set up python dev environment ---- run_script "$DOTFILES_DIR/python/setup.sh"
+run_script "$SCRIPTS_DIR/python.sh"
 # Call ./go/setup.sh
 # Call ./rust/setup.sh
 # Call ./npm/setup.sh
@@ -131,7 +131,16 @@ fi
 ################################################################################
 # Symbolic linking for configuration files 
 ################################################################################
-stow --dir=$HOME/.dotfiles/ --target=$HOME zsh alacritty tmux
+stow --dir=$HOME/.dotfiles/ --target=$HOME --adopt zsh tmux
+git restore . # 
+
+
+################################################################################
+# Set default shell
+################################################################################
+if [ "$SHELL" != "$(which zsh)" ]; then
+    sudo chsh -s "$(which zsh)"
+fi
 
 
 ###############################################################################
