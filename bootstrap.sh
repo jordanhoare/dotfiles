@@ -31,7 +31,7 @@ SCRIPTS_DIR="$DOTFILES_DIR/shell/scripts"
 ################################################################################
 if [[ "$(uname -s)" == "Linux" ]]; then
     sudo apt-get update && sudo apt-get upgrade -y
-    sudo apt install -y libz-dev libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext cmake gcc
+    sudo apt install -y libz-dev libssl-dev liblzma-dev libcurl4-gnutls-dev libexpat1-dev gettext cmake gcc
     sudo apt-get install -y git zsh stow
 fi
 
@@ -132,7 +132,7 @@ fi
 # Symbolic linking for configuration files 
 ################################################################################
 stow --dir=$HOME/.dotfiles/ --target=$HOME --adopt zsh tmux
-git restore . # 
+cd $DOTFILES_DIR && git restore . 
 
 
 ################################################################################
