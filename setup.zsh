@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
 
 BREWFILE="$HOME/.dotfiles/Brewfile"
+BREWFILE="$HOME/.dotfiles/Brewfile"
+brew bundle --file="$BREWFILE" --build-from-source
+
 
 export XDG_CONFIG_HOME="$HOME"/.config
 

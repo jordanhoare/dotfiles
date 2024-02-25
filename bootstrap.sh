@@ -26,44 +26,30 @@ SHELL_FUNCTIONS_DIR="$DOTFILES_DIR/shell/functions"
 
 
 ################################################################################
-# Initial dependencies
+# Update system packages & install initial dependencies
 ################################################################################
-if ! command -v rustc &> /dev/null; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path --verbose -y
-    export PATH="$HOME/.cargo/bin:$PATH"
-fi
-
-# Install brew (if not already installed)
-if ! command -v brew &> /dev/null; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
-# For Linux, append Homebrew to the current session's PATH
 if [[ "$(uname -s)" == "Linux" ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    sudo apt-get update && sudo apt-get upgrade -y
+    sudo apt install -y libz-dev libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext cmake gcc
+    sudo apt-get install -y git zsh stow
 fi
 
-# Function to install a package if it's not already installed
-install_package() {
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    # Install brew (if not already installed)
+    if ! command -v brew &> /dev/null; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew update && brew upgrade
+    fi
+
+    install_package() {
     local package=$1
     if ! command -v $package &> /dev/null; then
         brew install $package
     fi
-}
-install_package git
-install_package zsh
-install_package stow
-
-
-################################################################################
-# Update and upgrade system packages (MacOS, add Linux equivalent)
-################################################################################
-if [[ "$(uname -s)" == "Linux" ]]; then
-    sudo apt-get update && sudo apt-get upgrade -y
-fi
-
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    brew update && brew upgrade
+    }
+    install_package git
+    install_package zsh
+    install_package stow
 fi
 
 
@@ -84,52 +70,38 @@ source "$SHELL_FUNCTIONS_DIR/reboot.sh"
 
 
 ################################################################################
-# Import helper logging functions
-################################################################################
-
-
-################################################################################
 # Applications and dependencies
 ################################################################################
-log_info "Installing packages from Brewfile..."
-brew bundle --file="$DOTFILES_DIR/Brewfile"
-
-if [ ! -d "$HOME/.config/alacritty" ]; then
-    mkdir -p "$XDG_CONFIG_HOME"/alacritty
-    mkdir -p "$XDG_CONFIG_HOME"/alacritty/themes
-    git clone https://github.com/alacritty/alacritty-theme "$XDG_CONFIG_HOME"/alacritty/themes
-fi
-
 if [[ "$(uname -s)" == "Linux" ]]; then
-    sudo snap install firefox
+    echo ".."
 fi
 
-if [[ "$(uname -s)" == "Linux" ]]; then
-    cargo install alacritty
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    brew update && brew upgrade
+    brew bundle --file="$DOTFILES_DIR/Brewfile"
 fi
+
+# Create symbolic links for the configuration files 
+stow --dir=$HOME/.dotfiles/ --target=$HOME zsh
+
 
 ################################################################################
-# Shell tools
+# Terminal and workspace tools
 ################################################################################
 # Call ./zsh/setup.sh
+# Call ./alacritty/setup.sh
+# Call ./nvim/setup.sh
+# Call ./tmux/setup.sh
 
 
 ################################################################################
-# Development tools and managers
+# Development ecosystem
 ################################################################################
-# Call ./python/setup.sh
-run_script "$DOTFILES_DIR/python/setup.sh"
-
+# Set up python dev environment ---- run_script "$DOTFILES_DIR/python/setup.sh"
 # Call ./go/setup.sh
 # Call ./rust/setup.sh
 # Call ./npm/setup.sh
-
-
-################################################################################
-# Developer environment
-################################################################################
-# Call ./nvim/setup.sh
-# Call ./tmux/setup.sh
+# Call ./dotnet/setup.sh
 
 
 ###############################################################################
