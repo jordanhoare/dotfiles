@@ -136,7 +136,4 @@ fi
 # Reboot
 ###############################################################################
 log_warning "❗❗ It is recommended to reboot your machine after running this script. ❗❗"
-suggest_reboot
-
-
-dpkg-query -W ubuntu-desktop &>/dev/null && echo "y" || echo "n"
+sudo suggest_reboot
