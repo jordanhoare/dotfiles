@@ -18,9 +18,6 @@ done 2>/dev/null &
 ################################################################################
 # Directories
 ################################################################################
-mkdir -p "$HOME"/.config/alacritty
-mkdir -p "$HOME"/.config/alacritty/themes
-
 DOTFILES_DIR="$HOME/.dotfiles"
 FUNCTIONS_DIR="$DOTFILES_DIR/shell/functions"
 SCRIPTS_DIR="$DOTFILES_DIR/shell/scripts"
@@ -90,7 +87,7 @@ fi
 # run_script "$SCRIPTS_DIR/firefox.sh"
 run_script "$SCRIPTS_DIR/bitwarden.sh"
 run_script "$SCRIPTS_DIR/zsh.sh"
-# Call ./alacritty/setup.sh
+run_script "$SCRIPTS_DIR/alacritty.sh"
 # Call ./nvim/setup.sh
 # Call ./tmux/setup.sh
 

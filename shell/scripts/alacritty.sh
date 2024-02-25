@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-
-# Alacritty themes
+# Download Alacritty themes
 if [ ! -d "$HOME/.config/alacritty/themes" ]; then
     mkdir -p "$HOME"/.config/alacritty
     mkdir -p "$HOME"/.config/alacritty/themes
