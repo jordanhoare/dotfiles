@@ -112,7 +112,7 @@ stow --dir=$HOME/.dotfiles/ --target=$HOME zsh alacritty tmux
 ################################################################################
 # VMware fusion (only applicable for Linux ARM servers)
 ################################################################################
-if [[ "$(uname -m)" == *"arm"* ]]; then
+if [[ "$(uname -m)" == *"arm"* ]] || [[ "$(uname -m)" == "aarch64" ]]; then
   sudo apt update -y
   dpkg -l tasksel &>/dev/null || sudo apt install tasksel -y
   dpkg -l ubuntu-desktop &>/dev/null || sudo apt install 'ubuntu-desktop^' -y
