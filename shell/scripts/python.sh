@@ -19,3 +19,4 @@ $HOME/.pyenv/bin/pyenv global "${py_versions[-1]}"
 # Install poetry
 if ! command -v poetry &> /dev/null; then
     curl -sSL https://install.python-poetry.org | POETRY_HOME=$HOME/.poetry python3 -
+fi
