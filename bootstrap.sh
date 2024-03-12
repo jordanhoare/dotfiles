@@ -28,7 +28,7 @@ SCRIPTS_DIR="$DOTFILES_DIR/shell/scripts"
 ################################################################################
 if [[ "$(uname -s)" == "Linux" ]]; then
     sudo apt-get update && sudo apt-get upgrade -y
-    sudo apt install -y libz-dev libssl-dev liblzma-dev libcurl4-gnutls-dev libexpat1-dev gettext cmake gcc
+    sudo apt install -y libz-dev libssl-dev liblzma-dev libcurl4-gnutls-dev libexpat1-dev gettext cmake gcc bc
     sudo apt-get install -y git zsh stow
 fi
 
@@ -84,10 +84,14 @@ fi
 ################################################################################
 # Terminal and workspace tools
 ################################################################################
-# run_script "$SCRIPTS_DIR/firefox.sh"
-run_script "$SCRIPTS_DIR/bitwarden.sh"
+run_script "$SCRIPTS_DIR/bitwarden.sh" # Unavailable on ARM64 (aarch64)
+run_script "$SCRIPTS_DIR/vault.sh"
 run_script "$SCRIPTS_DIR/zsh.sh"
 run_script "$SCRIPTS_DIR/alacritty.sh"
+
+
+
+# run_script "$SCRIPTS_DIR/firefox.sh"
 # Call ./nvim/setup.sh
 # Call ./tmux/setup.sh
 
@@ -100,29 +104,6 @@ run_script "$SCRIPTS_DIR/python.sh"
 # Call ./rust/setup.sh
 # Call ./npm/setup.sh
 # Call ./dotnet/setup.sh
-
-
-################################################################################
-# VMware fusion (only applicable for Linux ARM servers)
-################################################################################
-if [[ "$(uname -m)" == *"arm"* ]] || [[ "$(uname -m)" == "aarch64" ]]; then
-  sudo apt update -y
-
-  # Check and install tasksel if needed
-  if ! dpkg-query -W tasksel &>/dev/null; then
-    sudo apt install tasksel -y
-  fi
-
-  # Check and install ubuntu-desktop if needed
-  if ! dpkg-query -W ubuntu-desktop &>/dev/null; then
-    sudo apt install 'ubuntu-desktop^' -y
-  fi
-
-  # Check and install open-vm-tools-desktop if needed
-  if ! dpkg-query -W open-vm-tools-desktop &>/dev/null; then
-    sudo apt install open-vm-tools-desktop -y
-  fi
-fi
 
 
 ################################################################################
