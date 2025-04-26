@@ -1,0 +1,33 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[user]
+	name = jordanhoare
+	email = jordan.hoare@outlook.com
+
+[core]
+	editor = \"D:\\Microsoft VS Code\\bin\\code\" --wait
+
+[init]
+	defaultBranch = main
+
+[branch]
+  autosetuprebase = always
+
+[pull]
+  rebase = true
+
+[push]
+  default = current
+
+[alias]
+  use-main = "!git config user.name 'Jordan Hoare' && git config user.email 'jordan.hoare@outlook.com' && echo 'Switched to main profile'"
+
+[includeIf "gitdir:E:/repositories/"]
+  path = ~/.gitconfig
+
+[credential]
+	helper = manager-core
