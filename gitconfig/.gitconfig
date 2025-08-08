@@ -28,7 +28,7 @@
   use-main = "!git config user.name 'Jordan Hoare' && git config user.email 'jordan.hoare@outlook.com' && echo 'Switched to main profile'"
 
 [credential]
-  helper = manager-core
+	helper = store
 
 [safe]
   directory = /mnt/d/repositories/second-brain
