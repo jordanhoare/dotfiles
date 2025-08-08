@@ -13,22 +13,23 @@ config.max_fps = 144
 config.default_cursor_style = "BlinkingBlock"
 config.animation_fps = 1
 config.cursor_blink_rate = 500
-config.term = "xterm-256color" -- Set the terminal type
+config.term = "xterm-256color"
 
-config.font = wezterm.font("Iosevka Custom")
+config.font = wezterm.font("Consolas", {
+  weight = "Regular",
+  stretch = "Normal",
+  style   = "Normal",
+})
+-- config.font = wezterm.font("Iosevka Custom")
 -- config.font = wezterm.font("Monocraft Nerd Font")
 -- config.font = wezterm.font("FiraCode Nerd Font Mono")
 -- config.font = wezterm.font("JetBrains Mono Regular")
-config.cell_width = 0.9
 -- config.font = wezterm.font("Menlo Regular")
 -- config.font = wezterm.font("Hasklig")
 -- config.font = wezterm.font("Monoid Retina")
 -- config.font = wezterm.font("InputMonoNarrow")
--- config.font = wezterm.font("mononoki Regular")
--- config.font = wezterm.font("Iosevka")
--- config.font = wezterm.font("M+ 1m")
--- config.font = wezterm.font("Hack Regular")
--- config.cell_width = 0.9
+
+config.cell_width = 0.9
 config.window_background_opacity = 0.9
 config.prefer_egl = true
 config.font_size = 18.0
@@ -178,7 +179,7 @@ config.window_frame = {
 
 -- config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
 config.window_decorations = "NONE | RESIZE"
-config.default_prog = { "powershell.exe", "-NoLogo" }
+config.default_prog = { "wsl.exe", "--distribution", "Ubuntu-24.04", "--exec", "zsh", "-l" }
 config.initial_cols = 80
 -- config.window_background_image = "C:/dev/misc/berk.png"
 -- config.window_background_image_hsb = {

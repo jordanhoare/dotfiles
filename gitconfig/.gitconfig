@@ -1,18 +1,18 @@
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 
 [user]
-	name = jordanhoare
-	email = jordan.hoare@outlook.com
+  name = Jordan Hoare
+  email = jordan.hoare@outlook.com
 
 [core]
-	editor = \"D:\\Microsoft VS Code\\bin\\code\" --wait
+  editor = code --wait
 
 [init]
-	defaultBranch = main
+  defaultBranch = main
 
 [branch]
   autosetuprebase = always
@@ -22,12 +22,19 @@
 
 [push]
   default = current
+  autoSetupRemote = true
 
 [alias]
   use-main = "!git config user.name 'Jordan Hoare' && git config user.email 'jordan.hoare@outlook.com' && echo 'Switched to main profile'"
 
-[includeIf "gitdir:E:/repositories/"]
-  path = ~/.gitconfig
-
 [credential]
-	helper = manager-core
+  helper = manager-core
+
+[safe]
+  directory = /mnt/d/repositories/second-brain
+
+[includeIf "gitdir:/mnt/e/PoE/Dev/"]
+  path = /mnt/e/PoE/Dev/.gitconfig_game
+
+[commit]
+  gpgSign = false
