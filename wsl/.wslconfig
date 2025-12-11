@@ -1,0 +1,20 @@
+# Place this file at: C:\Users\<YourUsername>\.wslconfig
+# After changes, restart WSL: wsl --shutdown
+
+[wsl2]
+memory=12GB
+processors=6
+swap=4GB
+swapfile=C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\swap.vhdx
+pageReporting=false
+nestedVirtualization=false
+kernelCommandLine=sysctl.vm.max_map_count=262144
+networkingMode=mirrored
+dnsTunneling=true
+firewall=true
+vmIdleTimeout=60000
+
+# Experimental features for better performance
+[experimental]
+autoMemoryReclaim=gradual
+sparseVhd=true

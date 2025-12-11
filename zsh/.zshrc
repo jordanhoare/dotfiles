@@ -57,7 +57,8 @@ fi
 export PYENV_ROOT="$HOME/.pyenv"
 if [ -d "$PYENV_ROOT" ]; then
   export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
+  eval "$(pyenv init --path)"
+  eval "$(pyenv init - --no-rehash)"
   command -v pyenv-virtualenv >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"
 fi
 
@@ -75,7 +76,7 @@ fi
 # ============================================================================ #
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
 ZSH_CUSTOM="$DOTFILES/zsh/themes"
-ZSH_THEME="passion/passion"
+ZSH_THEME="w00fz-bureau-fast"
 HYPHEN_INSENSITIVE="true"
 plugins=(git)
 
@@ -136,3 +137,4 @@ alias vdot='cd $DOTFILES && code .'
 alias vsb='cd $SECONDBRAIN && code .'
 alias c='clear'
 alias reload='source ~/.zshrc'
+export PATH="$HOME/.aftman/bin:$HOME/.cargo/bin:$PATH"
