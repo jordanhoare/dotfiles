@@ -1,9 +1,6 @@
-Ref: https://github.com/Alex-D/dotfiles/tree/main
-
 # Additional configurations
 
-Setup WSL 2
------------
+## Setup WSL 2
 
 - Enable WSL 2 and update the linux kernel ([Source](https://docs.microsoft.com/en-us/windows/wsl/install-win10))
 
@@ -28,9 +25,7 @@ wsl --set-default-version 2
 
 - [Install Ubuntu from Microsoft Store](https://www.microsoft.com/fr-fr/p/ubuntu/9nblggh4msv6)
 
-
-Install common dependencies
----------------------------
+## Install common dependencies
 
 ```shell script
 #!/bin/bash
@@ -49,9 +44,7 @@ sudo apt update && sudo apt install -y \
     zsh
 ```
 
-
-GPG key
--------
+## GPG key
 
 If you already have a GPG key, restore it. If you did not have one, you can create one.
 
@@ -70,9 +63,7 @@ If you already have a GPG key, restore it. If you did not have one, you can crea
 
 [Read GitHub documentation about generating a new GPG key for more details](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key).
 
-
-Setup Git
----------
+## Setup Git
 
 ```shell script
 #!/bin/bash
@@ -103,9 +94,7 @@ cat ~/.ssh/id_rsa.pub
 
 - [Add the generated key to GitHub](https://github.com/settings/ssh/new)
 
-
-Setup zsh
----------
+## Setup zsh
 
 ```shell script
 #!/bin/bash
@@ -131,9 +120,7 @@ mkdir ~/.screen && chmod 700 ~/.screen
 chsh -s $(which zsh)
 ```
 
-
-Setup GitHub CLI
-----------------
+## Setup GitHub CLI
 
 ```shell script
 #!/bin/zsh
@@ -146,9 +133,7 @@ sudo apt install gh
 
 Login gh command to GitHub via `gh auth login`
 
-
-Docker
-------
+## Docker
 
 ### Setup Docker
 
@@ -171,9 +156,7 @@ sudo usermod -aG docker $USER
 
 You can start Docker daemon via [Systemd](#systemd) or via `dcs` alias.
 
-
-Docker Compose
---------------
+## Docker Compose
 
 ```shell script
 #!/bin/zsh
@@ -182,9 +165,7 @@ sudo curl -sL -o /usr/local/bin/docker-compose $(curl -s https://api.github.com/
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-
-Node.js
--------
+## Node.js
 
 ```shell script
 #!/bin/zsh
@@ -197,9 +178,7 @@ curl https://get.volta.sh | bash -s -- --skip-setup
 volta install node npm yarn
 ```
 
-
-Go
----
+## Go
 
 ```shell script
 #!/bin/zsh
@@ -213,9 +192,7 @@ rm /tmp/go${goVersion}.linux-amd64.tar.gz
 
 [See official documentation](https://golang.org/doc/install)
 
-
-IntelliJ IDEA
--------------
+## IntelliJ IDEA
 
 I run IntelliJ IDEA in WSL 2, and get its GUI on Windows via X Server (VcXsrv).
 
@@ -257,9 +234,7 @@ sudo chown $UID:$UID /opt/idea
 curl -L "https://download.jetbrains.com/product?code=IIU&latest&distribution=linux" | tar vxz -C /opt/idea --strip 1
 ```
 
-
-Setup Windows Terminal
-----------------------
+## Setup Windows Terminal
 
 - [Download and install JetBrains Mono](https://www.jetbrains.com/mono/)
 - [Install Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701)
@@ -273,9 +248,7 @@ windowsUserProfile=/mnt/c/Users/$(cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr 
 cp ~/dev/dotfiles/terminal-settings.json ${windowsUserProfile}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
 ```
 
-
-WSL Bridge
-----------
+## WSL Bridge
 
 When a port is listening from WSL 2, it cannot be reached.
 You need to create port proxies for each port you want to use.
@@ -309,9 +282,7 @@ wslb
 
 Note: This is a custom alias. See [`.aliases.zsh`](.aliases.zsh) for more details
 
-
-Limit WSL 2 RAM consumption
----------------------------
+## Limit WSL 2 RAM consumption
 
 ```shell script
 #!/bin/zsh
@@ -324,9 +295,7 @@ cp ~/dev/dotfiles/.wslconfig ${windowsUserProfile}/.wslconfig
 
 Note: You can adjust the RAM amount in `.wslconfig` file. Personally, I set it to 8 GB.
 
-
-Install kubectl
----------------
+## Install kubectl
 
 ```shell script
 #!/bin/zsh
@@ -339,9 +308,7 @@ sudo apt-get install -y kubectl
 
 [Original documentation](https://master--kubernetes-io-master-staging.netlify.app/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
 
-
-Install AWS CLI
----------------
+## Install AWS CLI
 
 ```shell script
 #!/bin/zsh

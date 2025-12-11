@@ -6,10 +6,16 @@
 
 [user]
   name = Jordan Hoare
-  email = jordan.hoare@outlook.com
+  email = jordanhoare0@gmail.com
 
 [core]
   editor = code --wait
+  # WSL performance optimizations for Windows mounts
+  preloadindex = true
+  fscache = true
+  autocrlf = input
+  trustctime = false
+  ignorecase = false
 
 [init]
   defaultBranch = main
@@ -25,16 +31,60 @@
   autoSetupRemote = true
 
 [alias]
-  use-main = "!git config user.name 'Jordan Hoare' && git config user.email 'jordan.hoare@outlook.com' && echo 'Switched to main profile'"
-
-[credential]
-	helper = store
-
+  use-main = "!git config user.name 'Jordan Hoare' && git config user.email 'jordanhoare0@gmail.com' && echo 'Switched to main profile'"
 [safe]
   directory = /mnt/d/repositories/second-brain
+	directory = /mnt/e/PoE
 
 [includeIf "gitdir:/mnt/e/PoE/Dev/"]
   path = /mnt/e/PoE/Dev/.gitconfig_game
 
+# Optimize git for all Windows mounts (/mnt/*) - these are extremely slow
+# This applies to all repos on Windows filesystems accessed from WSL
+[includeIf "gitdir:/mnt/"]
+  [core]
+    # Disable filemode checks (very slow on Windows mounts via 9P protocol)
+    # This prevents git from checking file permissions on every operation
+    fileMode = false
+  [status]
+    aheadBehind = false
+    showUntrackedFiles = normal
+
 [commit]
   gpgSign = false
+[fetch]
+	tags = true
+	fsckObjects = false
+	writeCommitGraph = true
+[status]
+	submoduleSummary = false
+	showUntrackedFiles = normal
+	aheadBehind = false
+[feature]
+	manyFiles = true
+[remote "origin"]
+	tagOpt = --force
+[diff]
+	tool = bc
+[merge]
+	tool = bc
+[difftool "bc4"]
+	path = /mnt/c/Program Files/Beyond Compare 4/BComp.exe
+[mergetool "bc4"]
+	path = /mnt/c/Program Files/Beyond Compare 4/BComp.exe
+	trustExitCode = true
+[difftool]
+	prompt = false
+[mergetool]
+	keepBackup = false
+[mergetool "bc"]
+	trustExitCode = true
+	cmd = \"/mnt/c/Program Files/Beyond Compare 5/BComp.exe\" \"$(wslpath -w \"$LOCAL\")\" \"$(wslpath -w \"$REMOTE\")\" \"$(wslpath -w \"$BASE\")\" \"$(wslpath -w \"$MERGED\")\"
+[difftool "bc"]
+	cmd = \"/mnt/c/Program Files/Beyond Compare 5/BComp.exe\" \"$(wslpath -w \"$LOCAL\")\" \"$(wslpath -w \"$REMOTE\")\"
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
