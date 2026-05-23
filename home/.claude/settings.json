@@ -1,3 +1,18 @@
 {
-  "effortLevel": "low"
+  "effortLevel": "low",
+  "permissions": {
+    "allow": [
+      "Bash(gh issue create *)",
+      "Bash(gh issue view *)",
+      "Bash(gh repo view *)",
+      "Bash(git status:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(git filter-branch *)",
+      "Bash(git check-ignore *)",
+      "Bash(git whoami *)",
+      "Bash(git restore *)",
+      "Bash(git remote *)"
+    ]
+  }
 }
