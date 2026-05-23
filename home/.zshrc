@@ -125,6 +125,8 @@ alias vdot='cd $DOTFILES && code .'
 alias vsb='cd $SECONDBRAIN && code .'
 alias c='clear'
 alias reload='source ~/.zshrc'
+gclone() { gh repo clone "$1" }
+alias gclone=gclone
 export PATH="$HOME/.aftman/bin:$HOME/.cargo/bin:$PATH"
 export PATH="$PATH:/mnt/c/Program\ Files/Docker/Docker/resources/bin"
 export exapiPackage="/mnt/e/PoE/Api/ExileApi"
