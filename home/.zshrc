@@ -3,6 +3,8 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
   [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 fi
 
+command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
+
 if [[ -n "$WSL_DISTRO_NAME" ]]; then
   source ~/.zsh/platform/wsl.zsh
 elif [[ "$OSTYPE" == darwin* ]]; then
