@@ -41,10 +41,9 @@ verify: ## verify key symlinks, tools, and nvim health
 	@command -v tofu     >/dev/null && echo "  ✓ opentofu"  || echo "  ✗ opentofu"
 	@command -v kubectl  >/dev/null && echo "  ✓ kubectl"   || echo "  ✗ kubectl"
 	@command -v docker   >/dev/null && echo "  ✓ docker"    || echo "  ✗ docker"
-	@echo "==> nvim"
-	@command -v nvim >/dev/null 2>&1 \
-		&& nvim --headless +qa 2>/dev/null && echo "  ✓ nvim starts cleanly (run :LazyHealth for full check)" \
-		|| echo "  ✗ nvim not installed"
+	@command -v nvim     >/dev/null 2>&1 \
+		&& nvim --headless +qa 2>/dev/null && echo "  ✓ nvim" \
+		|| echo "  ✗ nvim"
 
 brew: ## install all brew packages, casks, and vscode extensions from Brewfile (macOS only)
 	@if ! command -v brew >/dev/null 2>&1; then echo "brew not found - skipping"; exit 0; fi
