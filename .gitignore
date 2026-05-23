@@ -14,3 +14,4 @@ config/git/private
 
 # MacOs
 home/.DS_Store
+config/gh/hosts.yml
