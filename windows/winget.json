@@ -1,0 +1,26 @@
+{
+  "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+  "CreationDate": "2026-05-24T00:00:00.000Z",
+  "Sources": [
+    {
+      "Packages": [
+        { "PackageIdentifier": "Microsoft.WSL" },
+        { "PackageIdentifier": "Microsoft.VisualStudioCode" },
+        { "PackageIdentifier": "Obsidian.Obsidian" },
+        { "PackageIdentifier": "Bitwarden.Bitwarden" },
+        { "PackageIdentifier": "Docker.DockerDesktop" },
+        { "PackageIdentifier": "Mozilla.Firefox" },
+        { "PackageIdentifier": "Anthropic.ClaudeCode" },
+        { "PackageIdentifier": "GitHub.GitHubDesktop" },
+        { "PackageIdentifier": "Ghostty.Ghostty" }
+      ],
+      "SourceDetails": {
+        "Argument": "https://cdn.winget.microsoft.com/cache",
+        "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Name": "winget",
+        "Type": "Microsoft.PreIndexed.Package"
+      }
+    }
+  ],
+  "WinGetVersion": "1.9.25200"
+}
