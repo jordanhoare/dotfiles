@@ -1,3 +1,4 @@
+autoload -Uz compinit && compinit
 eval "$(starship init zsh)"
 eval "$(sheldon source)"
 
@@ -6,12 +7,8 @@ _update_git_identity() {
 }
 add-zsh-hook precmd _update_git_identity
 
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  . "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
-fi
-
 command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
 if [[ -n "$WSL_DISTRO_NAME" ]]; then
   source ~/.zsh/platform/wsl.zsh

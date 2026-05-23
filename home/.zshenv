@@ -27,4 +27,5 @@ export PATH="$PATH:$GOPATH:$GOROOT/bin"
 export PATH="$HOME/.aftman/bin:$HOME/.cargo/bin:$PATH"
 [ -d "$HOME/.poetry/bin" ] && export PATH="$PATH:$HOME/.poetry/bin"
 
-export NVM_DIR="$HOME/.nvm"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
