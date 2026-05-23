@@ -29,8 +29,9 @@ verify: ## verify key symlinks are in place
 	@test -L $(HOME)/.config/uv        && echo "✓ uv"           || echo "✗ uv"
 	@test -L $(HOME)/bin/up            && echo "✓ bin/up"       || echo "✗ bin/up"
 
-brew: ## install all brew packages, casks, and vscode extensions from Brewfile
-	brew bundle --file=$(HOME)/Brewfile
+brew: ## install all brew packages, casks, and vscode extensions from Brewfile (macOS only)
+	@if ! command -v brew >/dev/null 2>&1; then echo "brew not found - skipping"; exit 0; fi
+	brew bundle --file=$(DOTFILES)/home/Brewfile
 
 hooks: ## install pre-commit hooks
 	pre-commit install
