@@ -48,6 +48,12 @@ make decrypt
 make stow
 ```
 
+On Linux/WSL, also stow the etc package (sets timezone and locale):
+
+```bash
+make stow-etc
+```
+
 Switch the remote to SSH now that `~/.ssh/config` is in place:
 
 ```bash
@@ -61,7 +67,7 @@ git remote set-url origin git@personal:jordanhoare/dotfiles.git
 - [tmux](https://github.com/tmux/tmux/wiki/Installing)
 - [Ghostty](https://ghostty.org/download)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
-- [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- [Bun](https://bun.sh/docs/installation)
 
 ## Verify
 

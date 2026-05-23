@@ -35,7 +35,7 @@ See `.claude/docs/adr/` for full rationale.
 - **Multiplexer:** tmux
 - **Prompt:** Starship
 - **Plugin manager:** Sheldon (updates via `sheldon lock --update`)
-- **Symlinks:** GNU stow (two-package pattern — see ADR 0001)
+- **Symlinks:** GNU stow (four-package pattern — see ADR 0001)
 - **Python:** uv
 - **Node/JS:** Bun
 
@@ -61,7 +61,7 @@ See `.claude/docs/adr/` for full rationale.
 3. Stow: `stow -d ~/repositories/dotfiles -t ~ home && stow -d ~/repositories/dotfiles -t ~/.config config && stow -d ~/repositories/dotfiles -t ~/bin bin && sudo stow -d ~/repositories/dotfiles -t /etc etc`
 4. Restore SSH keys from Bitwarden (see SSH section above)
 5. Decrypt private git config: see `config/git/README.md`
-6. Install tools: starship, sheldon, tmux, ghostty, nvm, uv
+6. Install tools: starship, sheldon, tmux, ghostty, uv, bun
 
 ### Verify
 ```bash
