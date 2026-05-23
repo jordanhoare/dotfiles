@@ -63,10 +63,10 @@
 [remote "origin"]
 	tagOpt = --force
 [credential "https://github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
+	helper =
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper =
-	helper = !/usr/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [includeIf "gitdir:/mnt/d/repositories/private/"]
   path = ~/.config/git/private
