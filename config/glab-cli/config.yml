@@ -1,0 +1,4 @@
+git_protocol: ssh
+api_protocol: https
+editor:
+no_prompt: false
