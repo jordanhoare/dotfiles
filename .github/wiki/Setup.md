@@ -6,9 +6,7 @@ All platforms use Nix and Home Manager to provision tools and dotfiles. The Wind
 
 ### 1. Install Nix
 
-```bash
-sh <(curl -L https://nixos.org/nix/install)
-```
+Follow the macOS instructions at https://nixos.org/download/#nix-install-macos
 
 ### 2. Clone dotfiles
 
@@ -60,9 +58,7 @@ sudo apt install -y git curl
 
 ### 2. Install Nix
 
-```bash
-sh <(curl -L https://nixos.org/nix/install) --daemon
-```
+Follow the Linux instructions at https://nixos.org/download/#nix-install-linux
 
 Open a new shell to pick up the Nix environment.
 
@@ -113,9 +109,7 @@ Once inside the WSL shell:
 
 ### 1. Install Nix
 
-```bash
-sh <(curl -L https://nixos.org/nix/install) --daemon
-```
+Follow the Linux instructions at https://nixos.org/download/#nix-install-linux
 
 Open a new shell.
 

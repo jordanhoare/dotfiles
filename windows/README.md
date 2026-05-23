@@ -40,9 +40,7 @@ Restart when prompted, then complete the Ubuntu user setup.
 
 Once inside the WSL shell:
 
-```bash
-sh <(curl -L https://nixos.org/nix/install) --daemon
-```
+Follow the Linux instructions at https://nixos.org/download/#nix-install-linux
 
 Then activate the WSL configuration:
 
