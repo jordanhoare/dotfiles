@@ -33,7 +33,7 @@ Never hardcode the private GitHub username in any public file.
 - **Multiplexer:** tmux
 - **Prompt:** Starship
 - **Plugin manager:** Sheldon
-- **Symlinks:** GNU stow (dotfiles managed at `~/repositories/dotfiles`)
+- **Symlinks:** Home Manager `home.file` (dotfiles managed at `~/repositories/dotfiles`)
 - **Python:** uv (versions, packages, and virtualenvs — never use pip or virtualenv directly)
 - **Node:** nvm
 

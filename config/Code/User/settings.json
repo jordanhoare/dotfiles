@@ -206,5 +206,16 @@
     "Dockerfile.*": "dockerfile",
     "*.dockerfile": "dockerfile"
   },
-  "extensions.autoCheckUpdates": false
+  "extensions.autoCheckUpdates": false,
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nil",
+  "nix.serverSettings": {
+    "nil": {
+      "formatting": { "command": ["nixfmt"] }
+    }
+  },
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide",
+    "editor.formatOnSave": true
+  }
 }

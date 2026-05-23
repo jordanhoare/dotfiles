@@ -2,24 +2,44 @@
 
 ## What this repo is
 
-Personal dotfiles for Jordan Hoare. Managed via GNU stow — editing any tracked file is immediately live via symlink. Targets three platforms: WSL (primary), native Linux (VMs), macOS.
+Personal dotfiles for Jordan Hoare. Managed via Nix and Home Manager — editing any tracked file is immediately live via symlink. Targets three platforms: WSL (primary), native Linux (VMs), macOS.
 
 ## Repository structure
 
-### Stow packages
+### Dotfile packages
 
-Four packages, each targeting a different directory.
+Four directories whose contents are linked into place by Home Manager `home.file`.
 
-| Package | Stow target | Stow command | Contents |
-|---|---|---|---|
-| `home/` | `~` | `stow -t ~ home` | `.zshrc`, `.zlogin`, `.zprofile`, `.zshenv`, `.ssh/config` |
-| `config/` | `~/.config` | `stow -t ~/.config config` | `git/`, `gh/`, `ghostty/`, `mise/`, `uv/`, `sheldon/`, etc. |
-| `bin/` | `~/bin` | `stow -t ~/bin bin` | Personal executable scripts |
-| `etc/` | `/etc` | `sudo stow -t /etc etc` | `timezone`, `locale.conf` - Linux/WSL only |
+| Package | Target | Contents |
+|---|---|---|
+| `home/` | `~` | `.zshrc`, `.zlogin`, `.zprofile`, `.zshenv`, `.ssh/config` |
+| `config/` | `~/.config` | `git/`, `gh/`, `ghostty/`, `mise/`, `uv/`, `sheldon/`, etc. |
+| `bin/` | `~/bin` | Personal executable scripts |
+| `etc/` | `/etc` | `timezone`, `locale.conf` - Linux/WSL only, applied manually |
 
-Only files explicitly placed in these packages are tracked. Everything else is untouched by stow.
+Only files explicitly declared in `nix/modules/common.nix` (or a platform module) are linked. Everything else in `~/.config/` is untouched.
 
-### Non-stow directories
+### Nix modules
+
+| File | Purpose |
+|---|---|
+| `nix/flake.nix` | Entry point — defines `jordan@macos`, `jordan@linux`, `jordan@wsl` |
+| `nix/flake.lock` | Committed — pins all package versions |
+| `nix/modules/common.nix` | Packages and dotfile links shared across all platforms |
+| `nix/modules/linux-base.nix` | Shared between Linux and WSL |
+| `nix/modules/macos.nix` | macOS Home Manager config |
+| `nix/modules/macos-system.nix` | nix-darwin system config (Homebrew cask for Docker Desktop) |
+| `nix/modules/linux.nix` | Native Linux specifics |
+| `nix/modules/wsl.nix` | WSL specifics |
+
+### Windows
+
+| File | Purpose |
+|---|---|
+| `windows/winget.json` | Declarative Windows app list — import with `winget import` |
+| `windows/README.md` | Full Windows bootstrap steps (winutil, winget, WSL, Nix) |
+
+### Non-managed directories
 
 | Directory | Purpose |
 |---|---|
@@ -28,7 +48,7 @@ Only files explicitly placed in these packages are tracked. Everything else is u
 
 ### zsh
 
-`.zshrc` sets `$DOTFILES` and sources everything it needs directly via that variable. The `home/` package stows the shell entry points; the rest of the zsh config is referenced via `$DOTFILES`.
+`.zshrc` sets `$DOTFILES` and sources everything it needs directly via that variable. The `home/` package provides the shell entry points; the rest of the zsh config is referenced via `$DOTFILES`.
 
 ## Key tooling
 
@@ -39,13 +59,17 @@ See `.claude/docs/adr/` for full rationale.
 - **Multiplexer:** tmux
 - **Prompt:** Starship
 - **Plugin manager:** Sheldon (updates via `sheldon lock --update`)
-- **Symlinks:** GNU stow (four-package pattern — see ADR 0001)
+- **Package manager:** Nix + Home Manager (see ADR 0009)
 - **Python:** uv
 - **Node/JS:** Bun
 
+## Adding tools
+
+Edit `nix/modules/common.nix` (or the appropriate platform module) and run `make switch`. Never install tools manually with `brew install`, `apt install`, or similar.
+
 ## SSH
 
-`home/.ssh/config` is the only SSH file committed. Stow symlinks it to `~/.ssh/config`. Private keys are never committed — restore from Bitwarden on a new machine:
+`home/.ssh/config` is the only SSH file committed. Home Manager links it to `~/.ssh/config`. Private keys are never committed — restore from Bitwarden on a new machine:
 
 1. Bitwarden → SSH key "personal" → `cat > ~/.ssh/personal` → paste → Ctrl+D
 2. Bitwarden → SSH key "private" → `cat > ~/.ssh/private` → paste → Ctrl+D
@@ -57,33 +81,29 @@ See `.claude/docs/adr/` for full rationale.
 
 ## New machine setup
 
-### Windows/WSL
+See `.github/wiki/Setup.md` for full per-platform bootstrap steps.
 
-1. Run `todo/wsl/wsl-enable.ps1` in PowerShell as Administrator
-2. Install Ubuntu from Microsoft Store, complete initial user setup
-
-### Linux/WSL/macOS
-
-1. Install prereqs: `sudo apt install git stow` (or brew equivalent)
-2. Clone: `git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles`
-3. Stow: `make stow` (symlinks all four packages; sudo prompt expected for etc/)
-4. Restore SSH keys from Bitwarden (see SSH section above)
-5. Decrypt private git config: see `config/git/README.md`
-6. Install tools: starship, sheldon, tmux, ghostty, uv, bun
-7. Install pre-commit hooks: `make hooks`
-
-### Verify
+Quick reference:
 
 ```bash
-git whoami              # Jordan Hoare <jordanhoare0@gmail.com>
-ssh -T git@personal     # authenticates as jordanhoare
-ssh -T git@private      # authenticates as private account
+# macOS
+make switch-macos
+
+# Linux
+make switch-linux
+
+# WSL
+make switch-wsl
+
+# Verify
+make verify
 ```
 
 ## What NOT to do
 
 - Never commit `config/git/private` — gitignored plaintext secrets
-- Never hardcode the private GitHub username in any public file — lives only in `config/git/private` (gitignored, symlinked to `~/.config/git/private` via stow)
+- Never hardcode the private GitHub username in any public file — lives only in `config/git/private` (gitignored, linked to `~/.config/git/private` via Home Manager)
+- Never run `brew install` directly — Homebrew is managed by nix-darwin; declare casks in `nix/modules/macos-system.nix`
 - Never add `eval "$(mise activate zsh)"` — mise was removed (see ADR 0004)
 - Never use `/mnt/d` paths in shared zsh config — WSL-only
 
