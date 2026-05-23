@@ -3,7 +3,7 @@ name: sync wiki
 on:
   push:
     branches: [main]
-    paths: [docs/wiki/**, .github/workflows/wiki.yml]
+    paths: [.github/wiki/**, .github/workflows/wiki.yml]
 
 permissions:
   contents: write
@@ -17,4 +17,4 @@ jobs:
       - uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
           token: ${{ secrets.WIKI_TOKEN }}
-          path: docs/wiki
+          path: .github/wiki
