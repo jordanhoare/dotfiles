@@ -1,47 +1,19 @@
-# dotfiles
+<h1 align="center">dotfiles</h1>
 
-Personal dotfiles for WSL, Linux, and macOS. Managed with [GNU Stow](https://www.gnu.org/software/stow/).
+<div align="center">
 
-## Tooling
+Personal dotfiles for WSL, Linux, and macOS - managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
-| Tool | Purpose |
-|---|---|
-| zsh | Shell |
-| Ghostty | Terminal |
-| tmux | Multiplexer |
-| Starship | Prompt |
-| Sheldon | Plugin manager |
-| GNU Stow | Symlink management |
-| uv | Python |
-| nvm | Node |
+<p></p>
 
-## Key features
+![zsh](https://img.shields.io/badge/zsh-89DCEB?style=for-the-badge&logo=gnubash&logoColor=black)
+![Ghostty](https://img.shields.io/badge/ghostty-purple?style=for-the-badge&logoColor=white)
+![Starship](https://img.shields.io/badge/starship-DD0B78?style=for-the-badge&logo=starship&logoColor=white)
+![tmux](https://img.shields.io/badge/tmux-1BB91F?style=for-the-badge&logo=tmux&logoColor=white)
+![GNU Stow](https://img.shields.io/badge/stow-4A90D9?style=for-the-badge&logo=gnu&logoColor=white)
 
-- **Dual git identity** - `git personal` / `git private` switches identity and gh auth
-- **SOPS encryption** - private git config encrypted at rest, decrypted via SSH key
-- **Platform-aware shell** - WSL, Linux, and macOS each source platform-specific config
+<p></p>
 
-## Setup
+Full setup instructions in the [wiki](https://github.com/jordanhoare/dotfiles/wiki).
 
-#### Clone
-
-```bash
-git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles
-```
-
-#### Stow
-
-```bash
-stow -d ~/repositories/dotfiles -t ~ home
-stow -d ~/repositories/dotfiles -t ~/.config config
-```
-
-## Platforms
-
-| Platform | Notes |
-|---|---|
-| WSL | Primary — dotfiles live on Windows FS at `/mnt/d/repositories/` |
-| Linux | Clone to `~/repositories/dotfiles`, same stow commands |
-| macOS | Clone to `~/repositories/dotfiles`, use `brew` for prereqs |
-
-See `.claude/CLAUDE.md` for full bootstrap and key restore instructions.
+</div>
