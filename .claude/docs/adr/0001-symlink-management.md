@@ -1,4 +1,4 @@
-# ADR 0001 — Symlink management via stow
+# ADR 0001 — Symlink management via stow [SUPERSEDED by ADR 0009]
 
 ## Context
 

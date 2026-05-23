@@ -1,4 +1,4 @@
-# ADR 0006 — Bootstrap architecture
+# ADR 0006 — Bootstrap architecture [SUPERSEDED by ADR 0009]
 
 ## Context
 
