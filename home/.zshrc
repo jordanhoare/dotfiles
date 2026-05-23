@@ -1,6 +1,7 @@
 autoload -Uz compinit && compinit
 eval "$(starship init zsh)"
 eval "$(sheldon source)"
+eval "$(mise activate zsh)"
 
 _update_git_identity() {
   export STARSHIP_GIT_USER=$(git config user.name 2>/dev/null)
@@ -24,7 +25,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias vdot='cd $DOTFILES && code .'
-alias vsb='cd $SECONDBRAIN && code .'
+alias vsb='cd $GARDEN && code .'
 alias c='clear'
 alias reload='source ~/.zshrc'
 

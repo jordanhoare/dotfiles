@@ -16,19 +16,14 @@ if command -v sheldon &>/dev/null; then
   sheldon lock --update
 fi
 
+if command -v mise &>/dev/null; then
+  echo "==> mise"
+  mise upgrade
+fi
+
 if command -v uv &>/dev/null; then
   echo "==> uv tools"
   uv tool upgrade --all
-fi
-
-if command -v bun &>/dev/null; then
-  echo "==> bun"
-  if ! bun upgrade; then
-    curl -fsSL https://bun.sh/install | bash
-    # the installer appends a completions block to ~/.zshrc — strip it since
-    # we already source completions portably via $BUN_INSTALL in .zshrc
-    sed -i '' '/# bun completions/,/source.*_bun/d' ~/.zshrc
-  fi
 fi
 
 echo "==> done"
