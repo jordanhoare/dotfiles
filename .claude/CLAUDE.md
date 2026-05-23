@@ -11,7 +11,7 @@
 Two profiles — never expose the private profile in public files:
 
 - **personal:** `jordanhoare` — default
-- **private:** anon identity — stored encrypted, decrypted to `~/.gitconfig-private`
+- **private:** anon identity — stored encrypted at `config/git/private.enc`, decrypts to `config/git/private` (gitignored, symlinked to `~/.config/git/private` via stow)
 
 Switching:
 - `git personal` — switch to jordanhoare + gh auth switch
@@ -98,6 +98,6 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`
 
 ## What NOT to do
 
-- Never use `/mnt/d` paths in shared zsh config — WSL-only, belongs in `platform/wsl.zsh`
-- Never commit private keys, plaintext secrets, or private gitconfig
+- Never use `/mnt/d` paths in shared zsh config — WSL-only
+- Never commit private keys, plaintext secrets, or `config/git/private`
 - Never hardcode the private GitHub username anywhere in public files

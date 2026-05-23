@@ -31,7 +31,7 @@
 
 [alias]
   personal = "!git config user.name 'jordanhoare' && git config user.email 'jordanhoare0@gmail.com' && gh auth switch --user jordanhoare"
-  private = "!git config user.name \"$(git config --file ~/.gitconfig-private user.name)\" && git config user.email \"$(git config --file ~/.gitconfig-private user.email)\" && gh auth switch --user \"$(git config --file ~/.gitconfig-private github.user)\""
+  private = "!git config user.name \"$(git config --file ~/.config/git/private user.name)\" && git config user.email \"$(git config --file ~/.config/git/private user.email)\" && gh auth switch --user \"$(git config --file ~/.config/git/private github.user)\""
   whoami = "!echo \"$(git config user.name) <$(git config user.email)>\""
 
 [safe]
@@ -68,4 +68,4 @@
 	helper =
 	helper = !/usr/bin/gh auth git-credential
 [includeIf "gitdir:/mnt/d/repositories/private/"]
-  path = ~/.gitconfig-private
+  path = ~/.config/git/private

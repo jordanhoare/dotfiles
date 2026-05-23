@@ -1,16 +1,6 @@
-# Directories that are not stow packages
-^bootstrap
+# Non-stow directories
 ^docs
-^brew
-^wsl
-^vscode
-^zebar
-^shell
-^wezterm
-
-# SSH secrets — config only, never keys
-known_hosts
-known_hosts\.old
+^todo
 
 # Repo files
 ^\.git

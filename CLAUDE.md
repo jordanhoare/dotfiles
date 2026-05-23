@@ -1,145 +1,86 @@
 # Dotfiles — Claude Code Context
 
 ## What this repo is
-Personal dotfiles for Jordan Hoare. Managed via GNU stow — editing any file in this repo is immediately live via symlink. Targets three platforms: WSL (primary), native Linux (VMs), macOS.
+Personal dotfiles for Jordan Hoare. Managed via GNU stow — editing any tracked file is immediately live via symlink. Targets three platforms: WSL (primary), native Linux (VMs), macOS.
 
 ## Repository structure
 
 ### Stow packages
-Each of these top-level directories is a stow package. Running `stow <package>` symlinks its contents into `$HOME`.
+Two packages, each targeting a different directory. See `docs/internal/runbooks/stow.md` for commands.
 
-| Package | Symlinks to |
-|---|---|
-| `zsh/` | `~/.zshrc`, sources `zsh/conf.d/` and `zsh/platform/` directly |
-| `gitconfig/` | `~/.gitconfig` |
-| `tmux/` | `~/.tmux.conf` |
-| `starship/` | `~/.config/starship.toml` |
-| `sheldon/` | `~/.config/sheldon/plugins.toml` |
-| `ghostty/` | `~/.config/ghostty/config` |
-| `ssh/` | `~/.ssh/config` |
+| Package | Stow target | Contents |
+|---|---|---|
+| `home/` | `~` | `.zshrc`, `.zlogin`, `.zprofile`, `.ssh/config` |
+| `config/` | `~/.config` | `git/` — add new app dirs here as needed |
+
+Only files explicitly placed in these packages are tracked. Everything else in `~` or `~/.config/` is untouched by stow.
 
 ### Non-stow directories
-These are NOT stow packages. Listed in `.stow-local-ignore`.
 
 | Directory | Purpose |
 |---|---|
-| `bootstrap/` | Staged idempotent install scripts |
-| `docs/` | Documentation and ADRs |
-| `brew/` | macOS Brewfile |
-| `wsl/` | WSL-specific configs copied by bootstrap (not stowed — target is `/etc/` and Windows paths) |
-| `vscode/` | VSCode settings copied by bootstrap (Windows AppData path, not stowable from WSL) |
+| `docs/` | ADRs, glossary, runbooks |
+| `todo/` | Configs requiring manual placement — Windows apps, WSL `/etc/` targets, platform-specific |
 
-### zsh structure
-```
-zsh/
-  .zshrc          # loader only — detects platform, sources conf.d/ and platform/
-  conf.d/         # loaded on all platforms, alphabetical order
-    env.zsh       # LANG, EDITOR, BROWSER, core exports
-    path.zsh      # all PATH manipulation
-    aliases.zsh   # git and user aliases
-    plugins.zsh   # sheldon init
-    prompt.zsh    # starship init
-    tools.zsh     # nvm, uv
-    git.zsh       # git identity rprompt / prompt hook
-  platform/       # one file sourced based on detected platform
-    wsl.zsh       # WSL-specific: MSBuild, VSCode shim, /mnt paths
-    linux.zsh     # native Linux specifics
-    macos.zsh     # brew, mac-specific paths
-```
+### zsh
+`.zshrc` sets `$DOTFILES` and sources everything it needs directly via that variable. The `home/` package stows the shell entry points; the rest of the zsh config is referenced via `$DOTFILES`.
 
-## Key tooling decisions
-See `docs/internal/adr/` for full rationale. Summary:
+## Key tooling
+See `docs/internal/adr/` for full rationale.
 
+- **Shell:** zsh
 - **Terminal:** Ghostty
 - **Multiplexer:** tmux
-- **Shell:** zsh
+- **Prompt:** Starship
 - **Plugin manager:** Sheldon (updates via `sheldon lock --update`)
-- **Prompt:** Starship (`starship.toml`)
-- **Symlinks:** GNU stow
-- **Version management:** nvm (Node), uv (Python — versions, packages, and virtualenvs)
-- **Bootstrap:** Staged bash scripts in `bootstrap/stages/` — idempotent, re-runnable
-
-## Bootstrap
-Entry point: `curl -sSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/bootstrap/install.sh | bash`
-
-Stages run in order, each idempotent:
-- `00-prereqs.sh` — package manager, git, curl, stow, zsh
-- `01-clone.sh` — clone to `~/repositories/dotfiles`
-- `02-stow.sh` — symlink all stow packages
-- `03-tools.sh` — starship, sheldon, tmux, ghostty
-- `04-secrets.sh` — prompt to restore SSH keys from Bitwarden, set permissions, then sops decrypt
-- `05-ecosystem.sh` — nvm, uv
-
-Windows/WSL pre-step: run `bootstrap/windows/wsl-enable.ps1` in PowerShell as Administrator before anything else.
-
-## Platform detection
-`.zshrc` uses `$WSL_DISTRO_NAME` (not `/mnt/d` existence) to detect WSL. Never hardcode drive paths in shared config — put them in `zsh/platform/wsl.zsh`.
+- **Symlinks:** GNU stow (two-package pattern — see ADR 0001)
+- **Python:** uv
+- **Node:** nvm
 
 ## SSH
-`ssh/.ssh/config` is the only file committed in the `ssh/` stow package. Stow symlinks it to `~/.ssh/config` — host aliases stay consistent across all machines automatically.
+`home/.ssh/config` is the only SSH file committed. Stow symlinks it to `~/.ssh/config`. Private keys are never committed — restore from Bitwarden on a new machine:
 
-Private keys are **never committed**. Restore flow on a new machine (handled by `04-secrets.sh`):
-1. Open Bitwarden → SSH key item "personal" → copy private key
-2. `cat > ~/.ssh/personal` → paste → Ctrl+D
-3. Open Bitwarden → SSH key item "private" → copy private key
-4. `cat > ~/.ssh/private` → paste → Ctrl+D
-5. `chmod 600 ~/.ssh/personal ~/.ssh/private`
+1. Bitwarden → SSH key "personal" → `cat > ~/.ssh/personal` → paste → Ctrl+D
+2. Bitwarden → SSH key "private" → `cat > ~/.ssh/private` → paste → Ctrl+D
+3. `chmod 600 ~/.ssh/personal ~/.ssh/private`
 
 ## SOPS
-- Encrypted with `~/.ssh/personal` public key
-- Decrypt: `sops-personal --decrypt --input-type ini --output-type ini gitconfig/private.gitconfig.enc > ~/.gitconfig-private`
-- `sops-personal` alias defined in `zsh/conf.d/aliases.zsh`
-- Re-encrypt after editing `private.gitconfig`:
-  ```bash
-  SOPS_CONFIG=/dev/null sops --encrypt --input-type ini --output-type ini \
-    --age "$(cat ~/.ssh/personal.pub)" \
-    ~/repositories/dotfiles/gitconfig/private.gitconfig \
-    > ~/repositories/dotfiles/gitconfig/private.gitconfig.enc
-  ```
+`config/git/private.enc` is encrypted for `~/.ssh/private` — decrypted automatically by bootstrap. See `docs/internal/runbooks/sops.md` for manual decrypt, re-encrypt, and debugging commands.
 
-## New machine setup — full sequence
+## New machine setup
 
 ### Windows/WSL
-1. Run `bootstrap/windows/wsl-enable.ps1` in PowerShell as Administrator
+1. Run `todo/wsl/wsl-enable.ps1` in PowerShell as Administrator
 2. Install Ubuntu from Microsoft Store, complete initial user setup
-3. Continue from step 2 of the Linux/WSL section below
 
 ### Linux/WSL/macOS
-1. Open Bitwarden — have it ready, you'll need it in step 5
-2. `curl -sSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/bootstrap/install.sh | bash`
-3. Bootstrap runs stages 00–03 automatically (prereqs, clone, stow, tools)
-4. Stage `04-secrets.sh` pauses and prompts:
-   - Restore SSH key "personal" from Bitwarden → `~/.ssh/personal`
-   - Restore SSH key "private" from Bitwarden → `~/.ssh/private`
-   - Script sets `chmod 600` and runs sops decrypt → `~/.gitconfig-private`
-5. Stage `05-ecosystem.sh` installs nvm and uv
-6. Restart shell — prompt, plugins, and git identity are live
+1. Install prereqs: `sudo apt install git stow` (or brew equivalent)
+2. Clone: `git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles`
+3. Stow: `stow -d ~/repositories/dotfiles -t ~ home && stow -d ~/repositories/dotfiles -t ~/.config config`
+4. Restore SSH keys from Bitwarden (see SSH section above)
+5. Decrypt private git config: see `docs/internal/runbooks/sops.md`
+6. Install tools: starship, sheldon, tmux, ghostty, nvm, uv
 
-### After setup — verify everything works
+### Verify
 ```bash
-git whoami                  # should show jordanhoare
-ssh -T git@personal         # should authenticate as jordanhoare
-ssh -T git@private          # should authenticate as private account
-cd ~/repositories/private   # git whoami should auto-switch to private identity
+git whoami              # Jordan Hoare <jordanhoare0@gmail.com>
+ssh -T git@personal     # authenticates as jordanhoare
+ssh -T git@private      # authenticates as private account
 ```
 
 ## What NOT to do
-- Never commit `gitconfig/private.gitconfig` — it is gitignored plaintext secrets
-- Never hardcode the private GitHub username anywhere in public files — it must only exist in `~/.gitconfig-private` (decrypted from the encrypted enc file)
+- Never commit `config/git/private` — gitignored plaintext secrets
+- Never hardcode the private GitHub username in any public file — lives only in `config/git/private` (gitignored, symlinked to `~/.config/git/private` via stow)
 - Never add `eval "$(mise activate zsh)"` — mise was removed (see ADR 0004)
-- Never use `/mnt/d` paths in shared zsh config — WSL-only, belongs in `platform/wsl.zsh`
-- Never run `git use-main` or `git use-poe` at shell startup — identity is set by `includeIf`
+- Never use `/mnt/d` paths in shared zsh config — WSL-only
 
 ## Agent skills
 
 ### Issue tracker
-
 Issues live in GitHub Issues (`jordanhoare/dotfiles`). See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
-
 Default canonical label strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
 
 ### Domain docs
-
 Single-context — `docs/internal/context.md` + `docs/internal/glossary.md` + `docs/internal/adr/`. See `docs/agents/domain.md`.
