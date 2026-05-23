@@ -1,0 +1,41 @@
+default: true
+
+# Line length - not enforced, prose wraps naturally
+MD013: false
+
+# First line heading - ADRs and skill files use titles freely
+MD041: false
+
+# Inline HTML - used in tables and README
+MD033: false
+
+# Bare URLs - acceptable in reference sections
+MD034: false
+
+# Duplicate headings - ADRs repeat section names across files
+MD024: false
+
+# Trailing punctuation in headings - "Why?" is intentional in ADRs
+MD026: false
+
+# Multiple H1s - some docs have title + body H1
+MD025: false
+
+# Unlabelled fenced code blocks - shell snippets often left untagged
+MD040: false
+
+# Heading style - don't auto-convert setext to atx
+MD003: false
+
+# Heading increment - skip levels used in informal docs
+MD001: false
+
+# Emphasis used as section label - bold headings common in skill files
+MD036: false
+
+# Table formatting - informal tables in wiki docs
+MD055: false
+MD056: false
+
+# Ordered list prefix - style doesn't matter
+MD029: false
