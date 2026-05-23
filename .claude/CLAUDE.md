@@ -6,14 +6,16 @@ Personal dotfiles for Jordan Hoare. Managed via GNU stow — editing any tracked
 ## Repository structure
 
 ### Stow packages
-Two packages, each targeting a different directory.
+Four packages, each targeting a different directory.
 
-| Package | Stow target | Contents |
-|---|---|---|
-| `home/` | `~` | `.zshrc`, `.zlogin`, `.zprofile`, `.ssh/config` |
-| `config/` | `~/.config` | `git/` — add new app dirs here as needed |
+| Package | Stow target | Stow command | Contents |
+|---|---|---|---|
+| `home/` | `~` | `stow -t ~ home` | `.zshrc`, `.zlogin`, `.zprofile`, `.zshenv`, `.ssh/config` |
+| `config/` | `~/.config` | `stow -t ~/.config config` | `git/`, `ghostty/`, `uv/`, `sheldon/`, etc. |
+| `bin/` | `~/bin` | `stow -t ~/bin bin` | Personal executable scripts |
+| `etc/` | `/etc` | `sudo stow -t /etc etc` | `timezone`, `locale.conf` - Linux/WSL only |
 
-Only files explicitly placed in these packages are tracked. Everything else in `~` or `~/.config/` is untouched by stow.
+Only files explicitly placed in these packages are tracked. Everything else is untouched by stow.
 
 ### Non-stow directories
 
@@ -35,7 +37,7 @@ See `.claude/docs/adr/` for full rationale.
 - **Plugin manager:** Sheldon (updates via `sheldon lock --update`)
 - **Symlinks:** GNU stow (two-package pattern — see ADR 0001)
 - **Python:** uv
-- **Node:** nvm
+- **Node/JS:** Bun
 
 ## SSH
 `home/.ssh/config` is the only SSH file committed. Stow symlinks it to `~/.ssh/config`. Private keys are never committed — restore from Bitwarden on a new machine:
@@ -56,7 +58,7 @@ See `.claude/docs/adr/` for full rationale.
 ### Linux/WSL/macOS
 1. Install prereqs: `sudo apt install git stow` (or brew equivalent)
 2. Clone: `git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles`
-3. Stow: `stow -d ~/repositories/dotfiles -t ~ home && stow -d ~/repositories/dotfiles -t ~/.config config`
+3. Stow: `stow -d ~/repositories/dotfiles -t ~ home && stow -d ~/repositories/dotfiles -t ~/.config config && stow -d ~/repositories/dotfiles -t ~/bin bin && sudo stow -d ~/repositories/dotfiles -t /etc etc`
 4. Restore SSH keys from Bitwarden (see SSH section above)
 5. Decrypt private git config: see `config/git/README.md`
 6. Install tools: starship, sheldon, tmux, ghostty, nvm, uv
