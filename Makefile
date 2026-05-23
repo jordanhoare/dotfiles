@@ -6,7 +6,7 @@ ETC_TARGET := /etc
 
 .DEFAULT_GOAL := help
 
-.PHONY: help stow decrypt verify hooks
+.PHONY: help stow decrypt verify hooks brew
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -28,6 +28,9 @@ verify: ## verify key symlinks are in place
 	@test -L $(HOME)/.config/tmux      && echo "✓ tmux"         || echo "✗ tmux"
 	@test -L $(HOME)/.config/uv        && echo "✓ uv"           || echo "✗ uv"
 	@test -L $(HOME)/bin/up            && echo "✓ bin/up"       || echo "✗ bin/up"
+
+brew: ## install all brew packages, casks, and vscode extensions from Brewfile
+	brew bundle --file=$(HOME)/Brewfile
 
 hooks: ## install pre-commit hooks
 	pre-commit install
