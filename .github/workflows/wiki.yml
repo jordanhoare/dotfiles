@@ -3,7 +3,7 @@ name: sync wiki
 on:
   push:
     branches: [main]
-    paths: [docs/wiki/**]
+    paths: [docs/wiki/**, .github/workflows/wiki.yml]
 
 permissions:
   contents: write
