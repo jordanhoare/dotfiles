@@ -26,6 +26,21 @@ switch-linux: ## activate Linux Home Manager config
 switch-macos: ## activate macOS nix-darwin config (includes Home Manager)
 	darwin-rebuild switch --flake $(NIX_FLAKE)#jordan
 
+secrets: ## restore SSH keys from Bitwarden and decrypt git identity
+	@echo "==> logging in to Bitwarden"
+	@BW_SESSION=$$(bw login jordanhoare0@gmail.com --raw 2>/dev/null || bw unlock --raw); \
+	echo "==> restoring personal SSH key"; \
+	mkdir -p $(HOME)/.ssh; \
+	bw get item "personal SSH key" --session $$BW_SESSION | jq -r '.notes' > $(HOME)/.ssh/personal; \
+	echo "==> restoring private SSH key"; \
+	bw get item "private SSH key" --session $$BW_SESSION | jq -r '.notes' > $(HOME)/.ssh/private; \
+	chmod 600 $(HOME)/.ssh/personal $(HOME)/.ssh/private; \
+	echo "==> locking Bitwarden session"; \
+	bw lock
+	@echo "==> decrypting git identity"
+	$(MAKE) decrypt
+	@echo "==> run 'make switch' to link the decrypted identity"
+
 update: ## update flake.lock to latest nixpkgs
 	nix flake update --flake $(NIX_FLAKE)
 

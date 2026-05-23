@@ -1,4 +1,4 @@
-{ config, pkgs, dotfiles, ... }:
+{ config, pkgs, lib, dotfiles, ... }:
 
 {
   home.stateVersion = "24.11";
@@ -72,6 +72,11 @@
 
   # git
   home.file.".config/git/config".source = "${dotfiles}/config/git/config";
+
+  # private git identity - only linked after 'make secrets' has decrypted it
+  home.file.".config/git/private" = lib.mkIf
+    (builtins.pathExists "${dotfiles}/config/git/private")
+    { source = "${dotfiles}/config/git/private"; };
 
   # cloud CLIs
   home.file.".config/gh/config.yml".source = "${dotfiles}/config/gh/config.yml";

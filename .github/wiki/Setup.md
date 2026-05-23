@@ -2,6 +2,10 @@
 
 All platforms use Nix and Home Manager to provision tools and dotfiles. The Windows side uses winget for Windows-native apps, with Nix running inside WSL.
 
+Bootstrap requires two passes of `make switch` on a fresh machine - the first installs `bw` and `sops` via Nix, the second picks up the private git identity after secrets are restored.
+
+---
+
 ## macOS
 
 ### 1. Install Nix
@@ -13,29 +17,37 @@ Follow the macOS instructions at https://nixos.org/download/#nix-install-macos
 ```bash
 mkdir -p ~/repositories
 git clone https://github.com/jordanhoare/dotfiles.git ~/repositories/dotfiles
+cd ~/repositories/dotfiles
 ```
 
-### 3. Activate
+### 3. First switch
+
+Installs all tools (including `bw` and `sops`). Private git identity is skipped - it does not exist yet.
 
 ```bash
-cd ~/repositories/dotfiles
 make switch-macos
 ```
 
-This runs `darwin-rebuild switch`, which installs all tools via nixpkgs, links all dotfiles via Home Manager, and manages Docker Desktop via the nix-darwin Homebrew integration.
+### 4. Restore secrets
 
-### 4. Restore SSH keys
+Authenticates with Bitwarden, restores SSH keys, and decrypts the private git identity.
 
-See [Bitwarden SSH Key Restore](Bitwarden-SSH), then switch the remote to SSH:
+```bash
+make secrets
+```
+
+Switch the remote to SSH now that `~/.ssh/config` and the personal key are in place:
 
 ```bash
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
-### 5. Decrypt git identity
+### 5. Second switch
+
+Links the now-decrypted private git identity.
 
 ```bash
-make decrypt
+make switch-macos
 ```
 
 ### 6. Verify
@@ -44,6 +56,7 @@ make decrypt
 make verify
 git whoami              # Jordan Hoare <jordanhoare0@gmail.com>
 ssh -T git@personal     # authenticates as jordanhoare
+ssh -T git@private      # authenticates as private account
 ```
 
 ---
@@ -75,35 +88,41 @@ nix-shell '<home-manager>' -A install
 ```bash
 mkdir -p ~/repositories
 git clone https://github.com/jordanhoare/dotfiles.git ~/repositories/dotfiles
+cd ~/repositories/dotfiles
 ```
 
-### 5. Activate
+### 5. First switch
 
 ```bash
-cd ~/repositories/dotfiles
 make switch-linux
 ```
 
-### 6. Restore SSH keys and decrypt
-
-See [Bitwarden SSH Key Restore](Bitwarden-SSH), then:
+### 6. Restore secrets
 
 ```bash
-make decrypt
+make secrets
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
-### 7. Verify
+### 7. Second switch
+
+```bash
+make switch-linux
+```
+
+### 8. Verify
 
 ```bash
 make verify
+git whoami
+ssh -T git@personal
 ```
 
 ---
 
 ## Windows + WSL
 
-See [Windows bootstrap](windows/README.md) for the full Windows-side steps (winutil, winget, WSL install).
+See [windows/README.md](../windows/README.md) for the full Windows-side steps (winutil, winget, WSL install).
 
 Once inside the WSL shell:
 
@@ -126,30 +145,35 @@ nix-shell '<home-manager>' -A install
 ```bash
 mkdir -p ~/repositories
 git clone https://github.com/jordanhoare/dotfiles.git ~/repositories/dotfiles
+cd ~/repositories/dotfiles
 ```
 
-### 4. Activate
+### 4. First switch
 
 ```bash
-cd ~/repositories/dotfiles
 make switch-wsl
 ```
 
-### 5. Restore SSH keys and decrypt
-
-See [Bitwarden SSH Key Restore](Bitwarden-SSH), then:
+### 5. Restore secrets
 
 ```bash
-make decrypt
+make secrets
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
-### 6. Verify
+### 6. Second switch
+
+```bash
+make switch-wsl
+```
+
+### 7. Verify
 
 ```bash
 make verify
 git whoami              # Jordan Hoare <jordanhoare0@gmail.com>
 ssh -T git@personal     # authenticates as jordanhoare
+ssh -T git@private      # authenticates as private account
 ```
 
 ---
@@ -158,7 +182,7 @@ ssh -T git@personal     # authenticates as jordanhoare
 
 Edit the appropriate module in `nix/modules/` and run `make switch`. Never install tools manually with `brew install`, `apt install`, or similar - all tools go through Nix.
 
-To update all packages to the latest nixpkgs:
+To update all packages to latest nixpkgs:
 
 ```bash
 make update   # updates flake.lock
