@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-port="${1:-8000}"
-echo "Serving on http://localhost:$port"
-bun --eval "Bun.serve({ port: $port, fetch: (req) => new Response(Bun.file('.' + new URL(req.url).pathname)) })" 2>/dev/null \
-  || python3 -m http.server "$port"

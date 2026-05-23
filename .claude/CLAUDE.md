@@ -13,7 +13,7 @@ Four packages, each targeting a different directory.
 | Package | Stow target | Stow command | Contents |
 |---|---|---|---|
 | `home/` | `~` | `stow -t ~ home` | `.zshrc`, `.zlogin`, `.zprofile`, `.zshenv`, `.ssh/config` |
-| `config/` | `~/.config` | `stow -t ~/.config config` | `git/`, `ghostty/`, `uv/`, `sheldon/`, etc. |
+| `config/` | `~/.config` | `stow -t ~/.config config` | `git/`, `gh/`, `ghostty/`, `mise/`, `uv/`, `sheldon/`, etc. |
 | `bin/` | `~/bin` | `stow -t ~/bin bin` | Personal executable scripts |
 | `etc/` | `/etc` | `sudo stow -t /etc etc` | `timezone`, `locale.conf` - Linux/WSL only |
 
@@ -70,6 +70,7 @@ See `.claude/docs/adr/` for full rationale.
 4. Restore SSH keys from Bitwarden (see SSH section above)
 5. Decrypt private git config: see `config/git/README.md`
 6. Install tools: starship, sheldon, tmux, ghostty, uv, bun
+7. Install pre-commit hooks: `make hooks`
 
 ### Verify
 
@@ -86,8 +87,12 @@ ssh -T git@private      # authenticates as private account
 - Never add `eval "$(mise activate zsh)"` — mise was removed (see ADR 0004)
 - Never use `/mnt/d` paths in shared zsh config — WSL-only
 
-## Agent skills
+## Pre-commit
 
-### Domain docs
+Hooks are installed via `make hooks`. Run `pre-commit run --all-files` to check all files manually. Hooks enforce: trailing whitespace, EOF newlines, no private keys, YAML/TOML validity, markdownlint, and secret detection.
 
-Single-context — `.claude/docs/context.md` + `.claude/docs/glossary.md` + `.claude/docs/adr/`.
+## Agent context
+
+`.claude/docs/context.md` - domain overview and scope
+`.claude/docs/glossary.md` - canonical terms; use these, do not drift to synonyms
+`.claude/docs/adr/` - architectural decisions explaining why the tooling and layout are the way they are

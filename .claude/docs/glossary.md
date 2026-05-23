@@ -14,7 +14,11 @@ The canonical location of the dotfiles repository on any machine: `~/repositorie
 
 ## Package
 
-A top-level directory in the dotfiles repo that represents one stow unit. Each package has a designated stow target (`~` or `~/.config`). Only `home/` and `config/` are stow packages — everything else is either sourced directly via `$DOTFILES` or lives in `todo/`.
+A top-level directory in the dotfiles repo that represents one stow unit. Four packages: `home/` (target: `~`), `config/` (target: `~/.config`), `bin/` (target: `~/bin`), `etc/` (target: `/etc`, Linux/WSL only). Everything else is either sourced directly via `$DOTFILES`, lives in `.claude/`, or is a non-stow support directory.
+
+## Mise
+
+A per-project tool version manager (`mise-en-place`). Not used inside the dotfiles repo itself (see ADR 0004), but present in other repositories. Global mise config lives at `config/mise/config.toml` and is stowed to `~/.config/mise/config.toml`.
 
 ## Platform
 
