@@ -87,20 +87,9 @@ fix everything     # Too broad
 - Code breaking existing tests (except documented red phase)
 - Multiple unrelated changes together
 
-### Pre-Commit Verification
-
-Before each commit:
-```bash
-make prepare              # Format, lint, build docs
-uv run ty check src       # Type safety (if touching src)
-uv run pytest <area> -v   # Run affected tests
-```
-
-Pre-commit hooks will auto-enforce basic checks.
-
 ### Never Push
 
-Agents should commit locally but NEVER push to remote. The user controls when to push.
+Agents should commit locally but NEVER push to remote unless specifically request to by the user.
 
 ## Examples
 
@@ -155,4 +144,4 @@ Commit types affect version bumping:
 - `BREAKING CHANGE` → x.0.0 (major)
 - Other types → no version bump (but appear in changelog)
 
-The changelog is auto-generated from commit messages, so clarity matters for users reviewing release notes.
+Assume the changelog is auto-generated from commit messages via cicd, so clarity matters for users reviewing release notes.

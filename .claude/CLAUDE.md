@@ -41,6 +41,25 @@ Never hardcode the private GitHub username in any public file.
 - Check relevant `docs/internal/adr/` entries for the area being changed
 - Load appropriate skills from `.claude/skills/` for specialised workflows
 
+## Available skills
+
+Load a skill when the task matches its domain. Skills live in `.claude/skills/<name>/SKILL.md`.
+
+| Skill | When to load |
+|---|---|
+| `commits` | Any commit authoring — follow conventional commits format |
+| `tdd` | Writing or refactoring tests |
+| `architecture` | Architectural review or refactor proposals |
+| `issue` | Breaking work into GitHub/Gitlab issues |
+| `triage` | Triaging or labelling issues on the tracker |
+| `prd` | Writing a product requirements document |
+| `grill` | Deep codebase exploration with domain awareness |
+| `setup` | Scaffolding per-repo engineering config |
+| `uv` | Python dependency or virtualenv management |
+| `ruff` | Python linting or formatting |
+| `ty` | Python type checking |
+| `mkdocs` | Documentation site generation |
+
 ## Code style
 
 - No comments unless the WHY is non-obvious (hidden constraint, subtle invariant, workaround for a specific bug)
@@ -68,7 +87,7 @@ Never hardcode the private GitHub username in any public file.
 
 ## Commits
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/). Format: `<type>[scope]: <description>`.
+Load the `commits` skill (`.claude/skills/commits/SKILL.md`) before authoring commits. Follow [Conventional Commits](https://www.conventionalcommits.org/). Format: `<type>[scope]: <description>`.
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`. Breaking changes: append `!` or add `BREAKING CHANGE:` footer.
 
