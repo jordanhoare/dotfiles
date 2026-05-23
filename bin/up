@@ -22,7 +22,7 @@ if command -v mise &>/dev/null; then
 fi
 
 if command -v uv &>/dev/null; then
-  echo "==> uv tools"
+  echo "==> uv global tools"
   uv tool upgrade --all
 fi
 
