@@ -23,7 +23,7 @@ fi
 
 if command -v bun &>/dev/null; then
   echo "==> bun"
-  bun upgrade
+  bun upgrade || curl -fsSL https://bun.sh/install | bash
 fi
 
 echo "==> done"
