@@ -53,5 +53,5 @@ _Avoid_: Client, buyer, account
 ## Project convention
 
 This is a single-context repo. The glossary lives at `docs/internal/glossary.md`
-and the navigational hub for internal docs is `docs/internal/overview.md`. There
-is no root-level CONTEXT.md or nested CONTEXT.md (i.e. src/product/CONTEXT.md) — those patterns are not used here.
+and the prose domain framing plus navigation hub for agents is `docs/internal/context.md`.
+There is no root-level CONTEXT.md or nested CONTEXT.md.

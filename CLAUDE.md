@@ -59,27 +59,6 @@ See `docs/internal/adr/` for full rationale. Summary:
 - **Version management:** nvm (Node), uv (Python — versions, packages, and virtualenvs)
 - **Bootstrap:** Staged bash scripts in `bootstrap/stages/` — idempotent, re-runnable
 
-## Git identity / profiles
-Two profiles — never expose the private profile in public files:
-
-- **personal:** `jordanhoare` — default, set in `gitconfig/.gitconfig` `[user]`
-- **private:** anon identity — stored encrypted in `gitconfig/private.gitconfig.enc`, decrypted to `~/.gitconfig-private` by bootstrap stage `04-secrets.sh`
-
-Switching:
-- `git personal` — switch to jordanhoare + gh auth switch
-- `git private` — switch to anon profile (reads from `~/.gitconfig-private`)
-- Auto-switches in `~/repositories/private/` via `includeIf` in `.gitconfig`
-
-SSH:
-- `~/.ssh/personal` — jordanhoare key (Bitwarden: "personal"), Host alias `personal`
-- `~/.ssh/private` — anon key (Bitwarden: "private"), Host alias `private`
-- Clone syntax: `git clone git@personal:jordanhoare/repo.git` / `git clone git@private:<user>/repo.git`
-
-SOPS:
-- Encrypted with `~/.ssh/personal` public key
-- Decrypt: `sops-personal --decrypt --input-type ini --output-type ini gitconfig/private.gitconfig.enc > ~/.gitconfig-private`
-- `sops-personal` alias defined in `zsh/conf.d/aliases.zsh`
-
 ## Bootstrap
 Entry point: `curl -sSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/bootstrap/install.sh | bash`
 
@@ -99,16 +78,24 @@ Windows/WSL pre-step: run `bootstrap/windows/wsl-enable.ps1` in PowerShell as Ad
 ## SSH
 `ssh/.ssh/config` is the only file committed in the `ssh/` stow package. Stow symlinks it to `~/.ssh/config` — host aliases stay consistent across all machines automatically.
 
-Stow is safe here because it only processes files that exist in the package. Private keys are gitignored and never present in `ssh/.ssh/`, so stow never touches them.
-
-Everything else in `~/.ssh/` is ignored by `.gitignore` via `ssh/.ssh/*` with `!ssh/.ssh/config` as the only exception. Public keys are not committed — they live in Bitwarden alongside private keys.
-
 Private keys are **never committed**. Restore flow on a new machine (handled by `04-secrets.sh`):
 1. Open Bitwarden → SSH key item "personal" → copy private key
 2. `cat > ~/.ssh/personal` → paste → Ctrl+D
 3. Open Bitwarden → SSH key item "private" → copy private key
 4. `cat > ~/.ssh/private` → paste → Ctrl+D
 5. `chmod 600 ~/.ssh/personal ~/.ssh/private`
+
+## SOPS
+- Encrypted with `~/.ssh/personal` public key
+- Decrypt: `sops-personal --decrypt --input-type ini --output-type ini gitconfig/private.gitconfig.enc > ~/.gitconfig-private`
+- `sops-personal` alias defined in `zsh/conf.d/aliases.zsh`
+- Re-encrypt after editing `private.gitconfig`:
+  ```bash
+  SOPS_CONFIG=/dev/null sops --encrypt --input-type ini --output-type ini \
+    --age "$(cat ~/.ssh/personal.pub)" \
+    ~/repositories/dotfiles/gitconfig/private.gitconfig \
+    > ~/repositories/dotfiles/gitconfig/private.gitconfig.enc
+  ```
 
 ## New machine setup — full sequence
 
@@ -136,26 +123,23 @@ ssh -T git@private          # should authenticate as private account
 cd ~/repositories/private   # git whoami should auto-switch to private identity
 ```
 
-### Working with the private git profile day-to-day
-- Inside `~/repositories/private/` — identity switches automatically via `includeIf`
-- On other machines or non-standard paths — run `git private` to switch manually
-- To switch back — run `git personal`
-- To re-decrypt private gitconfig after a key rotation or new machine:
-  ```bash
-  sops-personal --decrypt --input-type ini --output-type ini \
-    ~/repositories/dotfiles/gitconfig/private.gitconfig.enc > ~/.gitconfig-private
-  ```
-- To re-encrypt after editing `private.gitconfig`:
-  ```bash
-  SOPS_CONFIG=/dev/null sops --encrypt --input-type ini --output-type ini \
-    --age "$(cat ~/.ssh/personal.pub)" \
-    ~/repositories/dotfiles/gitconfig/private.gitconfig \
-    > ~/repositories/dotfiles/gitconfig/private.gitconfig.enc
-  ```
-
 ## What NOT to do
 - Never commit `gitconfig/private.gitconfig` — it is gitignored plaintext secrets
 - Never hardcode the private GitHub username anywhere in public files — it must only exist in `~/.gitconfig-private` (decrypted from the encrypted enc file)
 - Never add `eval "$(mise activate zsh)"` — mise was removed (see ADR 0004)
 - Never use `/mnt/d` paths in shared zsh config — WSL-only, belongs in `platform/wsl.zsh`
 - Never run `git use-main` or `git use-poe` at shell startup — identity is set by `includeIf`
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (`jordanhoare/dotfiles`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default canonical label strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — `docs/internal/context.md` + `docs/internal/glossary.md` + `docs/internal/adr/`. See `docs/agents/domain.md`.

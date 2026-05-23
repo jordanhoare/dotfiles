@@ -6,7 +6,12 @@
       "Bash(gh repo view *)",
       "Bash(git status:*)",
       "Bash(git commit:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git filter-branch *)",
+      "Bash(git check-ignore *)",
+      "Bash(git whoami *)",
+      "Bash(git restore *)",
+      "Bash(git remote *)"
     ]
   }
 }

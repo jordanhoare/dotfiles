@@ -65,7 +65,7 @@ Once the user picks a candidate, drop into a grilling conversation. Walk the des
 
 Side effects happen inline as decisions crystallize:
 
-- **Naming a deepened module after a concept not in the glossary?** Update the term and supply content about it into `docs/internal/glossary.md` — follow the same discipline as [context.md](./context.md).
+- **Naming a deepened module after a concept not in the glossary?** Update the term and supply content about it into `docs/internal/glossary.md` — follow the same discipline as the rest of the glossary.
 - **Sharpening a fuzzy term during the conversation?** Update `docs/internal/glossary.md` right there.
 - **User rejects the candidate with a load-bearing reason?** Offer an ADR, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones
 - **Want to explore alternative interfaces for the deepened module?** See [interfaces.md](interfaces.md).
