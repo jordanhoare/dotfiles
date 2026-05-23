@@ -1,0 +1,20 @@
+k9s:
+  liveViewAutoRefresh: true
+  refreshRate: 2
+  maxConnRetry: 5
+  readOnly: false
+  noExitOnCtrlC: false
+  ui:
+    enableMouse: false
+    headless: false
+    logoless: false
+    crumbsless: false
+    reactive: false
+    noIcons: false
+  skipLatestRevCheck: false
+  shellPod:
+    image: busybox
+    namespace: default
+    limits:
+      cpu: 100m
+      memory: 100Mi

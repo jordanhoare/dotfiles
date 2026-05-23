@@ -18,7 +18,7 @@ home/.DS_Store
 # AWS
 home/.aws/credentials
 
-# gcloud - only properties is portable; everything else is auth/machine state
+# Gcloud - only properties is portable
 config/gcloud/*
 !config/gcloud/properties
 
@@ -28,6 +28,9 @@ home/.azure/msal_token_cache.json
 home/.azure/azureProfile.json
 home/.azure/clouds.config
 
-# gh / glab - hosts files contain auth tokens
+# Github / Gitlab - hosts files contain auth tokens
 config/gh/hosts.yml
 config/glab-cli/hosts.yml
+
+# Kubernetes - cluster credentials
+home/.kube/config
