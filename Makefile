@@ -1,76 +1,53 @@
 DOTFILES := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
 NIX_FLAKE := $(DOTFILES)/nix
 
+PLATFORM ?= $(shell \
+	if [ -n "$$WSL_DISTRO_NAME" ]; then echo "jordan@wsl"; \
+	elif [ "$$(uname)" = "Darwin" ]; then echo "jordan@macos"; \
+	else echo "jordan@linux"; fi)
+
+NIX_RUN = $(if $(filter jordan@macos,$(PLATFORM)),nix run nix-darwin --,nix run home-manager/master --)
+
 .DEFAULT_GOAL := help
 
-.PHONY: help switch switch-linux switch-wsl switch-macos secrets verify hooks decrypt update
+.PHONY: help switch secrets verify hooks decrypt
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-switch: ## activate Home Manager config for the detected platform
-	@if [[ -n "$$WSL_DISTRO_NAME" ]]; then \
-		$(MAKE) switch-wsl; \
-	elif [[ "$$(uname)" == "Darwin" ]]; then \
-		$(MAKE) switch-macos; \
-	else \
-		$(MAKE) switch-linux; \
-	fi
+switch: ## activate nix profile for the detected platform
+	$(NIX_RUN) switch --flake $(NIX_FLAKE)#$(PLATFORM)
 
-switch-wsl: ## activate WSL Home Manager config
-	home-manager switch --flake $(NIX_FLAKE)#jordan@wsl
+secrets: ## restore SSH keys from bitwarden and decrypt sops
+	$(DOTFILES)/bin/secrets
 
-switch-linux: ## activate Linux Home Manager config
-	home-manager switch --flake $(NIX_FLAKE)#jordan@linux
+decrypt: ## unpack any encrypted sops secrets into local repo
+	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc
 
-switch-macos: ## activate macOS nix-darwin config (includes Home Manager)
-	darwin-rebuild switch --flake $(NIX_FLAKE)#jordan
-
-secrets: ## restore SSH keys from Bitwarden and decrypt git identity (run once after first switch)
-	@echo "==> logging in to Bitwarden"
-	@bw login; \
-	export BW_SESSION=$$(bw unlock --raw); \
-	mkdir -p $(HOME)/.ssh; \
-	echo "==> restoring personal SSH key"; \
-	ID=$$(bw list items --search "personal" --session $$BW_SESSION | jq -r '.[] | select(.type == 5) | .id'); \
-	bw get item "$$ID" --session $$BW_SESSION | jq -r '.sshKey.privateKey' > $(HOME)/.ssh/personal; \
-	echo "==> restoring private SSH key"; \
-	ID=$$(bw list items --search "private" --session $$BW_SESSION | jq -r '.[] | select(.type == 5) | .id'); \
-	bw get item "$$ID" --session $$BW_SESSION | jq -r '.sshKey.privateKey' > $(HOME)/.ssh/private; \
-	chmod 600 $(HOME)/.ssh/personal $(HOME)/.ssh/private; \
-	echo "==> locking Bitwarden session"; \
-	bw lock
-	@echo "==> decrypting git identity"
-	$(MAKE) decrypt
-	@echo "==> run 'make switch' to link the decrypted identity"
-
-update: ## update flake.lock to latest nixpkgs
-	nix flake update --flake $(NIX_FLAKE)
-
-verify: ## verify key symlinks and tools
+verify: ## verify key symlinks, tools, and git identity
 	@echo "==> symlinks"
-	@test -L $(HOME)/.zshrc            && echo "  ✓ .zshrc"       || echo "  ✗ .zshrc"
-	@test -L $(HOME)/.zshenv           && echo "  ✓ .zshenv"      || echo "  ✗ .zshenv"
-	@test -L $(HOME)/.zprofile         && echo "  ✓ .zprofile"    || echo "  ✗ .zprofile"
-	@test -L $(HOME)/.ssh/config       && echo "  ✓ .ssh/config"  || echo "  ✗ .ssh/config"
+	@test -L $(HOME)/.zshrc             && echo "  ✓ .zshrc"       || echo "  ✗ .zshrc"
+	@test -L $(HOME)/.zshenv            && echo "  ✓ .zshenv"      || echo "  ✗ .zshenv"
+	@test -L $(HOME)/.zprofile          && echo "  ✓ .zprofile"    || echo "  ✗ .zprofile"
+	@test -L $(HOME)/.ssh/config        && echo "  ✓ .ssh/config"  || echo "  ✗ .ssh/config"
 	@test -L $(HOME)/.config/git/config && echo "  ✓ .config/git"  || echo "  ✗ .config/git"
 	@test -L $(HOME)/.config/starship/starship.toml && echo "  ✓ starship" || echo "  ✗ starship"
 	@test -L $(HOME)/.config/tmux/tmux.conf && echo "  ✓ tmux"    || echo "  ✗ tmux"
-	@test -L $(HOME)/.config/uv/uv.toml && echo "  ✓ uv"         || echo "  ✗ uv"
-	@test -L $(HOME)/.config/nvim      && echo "  ✓ nvim"         || echo "  ✗ nvim"
-	@test -L $(HOME)/bin/up            && echo "  ✓ bin/up"       || echo "  ✗ bin/up"
+	@test -L $(HOME)/.config/uv/uv.toml && echo "  ✓ uv"          || echo "  ✗ uv"
+	@test -L $(HOME)/.config/nvim       && echo "  ✓ nvim"         || echo "  ✗ nvim"
+	@test -L $(HOME)/bin/up             && echo "  ✓ bin/up"       || echo "  ✗ bin/up"
 	@echo "==> tools"
 	@command -v nix          >/dev/null && echo "  ✓ nix"          || echo "  ✗ nix"
-	@command -v home-manager >/dev/null && echo "  ✓ home-manager" || echo "  ✗ home-manager"
 	@command -v mise         >/dev/null && echo "  ✓ mise"         || echo "  ✗ mise"
 	@command -v uv           >/dev/null && echo "  ✓ uv"           || echo "  ✗ uv"
 	@command -v gh           >/dev/null && echo "  ✓ gh"           || echo "  ✗ gh"
 	@command -v kubectl      >/dev/null && echo "  ✓ kubectl"      || echo "  ✗ kubectl"
 	@command -v nvim         >/dev/null && echo "  ✓ nvim"         || echo "  ✗ nvim"
+	@echo "==> identity"
+	@git whoami 2>/dev/null             && echo "  ✓ git identity" || echo "  ✗ git identity (run make secrets)"
+	@ssh -T git@personal 2>&1 | grep -q "jordanhoare" && echo "  ✓ ssh personal" || echo "  ✗ ssh personal"
+	@ssh -T git@private  2>&1 | grep -q "Hi "         && echo "  ✓ ssh private"  || echo "  ✗ ssh private"
 
 hooks: ## install pre-commit hooks
 	pre-commit install
 	pre-commit install --hook-type commit-msg
-
-decrypt: ## decrypt SOPS-encrypted files
-	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc

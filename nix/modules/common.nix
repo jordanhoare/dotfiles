@@ -106,6 +106,7 @@
 
   # bin
   home.file."bin/mkcd".source = "${dotfiles}/bin/mkcd";
+  home.file."bin/secrets".source = "${dotfiles}/bin/secrets";
   home.file."bin/sync".source = "${dotfiles}/bin/sync";
   home.file."bin/up".source = "${dotfiles}/bin/up";
 

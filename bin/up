@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if command -v brew &>/dev/null; then
-  echo "==> brew"
-  brew update && brew upgrade && brew cleanup
-fi
+DOTFILES="$(cd "$(dirname "$0")/.." && pwd)"
 
-if command -v apt-get &>/dev/null; then
-  echo "==> apt"
-  sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
-fi
+echo "==> nix"
+nix flake update --flake "$DOTFILES/nix"
+make -C "$DOTFILES" switch
 
 if command -v sheldon &>/dev/null; then
   echo "==> sheldon"

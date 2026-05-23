@@ -26,8 +26,8 @@
       };
     in
     {
-      # macOS — activate with: darwin-rebuild switch --flake ~/repositories/dotfiles/nix#jordan
-      darwinConfigurations."jordan" = nix-darwin.lib.darwinSystem {
+      # macOS — activate with: make switch
+      darwinConfigurations."jordan@macos" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           ./modules/macos-system.nix
@@ -43,13 +43,13 @@
         ];
       };
 
-      # Linux — activate with: home-manager switch --flake ~/repositories/dotfiles/nix#jordan@linux
+      # Linux — activate with: make switch
       homeConfigurations."jordan@linux" = mkHome {
         system = "x86_64-linux";
         modules = [ ./modules/linux-base.nix ./modules/linux.nix ];
       };
 
-      # WSL — activate with: home-manager switch --flake ~/repositories/dotfiles/nix#jordan@wsl
+      # WSL — activate with: make switch
       homeConfigurations."jordan@wsl" = mkHome {
         system = "x86_64-linux";
         modules = [ ./modules/linux-base.nix ./modules/wsl.nix ];
