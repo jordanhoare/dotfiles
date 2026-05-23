@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v brew &>/dev/null; then
+  echo "==> brew"
+  brew update && brew upgrade && brew cleanup
+fi
+
+if command -v apt-get &>/dev/null; then
+  echo "==> apt"
+  sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
+fi
+
+if command -v sheldon &>/dev/null; then
+  echo "==> sheldon"
+  sheldon lock --update
+fi
+
+if command -v uv &>/dev/null; then
+  echo "==> uv tools"
+  uv tool upgrade --all
+fi
+
+if command -v bun &>/dev/null; then
+  echo "==> bun"
+  bun upgrade
+fi
+
+echo "==> done"
