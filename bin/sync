@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SECOND_BRAIN="${SECONDBRAIN:-$HOME/repositories/second-brain}"
+GARDEN="${SECONDBRAIN:-$HOME/repositories/garden}"
 
-if [[ ! -d "$SECOND_BRAIN" ]]; then
-  echo "error: second-brain not found at $SECOND_BRAIN" >&2
+if [[ ! -d "$GARDEN" ]]; then
+  echo "error: garden not found at $GARDEN" >&2
   exit 1
 fi
 
-cd "$SECOND_BRAIN"
+cd "$GARDEN"
 mise run sync
