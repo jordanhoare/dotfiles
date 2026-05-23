@@ -37,20 +37,21 @@ stow -d ~/repositories/dotfiles -t ~ home
 stow -d ~/repositories/dotfiles -t ~/.config config
 ```
 
-> See `.claude/CLAUDE.md` for full bootstrap, SSH key restore, and SOPS decrypt instructions.
+> See `docs/` for full bootstrap, SSH key restore, and SOPS decrypt instructions.
 
 ## Tooling
 
-| Tool | Purpose |
-|---|---|
-| [zsh](https://www.zsh.org/) | Shell |
-| [Ghostty](https://ghostty.org/) | Terminal |
-| [tmux](https://github.com/tmux/tmux) | Multiplexer |
-| [Starship](https://starship.rs/) | Prompt |
-| [Sheldon](https://sheldon.cli.rs/) | Plugin manager |
-| [GNU Stow](https://www.gnu.org/software/stow/) | Symlink management |
-| [uv](https://github.com/astral-sh/uv) | Python |
-| [nvm](https://github.com/nvm-sh/nvm) | Node |
+| Category | Tool | Notes |
+|---|---|---|
+| Shell | [zsh](https://www.zsh.org/) | Platform-aware config for WSL, Linux, macOS |
+| Terminal | [Ghostty](https://ghostty.org/) | Primary terminal |
+| Multiplexer | [tmux](https://github.com/tmux/tmux) | Session and pane management |
+| Prompt | [Starship](https://starship.rs/) | Git identity, cloud context, language versions |
+| Plugins | [Sheldon](https://sheldon.cli.rs/) | zsh-syntax-highlighting, zsh-autosuggestions |
+| Symlinks | [GNU Stow](https://www.gnu.org/software/stow/) | Two-package pattern: `home/` and `config/` |
+| Notes | [Obsidian](https://obsidian.md/) | Second brain |
+| Python | [uv](https://github.com/astral-sh/uv) | Versions, packages, virtualenvs |
+| Node | [nvm](https://github.com/nvm-sh/nvm) | Version management |
 
 ## Features
 
