@@ -1,0 +1,4 @@
+[settings]
+trusted_config_paths = ["~/repositories"]
+auto_install = true
+jobs = 4
