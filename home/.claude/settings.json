@@ -1,5 +1,4 @@
 {
-  "effortLevel": "low",
   "permissions": {
     "allow": [
       "Bash(gh issue create *)",
@@ -14,5 +13,9 @@
       "Bash(git restore *)",
       "Bash(git remote *)"
     ]
+  },
+  "effortLevel": "low",
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true
   }
 }
