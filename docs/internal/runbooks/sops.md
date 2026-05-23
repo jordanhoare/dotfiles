@@ -8,7 +8,7 @@ Official docs: https://github.com/getsops/sops — SSH/age key support: https://
 
 | File | Recipient key | Plaintext (gitignored, decrypts into repo) |
 |---|---|---|
-| `config/git/private.enc` | `~/.ssh/private` | `config/git/private` |
+| `config/git/private.enc` | `~/.ssh/personal` | `config/git/private` |
 
 `config/git/private` is gitignored plaintext that lives only in the repo. Stow symlinks `config/git/` → `~/.config/git/`, so `~/.config/git/private` resolves through that link — nothing is ever written directly to `~/.config/`.
 
@@ -24,7 +24,7 @@ Official docs: https://github.com/getsops/sops — SSH/age key support: https://
 Handled automatically by bootstrap. Manual fallback:
 
 ```bash
-SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/private SOPS_CONFIG=/dev/null sops --decrypt --input-type ini --output-type ini ~/repositories/dotfiles/config/git/private.enc > ~/repositories/dotfiles/config/git/private
+SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/personal SOPS_CONFIG=/dev/null sops --decrypt --input-type ini --output-type ini ~/repositories/dotfiles/config/git/private.enc > ~/repositories/dotfiles/config/git/private
 ```
 
 ## Edit in-place
@@ -32,7 +32,7 @@ SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/private SOPS_CONFIG=/dev/null sops --decryp
 SOPS decrypts to a temp file, opens `$EDITOR`, re-encrypts on save:
 
 ```bash
-SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/private SOPS_CONFIG=/dev/null sops --input-type ini --output-type ini ~/repositories/dotfiles/config/git/private.enc
+SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/personal SOPS_CONFIG=/dev/null sops --input-type ini --output-type ini ~/repositories/dotfiles/config/git/private.enc
 ```
 
 ## Re-encrypt from plaintext
@@ -40,15 +40,13 @@ SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/private SOPS_CONFIG=/dev/null sops --input-
 Use after editing `config/git/private` directly:
 
 ```bash
-SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/private SOPS_CONFIG=/dev/null sops --encrypt --input-type ini --output-type ini --age "$(ssh-keygen -y -f ~/.ssh/private | ssh-to-age)" ~/repositories/dotfiles/config/git/private > ~/repositories/dotfiles/config/git/private.enc
+SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/personal SOPS_CONFIG=/dev/null sops --encrypt --input-type ini --output-type ini --age "$(cat ~/.ssh/personal.pub)" ~/repositories/dotfiles/config/git/private > ~/repositories/dotfiles/config/git/private.enc
 ```
-
-`ssh-to-age` converts an SSH public key to the age recipient format. Install: `apt install age` or `go install filippo.io/age/cmd/...@latest`.
 
 ## Verify
 
 ```bash
-SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/private SOPS_CONFIG=/dev/null sops --decrypt --input-type ini --output-type ini ~/repositories/dotfiles/config/git/private.enc
+SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/personal SOPS_CONFIG=/dev/null sops --decrypt --input-type ini --output-type ini ~/repositories/dotfiles/config/git/private.enc
 ```
 
 Output should show plaintext `[user]` and `[github]` fields.
