@@ -1,7 +1,7 @@
 font-family = "IosevkaTerm Nerd Font"
 font-size = 13
 
-theme = catppuccin-mocha
+theme = "Catppuccin Mocha"
 
 cursor-style = bar
 cursor-style-blink = false
