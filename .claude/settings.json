@@ -1,4 +1,5 @@
 {
+  "effortLevel": "low",
   "permissions": {
     "allow": [
       "Bash(gh issue create *)",

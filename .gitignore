@@ -1,5 +1,9 @@
 # Claude
 .claude/settings.local.json
+home/.claude/*
+!home/.claude/settings.json
+!home/.claude/CLAUDE.md
+!home/.claude/skills/
 
 # SSH
 home/.ssh/*
