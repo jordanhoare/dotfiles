@@ -1,4 +1,4 @@
-[plugins]
+shell = "zsh"
 
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
