@@ -3,7 +3,7 @@ NIX_FLAKE := $(DOTFILES)/nix
 
 .DEFAULT_GOAL := help
 
-.PHONY: help switch switch-linux switch-wsl switch-macos verify hooks decrypt
+.PHONY: help switch switch-linux switch-wsl switch-macos secrets verify hooks decrypt update
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -26,14 +26,17 @@ switch-linux: ## activate Linux Home Manager config
 switch-macos: ## activate macOS nix-darwin config (includes Home Manager)
 	darwin-rebuild switch --flake $(NIX_FLAKE)#jordan
 
-secrets: ## restore SSH keys from Bitwarden and decrypt git identity
+secrets: ## restore SSH keys from Bitwarden and decrypt git identity (run once after first switch)
 	@echo "==> logging in to Bitwarden"
-	@BW_SESSION=$$(bw login jordanhoare0@gmail.com --raw 2>/dev/null || bw unlock --raw); \
-	echo "==> restoring personal SSH key"; \
+	@bw login; \
+	export BW_SESSION=$$(bw unlock --raw); \
 	mkdir -p $(HOME)/.ssh; \
-	bw get item "personal SSH key" --session $$BW_SESSION | jq -r '.notes' > $(HOME)/.ssh/personal; \
+	echo "==> restoring personal SSH key"; \
+	ID=$$(bw list items --search "personal" --session $$BW_SESSION | jq -r '.[] | select(.type == 5) | .id'); \
+	bw get item "$$ID" --session $$BW_SESSION | jq -r '.sshKey.privateKey' > $(HOME)/.ssh/personal; \
 	echo "==> restoring private SSH key"; \
-	bw get item "private SSH key" --session $$BW_SESSION | jq -r '.notes' > $(HOME)/.ssh/private; \
+	ID=$$(bw list items --search "private" --session $$BW_SESSION | jq -r '.[] | select(.type == 5) | .id'); \
+	bw get item "$$ID" --session $$BW_SESSION | jq -r '.sshKey.privateKey' > $(HOME)/.ssh/private; \
 	chmod 600 $(HOME)/.ssh/personal $(HOME)/.ssh/private; \
 	echo "==> locking Bitwarden session"; \
 	bw lock
@@ -57,13 +60,13 @@ verify: ## verify key symlinks and tools
 	@test -L $(HOME)/.config/nvim      && echo "  ✓ nvim"         || echo "  ✗ nvim"
 	@test -L $(HOME)/bin/up            && echo "  ✓ bin/up"       || echo "  ✗ bin/up"
 	@echo "==> tools"
-	@command -v nix          >/dev/null && echo "  ✓ nix"        || echo "  ✗ nix"
+	@command -v nix          >/dev/null && echo "  ✓ nix"          || echo "  ✗ nix"
 	@command -v home-manager >/dev/null && echo "  ✓ home-manager" || echo "  ✗ home-manager"
-	@command -v mise         >/dev/null && echo "  ✓ mise"        || echo "  ✗ mise"
-	@command -v uv           >/dev/null && echo "  ✓ uv"          || echo "  ✗ uv"
-	@command -v gh           >/dev/null && echo "  ✓ gh"          || echo "  ✗ gh"
-	@command -v kubectl      >/dev/null && echo "  ✓ kubectl"     || echo "  ✗ kubectl"
-	@command -v nvim         >/dev/null && echo "  ✓ nvim"        || echo "  ✗ nvim"
+	@command -v mise         >/dev/null && echo "  ✓ mise"         || echo "  ✗ mise"
+	@command -v uv           >/dev/null && echo "  ✓ uv"           || echo "  ✗ uv"
+	@command -v gh           >/dev/null && echo "  ✓ gh"           || echo "  ✗ gh"
+	@command -v kubectl      >/dev/null && echo "  ✓ kubectl"      || echo "  ✗ kubectl"
+	@command -v nvim         >/dev/null && echo "  ✓ nvim"         || echo "  ✗ nvim"
 
 hooks: ## install pre-commit hooks
 	pre-commit install
