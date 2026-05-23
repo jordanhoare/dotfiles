@@ -4,7 +4,7 @@ CONFIG_TARGET := $(HOME)/.config
 
 .DEFAULT_GOAL := help
 
-.PHONY: help stow verify
+.PHONY: help stow decrypt verify
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -21,3 +21,6 @@ verify: ## verify key symlinks are in place
 	@test -L $(HOME)/.config/git && echo "✓ .config/git" || echo "✗ .config/git"
 	@test -L $(HOME)/.config/starship && echo "✓ starship" || echo "✗ starship"
 	@test -L $(HOME)/.config/tmux && echo "✓ tmux"       || echo "✗ tmux"
+
+decrypt: ## decrypt SOPS-encrypted files
+	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc
