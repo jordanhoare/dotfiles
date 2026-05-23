@@ -34,3 +34,7 @@ config/glab-cli/hosts.yml
 
 # Kubernetes - cluster credentials
 home/.kube/config
+
+# Neovim - runtime data written into config dir
+config/nvim/.repro
+config/nvim/doc/tags
