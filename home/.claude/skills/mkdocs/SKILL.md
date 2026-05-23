@@ -84,7 +84,7 @@ This applies to all docs, docstrings, comments, and prose throughout the repo.
 
 ## Grid cards
 
-Material grid cards must use `-   ` (dash + 3 spaces) for list items and `    ---` (4-space indent) as the separator. This is the only format that survives `mdformat` without being rewritten.
+Material grid cards must use `-` (dash + 3 spaces) for list items and `---` (4-space indent) as the separator. This is the only format that survives `mdformat` without being rewritten.
 
 ```markdown
 <div class="grid cards" markdown>
@@ -108,7 +108,7 @@ Material grid cards must use `-   ` (dash + 3 spaces) for list items and `    --
 </div>
 ```
 
-Do not use `- ` (single space) or `---` without 4-space indent - mdformat will convert the separator to `***` and break the card layout.
+Do not use `-` (single space) or `---` without 4-space indent - mdformat will convert the separator to `***` and break the card layout.
 
 ## Updating API reference
 
@@ -160,6 +160,7 @@ Reference in markdown:
 ```python
 --8<-- "docs/snippets/executors.py:basic"
 ```
+
 ```
 
 All snippet files are linted by ruff. Per-file ignores for snippet-specific rules are set in `pyproject.toml` under `[tool.ruff.lint.per-file-ignores]`.

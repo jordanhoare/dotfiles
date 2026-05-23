@@ -14,11 +14,13 @@ Two profiles — never expose the private profile in public files:
 - **private:** anon identity — stored encrypted at `config/git/private.enc`, decrypts to `config/git/private` (gitignored, symlinked to `~/.config/git/private` via stow)
 
 Switching:
+
 - `git personal` — switch to jordanhoare + gh auth switch
 - `git private` — switch to anon profile
 - Auto-switches in `~/repositories/private/` via `includeIf` in `.gitconfig`
 
 SSH clone syntax:
+
 - `git clone git@personal:jordanhoare/repo.git`
 - `git clone git@private:<user>/repo.git`
 

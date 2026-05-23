@@ -34,6 +34,7 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 ## Scopes
 
 Common scopes for this project (use the module/area affected):
+
 - `compiler` - DSL compilation logic
 - `reconcile` - Schema reconciliation layer
 - `executor` - Execution backends (local, Spark)
@@ -44,6 +45,7 @@ Common scopes for this project (use the module/area affected):
 ## Breaking Changes
 
 Add `BREAKING CHANGE:` footer or `!` after type/scope:
+
 ```
 feat(compiler)!: change DSL syntax to method chains
 
@@ -53,12 +55,15 @@ BREAKING CHANGE: Rule class removed, use Transform instead
 ## Guidelines for Agents
 
 ### Commit Frequency
+
 - Commit after EACH logical change unit
 - DO NOT wait until task completion to commit
 - Break work into digestible commits
 
 ### One Concern Per Commit
+
 Good sequence:
+
 ```bash
 test(compiler): add test for nested calls
 feat(compiler): implement nested call support
@@ -67,6 +72,7 @@ refactor(compiler): extract call resolution
 ```
 
 Bad sequence:
+
 ```bash
 feat: add feature  # Too vague
 wip                # Not descriptive
@@ -76,6 +82,7 @@ fix everything     # Too broad
 ### When to Commit
 
 ✅ Commit after:
+
 - Adding a new test (red phase)
 - Making test pass (green phase)
 - Completing a refactor
@@ -83,6 +90,7 @@ fix everything     # Too broad
 - Fixing a specific bug/lint issue
 
 ❌ Don't commit:
+
 - Half-written code that doesn't compile
 - Code breaking existing tests (except documented red phase)
 - Multiple unrelated changes together
@@ -139,6 +147,7 @@ Focus on **user impact**, not implementation details:
 ## Integration with Semantic Release
 
 Commit types affect version bumping:
+
 - `feat` → 1.x.0 (minor)
 - `fix` → 1.0.x (patch)
 - `BREAKING CHANGE` → x.0.0 (major)

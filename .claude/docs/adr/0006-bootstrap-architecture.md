@@ -1,9 +1,11 @@
 # ADR 0006 — Bootstrap architecture
 
 ## Context
+
 The existing bootstrap.sh is a single monolithic script with ordering bugs, undefined functions, and duplicate steps. It is not idempotent and cannot be safely re-run. It also has no strategy for the Windows/WSL chicken-and-egg problem.
 
 ## Decision
+
 Staged bootstrap with the following structure:
 
 ```
@@ -27,6 +29,7 @@ bootstrap/
 All stage scripts are written in bash (lowest common denominator — guaranteed before zsh is installed). Each stage is idempotent: safe to re-run and always converges to the same end state.
 
 ## Consequences
+
 - Dotfiles repo lives at ~/repositories/dotfiles on all platforms
 - WSL has a separate PowerShell pre-step before install.sh can run
 - Failed bootstrap can be resumed by re-running install.sh — completed stages no-op
