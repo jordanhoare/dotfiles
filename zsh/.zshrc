@@ -22,9 +22,6 @@ fi
 export LANG="en_US.UTF-8"
 export BROWSER="firefox"
 export GIT_USERNAME="jordanhoare"
-export GIT_EMAILADDRESS="jordan.hoare@outlook.com"
-export GIT_GAME_USERNAME="jordanhoare"
-export GIT_GAME_EMAILADDRESS="jordan.hoare@outlook.com"
 
 # ============================================================================ #
 #                              PATH CONFIGURATION                              #
@@ -65,11 +62,7 @@ fi
 # ============================================================================ #
 #                           DEFAULT EDITOR SELECTION                           #
 # ============================================================================ #
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR="nano"
-else
-  export EDITOR="code"
-fi
+export EDITOR="nano"
 
 # ============================================================================ #
 #                           ZSH + OH-MY-ZSH SETUP                              #
@@ -105,21 +98,17 @@ alias gcb='git checkout -b'
 alias gpl='git pull'
 alias gps='git push'
 alias gpf='git push --force-with-lease'
-
 alias gb='git branch'
 alias gba='git branch -a'
 alias gbd='git branch -d'
 alias gcount='git shortlog -sn'
 alias gl='git log --oneline --graph --decorate'
 alias glp='git log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --graph --date=relative'
-
 alias gsta='git stash'
 alias gstp='git stash pop'
 alias gstl='git stash list'
-
 alias gtag='git tag'
 alias gtags='git tag --sort=-creatordate'
-
 alias gclean='git clean -fd'
 alias gprune='git remote prune origin'
 
@@ -128,8 +117,7 @@ alias gprune='git remote prune origin'
 # ============================================================================ #
 export SECONDBRAIN="$REPOS/second-brain"
 alias repos='cd $REPOS'
-alias tibia='cd $REPOS/tibia-oce'
-alias dotfiles='cd $DOTFILES'
+alias dot='cd $DOTFILES'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -138,3 +126,15 @@ alias vsb='cd $SECONDBRAIN && code .'
 alias c='clear'
 alias reload='source ~/.zshrc'
 export PATH="$HOME/.aftman/bin:$HOME/.cargo/bin:$PATH"
+export PATH="$PATH:/mnt/c/Program\ Files/Docker/Docker/resources/bin"
+export exapiPackage="/mnt/e/PoE/Api/ExileApi"
+export SOPS_AGE_KEY_FILE=~/.aincrad/.sops.age.key
+eval "$(/home/jordan/.local/bin/mise activate zsh)"
+
+# Show active git identity in right prompt when inside a git repo
+_git_identity_rprompt() {
+  local name
+  name=$(git config user.name 2>/dev/null) || return
+  RPROMPT="%F{240}[${name}]%f"
+}
+add-zsh-hook precmd _git_identity_rprompt

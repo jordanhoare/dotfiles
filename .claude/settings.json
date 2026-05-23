@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh issue create *)",
+      "Bash(gh issue view *)",
+      "Bash(gh repo view *)",
+      "Bash(git status:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

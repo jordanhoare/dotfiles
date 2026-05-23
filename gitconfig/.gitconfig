@@ -10,7 +10,6 @@
 
 [core]
   editor = code --wait
-  # WSL performance optimizations for Windows mounts
   preloadindex = true
   fscache = true
   autocrlf = input
@@ -31,19 +30,17 @@
   autoSetupRemote = true
 
 [alias]
-  use-main = "!git config user.name 'Jordan Hoare' && git config user.email 'jordanhoare0@gmail.com' && echo 'Switched to main profile'"
-[safe]
-  directory = /mnt/d/repositories/second-brain
-	directory = /mnt/e/PoE
+  personal = "!git config user.name 'jordanhoare' && git config user.email 'jordanhoare0@gmail.com' && gh auth switch --user jordanhoare"
+  private = "!git config user.name \"$(git config --file ~/.gitconfig-private user.name)\" && git config user.email \"$(git config --file ~/.gitconfig-private user.email)\" && gh auth switch --user \"$(git config --file ~/.gitconfig-private github.user)\""
+  whoami = "!echo \"$(git config user.name) <$(git config user.email)>\""
 
-[includeIf "gitdir:/mnt/e/PoE/Dev/"]
-  path = /mnt/e/PoE/Dev/.gitconfig_game
+[safe]
+	directory = *
 
 # Optimize git for all Windows mounts (/mnt/*) - these are extremely slow
 # This applies to all repos on Windows filesystems accessed from WSL
 [includeIf "gitdir:/mnt/"]
   [core]
-    # Disable filemode checks (very slow on Windows mounts via 9P protocol)
     # This prevents git from checking file permissions on every operation
     fileMode = false
   [status]
@@ -64,27 +61,11 @@
 	manyFiles = true
 [remote "origin"]
 	tagOpt = --force
-[diff]
-	tool = bc
-[merge]
-	tool = bc
-[difftool "bc4"]
-	path = /mnt/c/Program Files/Beyond Compare 4/BComp.exe
-[mergetool "bc4"]
-	path = /mnt/c/Program Files/Beyond Compare 4/BComp.exe
-	trustExitCode = true
-[difftool]
-	prompt = false
-[mergetool]
-	keepBackup = false
-[mergetool "bc"]
-	trustExitCode = true
-	cmd = \"/mnt/c/Program Files/Beyond Compare 5/BComp.exe\" \"$(wslpath -w \"$LOCAL\")\" \"$(wslpath -w \"$REMOTE\")\" \"$(wslpath -w \"$BASE\")\" \"$(wslpath -w \"$MERGED\")\"
-[difftool "bc"]
-	cmd = \"/mnt/c/Program Files/Beyond Compare 5/BComp.exe\" \"$(wslpath -w \"$LOCAL\")\" \"$(wslpath -w \"$REMOTE\")\"
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
+	helper =
 	helper = !/usr/bin/gh auth git-credential
+[includeIf "gitdir:/mnt/d/repositories/private/"]
+  path = ~/.gitconfig-private

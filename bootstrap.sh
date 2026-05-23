@@ -107,7 +107,28 @@ run_script "$SCRIPTS_DIR/python.sh"
 
 
 ################################################################################
-# Symbolic linking for configuration files 
+# Decrypt personal secrets
+################################################################################
+if command -v sops &>/dev/null && [ -f "$DOTFILES_DIR/gitconfig/private.gitconfig.enc" ]; then
+    SSH_KEY="$HOME/.ssh/personal"
+    if [ -f "$SSH_KEY" ]; then
+        SOPS_AGE_SSH_PRIVATE_KEY_FILE="$SSH_KEY" \
+        SOPS_CONFIG=/dev/null \
+        sops --decrypt \
+            --input-type ini \
+            --output-type ini \
+            "$DOTFILES_DIR/gitconfig/private.gitconfig.enc" > "$HOME/.gitconfig-private"
+        chmod 600 "$HOME/.gitconfig-private"
+    else
+        echo "⚠️  Personal SSH key not found at $SSH_KEY — skipping private git config decryption."
+        echo "    Restore your key from Bitwarden to $SSH_KEY, then re-run:"
+        echo "    SOPS_AGE_SSH_PRIVATE_KEY_FILE=$SSH_KEY SOPS_CONFIG=/dev/null sops --decrypt --input-type ini --output-type ini gitconfig/private.gitconfig.enc > ~/.gitconfig-private"
+    fi
+fi
+
+
+################################################################################
+# Symbolic linking for configuration files
 ################################################################################
 stow --dir=$HOME/.dotfiles/ --target=$HOME --adopt zsh tmux
 cd $DOTFILES_DIR

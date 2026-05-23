@@ -1,0 +1,14 @@
+[user]
+name  = ENC[AES256_GCM,data:TKOlMMmZE8HFWQ==,iv:aCcDhEBFsYTMPlyYUs2bQ49HEmUSgcAHL6P2BQ24p+k=,tag:cTKygmBVQLNUvSl47wWx+g==,type:str]
+email = ENC[AES256_GCM,data:5bne7yYoS3IGC+vvWXx6slDpgaJ6nw==,iv:OubOb21WJwGtPgy7NXvOfAXhqfCM5EELeCrH0htz2cQ=,tag:w003kZDp7Xy9qMN7TH55Dw==,type:str]
+
+[github]
+user = ENC[AES256_GCM,data:t5C/bmdOoqUYEg==,iv:P8/fim477Zau1Wds6EIbzfH9o/3LkCY7XpZuUwXb7Hc=,tag:JSaZ8/90sFheW10CHs3SXw==,type:str]
+
+[sops]
+version                    = 3.11.0
+age__list_0__map_recipient = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLljxwDh6Wzx04GbTvk8M4m3nnSqQQlqTGeKJ0QhgHE
+age__list_0__map_enc       = -----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHNzaC1lZDI1NTE5IFcvZW5XUSBwNWtv\ndVY4Q1pMeThuZkh6QmVvNnpaVk1GSGQwVkIzZTQzbGxKanpZclJVCnJxeHdHMjVu\nNmZCb2VBQkk1VGFVWmZHNDNaeVJUTHZFOWE2M3JHTXYvODQKLS0tIG10TndDK0Qy\nbVQzNkpYUXVLcThyQ2RpL3JaZzRRK0xQaGFvSHNYaHBkMlEKRgMe2hHltt5j80DD\n/mqE/TvAuY77tXOL6dtjTD0L8y/yJjSGulYV2vXZCdJhG2FFrn9fGpk2F2R3Xj/9\nUPpfkA==\n-----END AGE ENCRYPTED FILE-----\n
+lastmodified               = 2026-05-20T01:56:16Z
+mac                        = ENC[AES256_GCM,data:FKbYsmc+J7EG+XkIcMNrztcXeRcG5RfD3FQG65a1IuO8x+mUUal67s4vUSdYhqVg9gwHn89fRzBILG03Ub6S7PGSiq2RQ6nqtja++sedKP03bFigZK756zzDrttklayxHmIvlrq/YGFRrFDcALE8BwXAhAH7rjrfeNaDc9SF6M0=,iv:SwMihqg5yvKbQ4qJn7Hk1rT8s6rByT6J1rz2/yNzPb0=,tag:vUY1QcX2vSrDb8ViZTWSlQ==,type:str]
+unencrypted_suffix         = _unencrypted

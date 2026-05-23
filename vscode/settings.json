@@ -7,7 +7,6 @@
   "editor.emptySelectionClipboard": false,
   "editor.fontFamily": "Cascadia Code NF",
   "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss19', 'ss20'",
-  "editor.formatOnSave": true,
   "editor.guides.indentation": false,
   "editor.inlineSuggest.enabled": true,
   "editor.lightbulb.enabled": "off",
@@ -16,9 +15,11 @@
   "editor.snippetSuggestions": "top",
   "editor.stickyScroll.enabled": false,
   "editor.tabCompletion": "onlySnippets",
+  "editor.tabSize": 2,
   "editor.wordWrapColumn": 120,
   "explorer.autoReveal": false,
   "explorer.incrementalNaming": "smart",
+  "extensions.autoUpdate": false,
   "extensions.closeExtensionDetailsOnViewChange": true,
   "extensions.ignoreRecommendations": true,
   "files.eol": "\n",
@@ -32,15 +33,12 @@
   "python.terminal.activateEnvInCurrentTerminal": true,
   "search.collapseResults": "alwaysCollapse",
   "search.useGlobalIgnoreFiles": true,
-  "telemetry.telemetryLevel": "off",
-  "terminal.explorerKind": "external",
   "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.defaultProfile.windows": "Ubuntu-24.04 (WSL)",
   "update.enableWindowsBackgroundUpdates": false,
   "update.mode": "none",
   "window.autoDetectColorScheme": true,
-  "window.enableMenuBarMnemonics": false,
   "window.zoomLevel": 1,
-  "workbench.colorTheme": "Nord Light",
   "workbench.commandPalette.preserveInput": true,
   "workbench.editor.enablePreview": false,
   "workbench.editor.focusRecentEditorAfterClose": false,
@@ -51,21 +49,45 @@
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.startupEditor": "newUntitledFile",
   "workbench.tree.renderIndentGuides": "none",
+  "workbench.preferredLightColorTheme": "Nord",
+  "editor.guides.bracketPairs": "active",
+  "workbench.activityBar.location": "top",
+  "security.workspace.trust.untrustedFiles": "open",
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "terminal.integrated.fontFamily": "monospace",
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "[html]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
+  "[json]": {
+    "editor.formatOnSave": false
+  },
+  "[xml]": {
+    "editor.formatOnSave": false
+  },
+  "makefile.configureOnOpen": false,
+  "explorer.confirmPasteNative": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  "git.replaceTagsWhenPull": true,
+  "diffEditor.maxComputationTime": 0,
+  "workbench.editor.empty.hint": "hidden",
+  "terminal.external.windowsExec": "C:\\Windows\\System32\\wsl.exe",
+  "luau-lsp.completion.imports.enabled": true,
+  "git.openRepositoryInParentFolders": "always",
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer"
-  },
   "update.showReleaseNotes": false,
-  "workbench.preferredLightColorTheme": "Nord",
-  "editor.guides.bracketPairs": "active",
-  "chat.commandCenter.enabled": false,
-  "workbench.activityBar.location": "top",
   "window.menuBarVisibility": "compact",
-  "security.workspace.trust.untrustedFiles": "open",
-
-  // File watching optimizations for large codebases
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
@@ -90,8 +112,6 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true
   },
-  
-  // Search exclusions for faster indexing
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,
@@ -111,36 +131,25 @@
     "**/.hg": true,
     "**/.svn": true
   },
-  
-  // File indexing optimizations
   "files.exclude": {
     "**/.git": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true
   },
-  
-  // Increase file watcher limit (important for large repos)
   "files.watcherInclude": [],
-  
-  // Performance: Disable unnecessary features
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
   "editor.renderControlCharacters": false,
   "editor.renderIndentGuides": false,
   "editor.folding": true,
   "editor.foldingStrategy": "indentation",
-  
-  // WSL-specific optimizations
   "remote.WSL.fileWatcher.polling": true,
   "remote.WSL.fileWatcher.pollingInterval": 5000,
   "remote.WSL.useShellEnvironment": true,
-  
-  // Language server optimizations
   "typescript.tsserver.maxTsServerMemory": 8192,
   "typescript.tsserver.watchOptions": {
     "watchFile": "useFsEvents",
     "watchDirectory": "useFsEvents",
-    "fallbackPolling": "dynamicPriority",
     "synchronousWatchDirectory": true,
     "excludeDirectories": [
       "**/node_modules",
@@ -149,8 +158,6 @@
       "**/build"
     ]
   },
-  
-  // Python language server optimizations
   "python.analysis.indexing": true,
   "python.analysis.packageIndexDepths": [
     { "name": "", "depth": 2 },
@@ -165,27 +172,15 @@
     "**/venv",
     "**/.venv"
   ],
-  
-  // Rust analyzer optimizations
   "rust-analyzer.checkOnSave.enable": true,
   "rust-analyzer.cargo.buildScripts.enable": true,
   "rust-analyzer.procMacro.enable": true,
-  
-  // Git optimizations (already configured in .gitconfig, but IDE-specific)
   "git.enabled": true,
-  "git.autofetch": false,
   "git.autoRepositoryDetection": true,
   "git.scanRepositories": [
     "/mnt/d/repositories"
   ],
   "git.path": "/usr/bin/git",
-  
-  // AI/Agentic mode optimizations
-  "cursor.ai.enableCodebaseIndexing": true,
-  "cursor.ai.maxContextFiles": 50,
-  "cursor.ai.enableSemanticSearch": true,
-  
-  // Editor performance
   "editor.suggestSelection": "first",
   "editor.quickSuggestions": {
     "other": true,
@@ -195,28 +190,21 @@
   "editor.suggest.snippetsPreventQuickSuggestions": false,
   "editor.acceptSuggestionOnCommitCharacter": true,
   "editor.acceptSuggestionOnEnter": "on",
-  "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
-  
-  // Terminal optimizations for WSL
   "terminal.integrated.enablePersistentSessions": true,
   "terminal.integrated.persistentSessionReviveProcess": "onExit",
-  "terminal.integrated.defaultProfile.windows": "Ubuntu-24.04 (WSL)",
   "terminal.integrated.profiles.windows": {
     "Ubuntu-24.04 (WSL)": {
       "path": "wsl.exe",
       "args": ["-d", "Ubuntu-24.04", "--exec", "zsh", "-l"]
     }
   },
-  
   "files.associations": {
     "*.env.*": "dotenv",
     "*.config.*": "jsonc",
     "Dockerfile.*": "dockerfile",
     "*.dockerfile": "dockerfile"
   },
-  
-  "extensions.autoCheckUpdates": false,
-  "extensions.autoUpdate": false
+  "extensions.autoCheckUpdates": false
 }

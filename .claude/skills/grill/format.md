@@ -1,0 +1,57 @@
+# Glossary Format
+
+The project's canonical glossary lives at `docs/internal/glossary.md` and is
+the single source of truth for domain vocabulary.
+
+## Structure
+
+```md
+# Glossary
+
+{One or two sentence description of what this project is and what the
+glossary is for.}
+
+## Language
+
+**Order**:
+{A concise description of the term}
+_Avoid_: Purchase, transaction
+
+**Invoice**:
+A request for payment sent to a customer after delivery.
+_Avoid_: Bill, payment request
+
+**Customer**:
+A person or organization that places orders.
+_Avoid_: Client, buyer, account
+
+## Relationships
+
+- An **Order** produces one or more **Invoices**
+- An **Invoice** belongs to exactly one **Customer**
+
+## Common questions
+
+> **Dev:** "When a **Customer** places an **Order**, do we create the **Invoice** immediately?"
+> **Maintainer:** "No — an **Invoice** is only generated once a **Fulfillment** is confirmed."
+
+## Naming notes
+
+- "account" was used to mean both **Customer** and **User** — resolved: these are distinct concepts.
+```
+
+## Rules
+
+- **Be opinionated.** When multiple words exist for the same concept, pick the best one and list the others as aliases to avoid.
+- **Flag conflicts explicitly.** If a term is used ambiguously, call it out in "Naming notes" with a clear resolution.
+- **Keep definitions tight.** One sentence max. Define what it IS, not what it does.
+- **Show relationships.** Use bold term names and express cardinality where obvious.
+- **Only include terms specific to this project's context.** General programming concepts (timeouts, error types, utility patterns) don't belong even if the project uses them extensively. Before adding a term, ask: is this a concept unique to this context, or a general programming concept? Only the former belongs.
+- **Group terms under subheadings** when natural clusters emerge. If all terms belong to a single cohesive area, a flat list is fine.
+- **Write common questions.** A conversation between a dev and a maintainer that demonstrates how the terms interact naturally and clarifies boundaries between related concepts.
+
+## Project convention
+
+This is a single-context repo. The glossary lives at `docs/internal/glossary.md`
+and the navigational hub for internal docs is `docs/internal/overview.md`. There
+is no root-level CONTEXT.md or nested CONTEXT.md (i.e. src/product/CONTEXT.md) — those patterns are not used here.

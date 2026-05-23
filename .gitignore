@@ -1,1 +1,12 @@
+# Claude
+.claude/settings.local.json
+
+# SSH
+ssh/.ssh/*
+!ssh/.ssh/config
+
+# Git
+gitconfig/private.gitconfig
+
+# Other
 wezterm/Iosevka/*
