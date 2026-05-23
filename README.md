@@ -9,5 +9,3 @@ git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles
 stow -d ~/repositories/dotfiles -t ~ home
 stow -d ~/repositories/dotfiles -t ~/.config config
 ```
-
-See `.claude/CLAUDE.md` for full setup instructions.
