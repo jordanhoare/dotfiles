@@ -23,7 +23,12 @@ fi
 
 if command -v bun &>/dev/null; then
   echo "==> bun"
-  bun upgrade || curl -fsSL https://bun.sh/install | bash
+  if ! bun upgrade; then
+    curl -fsSL https://bun.sh/install | bash
+    # the installer appends a completions block to ~/.zshrc — strip it since
+    # we already source completions portably via $BUN_INSTALL in .zshrc
+    sed -i '' '/# bun completions/,/source.*_bun/d' ~/.zshrc
+  fi
 fi
 
 echo "==> done"
