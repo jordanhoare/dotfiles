@@ -1,3 +1,11 @@
+eval "$(starship init zsh)"
+eval "$(sheldon source)"
+
+_update_git_identity() {
+  export STARSHIP_GIT_USER=$(git config user.name 2>/dev/null)
+}
+add-zsh-hook precmd _update_git_identity
+
 if [ -s "$NVM_DIR/nvm.sh" ]; then
   . "$NVM_DIR/nvm.sh"
   [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"

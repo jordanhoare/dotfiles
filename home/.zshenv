@@ -9,12 +9,15 @@ else
   export REPOS="$HOME/repositories"
 fi
 
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+
 export LANG="en_US.UTF-8"
 export EDITOR="nano"
 export BROWSER="firefox"
 export GIT_USERNAME="jordanhoare"
 export SECONDBRAIN="$REPOS/second-brain"
 export SOPS_AGE_KEY_FILE=~/.aincrad/.sops.age.key
+export SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/personal
 
 export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 export GOPATH="$HOME/go"

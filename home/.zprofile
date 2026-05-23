@@ -1,6 +1,3 @@
-eval "$(starship init zsh)"
-eval "$(sheldon source)"
-
 _git_identity_rprompt() {
   local name
   name=$(git config user.name 2>/dev/null) || return
