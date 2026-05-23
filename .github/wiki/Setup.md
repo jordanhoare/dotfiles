@@ -48,12 +48,6 @@ make decrypt
 make stow
 ```
 
-On Linux/WSL, also stow the etc package (sets timezone and locale):
-
-```bash
-make stow-etc
-```
-
 Switch the remote to SSH now that `~/.ssh/config` is in place:
 
 ```bash

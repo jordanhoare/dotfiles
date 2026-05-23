@@ -58,7 +58,7 @@ See `.claude/docs/adr/` for full rationale.
 ### Linux/WSL/macOS
 1. Install prereqs: `sudo apt install git stow` (or brew equivalent)
 2. Clone: `git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles`
-3. Stow: `stow -d ~/repositories/dotfiles -t ~ home && stow -d ~/repositories/dotfiles -t ~/.config config && stow -d ~/repositories/dotfiles -t ~/bin bin && sudo stow -d ~/repositories/dotfiles -t /etc etc`
+3. Stow: `make stow` (symlinks all four packages; sudo prompt expected for etc/)
 4. Restore SSH keys from Bitwarden (see SSH section above)
 5. Decrypt private git config: see `config/git/README.md`
 6. Install tools: starship, sheldon, tmux, ghostty, uv, bun
