@@ -18,7 +18,7 @@ A top-level directory in the dotfiles repo that represents one stow unit. Four p
 
 ## Mise
 
-A per-project tool version manager (`mise-en-place`). Not used inside the dotfiles repo itself (see ADR 0004), but present in other repositories. Global mise config lives at `config/mise/config.toml` and is stowed to `~/.config/mise/config.toml`.
+The global runtime version manager (`mise-en-place`). Manages installed versions of Go, Python, dotnet, bun, opentofu, and other runtimes across all platforms. Active version is switched on demand via `mise use --global <tool>@<version>`. No per-repo `.mise.toml` files — global config only at `~/.config/mise/config.toml`. See ADR 0004.
 
 ## Platform
 
