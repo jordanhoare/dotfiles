@@ -2,44 +2,56 @@
 
 ## Prerequisites
 
-Install `git` and `stow`:
+### WSL
+
+On WSL, clone onto the Windows filesystem - the Linux home is slow for git and won't survive a WSL reinstall.
 
 ```bash
-# Debian/Ubuntu/WSL
 sudo apt install git stow
+mkdir -p /mnt/d/repositories
+cd /mnt/d/repositories
+```
 
-# macOS
+### Linux
+
+```bash
+sudo apt install git stow
+mkdir -p ~/repositories
+cd ~/repositories
+```
+
+### macOS
+
+```bash
 brew install git stow
+mkdir -p ~/repositories
+cd ~/repositories
 ```
 
 ## Clone
 
 ```bash
-git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles
-```
-
-## Stow
-
-```bash
-stow -d ~/repositories/dotfiles -t ~ home
-stow -d ~/repositories/dotfiles -t ~/.config config
+git clone https://github.com/jordanhoare/dotfiles.git
+cd dotfiles
 ```
 
 ## SSH Keys
 
-Restore from Bitwarden:
+Restore from Bitwarden - see [Bitwarden SSH Key Restore](Bitwarden-SSH).
+
+## Decrypt and stow
+
+Install [SOPS](https://github.com/getsops/sops/releases), then:
 
 ```bash
-# Personal key
-cat > ~/.ssh/personal  # paste, Ctrl+D
-cat > ~/.ssh/private   # paste, Ctrl+D
-chmod 600 ~/.ssh/personal ~/.ssh/private
+make decrypt
+make stow
 ```
 
-## Decrypt private git config
+Switch the remote to SSH now that `~/.ssh/config` is in place:
 
 ```bash
-sops --decrypt --output $DOTFILES/config/git/private $DOTFILES/config/git/private.enc
+git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
 ## Install tools
@@ -54,6 +66,7 @@ sops --decrypt --output $DOTFILES/config/git/private $DOTFILES/config/git/privat
 ## Verify
 
 ```bash
+make verify
 git whoami          # Jordan Hoare <jordanhoare0@gmail.com>
 ssh -T git@personal # authenticates as jordanhoare
 ssh -T git@private  # authenticates as private account

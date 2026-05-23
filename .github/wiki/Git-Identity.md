@@ -19,7 +19,7 @@ git clone git@private:<user>/repo.git
 
 ## Auto-switch
 
-Repos under `~/repositories/private/` automatically use the private identity via `includeIf` in `.gitconfig`.
+On WSL, repos under `/mnt/d/repositories/private/` automatically use the private identity via `includeIf` in `.gitconfig`. On macOS or native Linux this requires updating the `includeIf` path to match the local repo location.
 
 ## Private config
 
