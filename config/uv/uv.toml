@@ -1,7 +1,2 @@
-[pip]
-# Refuse to install into system Python - always require a venv
-require-virtualenv = true
-
 [install]
-# Compile bytecode at install time rather than on first import
 compile-bytecode = true
