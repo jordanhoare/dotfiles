@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SECOND_BRAIN="${SECONDBRAIN:-$HOME/repositories/second-brain}"
+
+if [[ ! -d "$SECOND_BRAIN" ]]; then
+  echo "error: second-brain not found at $SECOND_BRAIN" >&2
+  exit 1
+fi
+
+cd "$SECOND_BRAIN"
+mise run sync

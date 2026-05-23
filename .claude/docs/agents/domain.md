@@ -4,9 +4,9 @@ How the engineering skills should consume this repo's domain documentation when 
 
 ## Before exploring, read these
 
-- **`docs/internal/context.md`** — prose domain framing (what the project is, its domain, users, scope) and the navigation hub for internal docs. Read this first to orient.
-- **`docs/internal/glossary.md`** — the canonical term list.
-- **`docs/internal/adr/`** — ADRs that touch the area you're about to work in.
+- **`.claude/docs/context.md`** — prose domain framing (what the project is, its domain, users, scope) and the navigation hub for internal docs. Read this first to orient.
+- **`.claude/docs/glossary.md`** — the canonical term list.
+- **`.claude/docs/adr/`** — ADRs that touch the area you're about to work in.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The producer skill (`/grill`) creates them lazily when terms or decisions actually get resolved.
 
@@ -28,7 +28,7 @@ Single-context repo:
 
 ## Use the glossary's vocabulary
 
-When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in `docs/internal/glossary.md`. Don't drift to synonyms the glossary explicitly avoids.
+When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in `.claude/docs/glossary.md`. Don't drift to synonyms the glossary explicitly avoids.
 
 If the concept you need isn't in the glossary yet, that's a signal — either you're inventing language the project doesn't use (reconsider) or there's a real gap (note it for `/grill`).
 

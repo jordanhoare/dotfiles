@@ -6,7 +6,7 @@ Personal dotfiles for Jordan Hoare. Managed via GNU stow — editing any tracked
 ## Repository structure
 
 ### Stow packages
-Two packages, each targeting a different directory. See `docs/internal/runbooks/stow.md` for commands.
+Two packages, each targeting a different directory.
 
 | Package | Stow target | Contents |
 |---|---|---|
@@ -19,14 +19,14 @@ Only files explicitly placed in these packages are tracked. Everything else in `
 
 | Directory | Purpose |
 |---|---|
-| `docs/` | ADRs, glossary, runbooks |
-| `todo/` | Configs requiring manual placement — Windows apps, WSL `/etc/` targets, platform-specific |
+| `.claude/docs/` | ADRs, glossary, context, agent instructions |
+| `.github/wiki/` | Wiki pages synced to GitHub Wiki on push |
 
 ### zsh
 `.zshrc` sets `$DOTFILES` and sources everything it needs directly via that variable. The `home/` package stows the shell entry points; the rest of the zsh config is referenced via `$DOTFILES`.
 
 ## Key tooling
-See `docs/internal/adr/` for full rationale.
+See `.claude/docs/adr/` for full rationale.
 
 - **Shell:** zsh
 - **Terminal:** Ghostty
@@ -45,7 +45,7 @@ See `docs/internal/adr/` for full rationale.
 3. `chmod 600 ~/.ssh/personal ~/.ssh/private`
 
 ## SOPS
-`config/git/private.enc` is encrypted for `~/.ssh/private` — decrypted automatically by bootstrap. See `docs/internal/runbooks/sops.md` for manual decrypt, re-encrypt, and debugging commands.
+`config/git/private.enc` is encrypted against `~/.ssh/personal`. See `config/git/README.md` for decrypt and re-encrypt commands.
 
 ## New machine setup
 
@@ -58,7 +58,7 @@ See `docs/internal/adr/` for full rationale.
 2. Clone: `git clone git@personal:jordanhoare/dotfiles.git ~/repositories/dotfiles`
 3. Stow: `stow -d ~/repositories/dotfiles -t ~ home && stow -d ~/repositories/dotfiles -t ~/.config config`
 4. Restore SSH keys from Bitwarden (see SSH section above)
-5. Decrypt private git config: see `docs/internal/runbooks/sops.md`
+5. Decrypt private git config: see `config/git/README.md`
 6. Install tools: starship, sheldon, tmux, ghostty, nvm, uv
 
 ### Verify
@@ -77,10 +77,10 @@ ssh -T git@private      # authenticates as private account
 ## Agent skills
 
 ### Issue tracker
-Issues live in GitHub Issues (`jordanhoare/dotfiles`). See `docs/agents/issue-tracker.md`.
+Issues live in GitHub Issues (`jordanhoare/dotfiles`). See `.claude/docs/agents/issue-tracker.md`.
 
 ### Triage labels
-Default canonical label strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+Default canonical label strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `.claude/docs/agents/triage-labels.md`.
 
 ### Domain docs
-Single-context — `docs/internal/context.md` + `docs/internal/glossary.md` + `docs/internal/adr/`. See `docs/agents/domain.md`.
+Single-context — `.claude/docs/context.md` + `.claude/docs/glossary.md` + `.claude/docs/adr/`. See `.claude/docs/agents/domain.md`.
