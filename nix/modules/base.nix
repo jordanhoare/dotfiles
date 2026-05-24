@@ -35,7 +35,7 @@
     # cloud + infra
     gh
     bitwarden-cli
-    helm
+    kubernetes-helm
     k9s
     kubectx
     kubectl
