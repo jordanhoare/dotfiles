@@ -42,19 +42,17 @@ jobs:
 
       - uses: DeterminateSystems/magic-nix-cache-action@v8
 
-      # GitHub Actions run: shells do not export USER, so the env-derived identity
-      # in flake.nix would fall back to "jordanhoare" and Home Manager activation
-      # would abort with a user mismatch. Export the real runner identity.
-      - name: export runner identity
-        run: |
-          echo "USER=$(id -un)" >> "$GITHUB_ENV"
-          echo "HOME=$HOME" >> "$GITHUB_ENV"
-
       - name: flake check (pure eval)
         run: nix flake check ./nix
 
+      # GitHub Actions run: shells do not export USER, so the env-derived identity
+      # in flake.nix falls back to "jordanhoare" and Home Manager activation aborts
+      # with a user mismatch. Export the real runner identity in the same shell that
+      # invokes nix so getEnv reads it at evaluation time.
       - name: build linux + wsl activation packages
         run: |
+          export USER="$(id -un)"
+          echo "building as USER=$USER HOME=$HOME"
           nix build --impure ./nix#homeConfigurations."jordan@linux".activationPackage
           nix build --impure ./nix#homeConfigurations."jordan@wsl".activationPackage
 
@@ -62,6 +60,7 @@ jobs:
       # -b backup avoids aborting on the runner's pre-existing dotfiles.
       - name: activate wsl config
         run: |
+          export USER="$(id -un)"
           nix run home-manager/master -- switch --flake ./nix#"jordan@wsl" --impure -b backup
 
       - name: smoke test - shell, tmux, tools (hard-fail)
