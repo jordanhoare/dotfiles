@@ -11,7 +11,7 @@
 Two profiles — never expose the private profile in public files:
 
 - **personal:** `jordanhoare` — default
-- **private:** anon identity — stored encrypted at `config/git/private.enc`, decrypts to `config/git/private` (gitignored, symlinked to `~/.config/git/private` via stow)
+- **private:** anon identity — stored encrypted at `config/git/private.enc`, decrypts to `config/git/private` (gitignored, symlinked to `~/.config/git/private` via Home Manager)
 
 Switching:
 

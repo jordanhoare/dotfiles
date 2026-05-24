@@ -2,7 +2,7 @@
 
 <div align="center">
 
-Personal dotfiles for WSL, Linux, and macOS - managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Personal dotfiles for WSL, Linux, and macOS - managed with [Nix](https://nixos.org) and [Home Manager](https://github.com/nix-community/home-manager).
 
 <p></p>
 
@@ -10,7 +10,7 @@ Personal dotfiles for WSL, Linux, and macOS - managed with [GNU Stow](https://ww
 ![Ghostty](https://img.shields.io/badge/ghostty-purple?style=for-the-badge&logoColor=white)
 ![Starship](https://img.shields.io/badge/starship-DD0B78?style=for-the-badge&logo=starship&logoColor=white)
 ![tmux](https://img.shields.io/badge/tmux-1BB91F?style=for-the-badge&logo=tmux&logoColor=white)
-![GNU Stow](https://img.shields.io/badge/stow-4A90D9?style=for-the-badge&logo=gnu&logoColor=white)
+![Nix](https://img.shields.io/badge/nix-5277C3?style=for-the-badge&logo=nixos&logoColor=white)
 
 <p></p>
 

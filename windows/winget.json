@@ -11,7 +11,7 @@
         { "PackageIdentifier": "Docker.DockerDesktop" },
         { "PackageIdentifier": "Mozilla.Firefox" },
         { "PackageIdentifier": "Anthropic.ClaudeCode" },
-        { "PackageIdentifier": "GitHub.GitHubDesktop" },
+        { "PackageIdentifier": "GitHub.cli" },
         { "PackageIdentifier": "Ghostty.Ghostty" }
       ],
       "SourceDetails": {

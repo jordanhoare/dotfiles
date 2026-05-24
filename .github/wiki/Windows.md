@@ -18,7 +18,7 @@ irm "https://christitus.com/win" | iex
 winget import --import-file D:\repositories\dotfiles\windows\winget.json --accept-package-agreements --accept-source-agreements
 ```
 
-This installs WSL, VSCode, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, and Ghostty.
+This installs WSL, VSCode, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, the GitHub CLI (`gh`), and Ghostty.
 
 ### 3. WSL
 
