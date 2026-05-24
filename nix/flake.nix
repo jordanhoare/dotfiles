@@ -19,9 +19,18 @@
     let
       dotfiles = builtins.toString ../.;
 
-      mkHome = { system, modules }: home-manager.lib.homeManagerConfiguration {
+      # Identity is derived from the environment at activation (requires --impure),
+      # with committed fallbacks so pure `nix flake check` still evaluates. This is
+      # the single point of impurity; modules receive identity as explicit args.
+      envOr = name: fallback: let v = builtins.getEnv name; in if v != "" then v else fallback;
+      username = envOr "USER" "jordanhoare";
+
+      mkHome = { system, homeFallback, modules }: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-        extraSpecialArgs = { inherit dotfiles; };
+        extraSpecialArgs = {
+          inherit dotfiles username;
+          homeDirectory = envOr "HOME" homeFallback;
+        };
         modules = [ ./modules/base.nix ] ++ modules;
       };
     in
@@ -29,14 +38,18 @@
       # macOS — activate with: make switch
       darwinConfigurations."jordan@macos" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
+        specialArgs = { inherit username; };
         modules = [
           ./modules/macos-system.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit dotfiles; };
-            home-manager.users.jordanhoare = {
+            home-manager.extraSpecialArgs = {
+              inherit dotfiles username;
+              homeDirectory = envOr "HOME" "/Users/${username}";
+            };
+            home-manager.users.${username} = {
               imports = [ ./modules/base.nix ./modules/macos.nix ];
             };
           }
@@ -46,12 +59,14 @@
       # Linux — activate with: make switch
       homeConfigurations."jordan@linux" = mkHome {
         system = "x86_64-linux";
+        homeFallback = "/home/${username}";
         modules = [ ./modules/linux.nix ];
       };
 
       # WSL — activate with: make switch
       homeConfigurations."jordan@wsl" = mkHome {
         system = "x86_64-linux";
+        homeFallback = "/home/${username}";
         modules = [ ./modules/wsl.nix ];
       };
     };

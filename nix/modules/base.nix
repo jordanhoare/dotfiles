@@ -1,11 +1,10 @@
-{ config, pkgs, lib, dotfiles, ... }:
+{ config, pkgs, lib, dotfiles, username, homeDirectory, ... }:
 
 {
   home.stateVersion = "24.11";
 
-  home.username = "jordanhoare";
-  home.homeDirectory =
-    if pkgs.stdenv.isDarwin then "/Users/jordanhoare" else "/home/jordanhoare";
+  home.username = username;
+  home.homeDirectory = homeDirectory;
 
   home.packages = with pkgs; [
     # core
