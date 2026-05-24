@@ -67,6 +67,11 @@ jobs:
           nix build --impure ./nix#homeConfigurations."jordan@wsl".activationPackage --out-link "$RUNNER_TEMP/hm-wsl"
           "$RUNNER_TEMP/hm-wsl/activate"
 
+      # zsh is the login shell, provided by the OS on real machines, not by this
+      # Nix config. The runner has no zsh, so install it before loading .zshrc.
+      - name: install zsh
+        run: sudo apt-get update -qq && sudo apt-get install -y zsh
+
       - name: smoke test - shell, tmux, tools (hard-fail)
         run: |
           set -euo pipefail
@@ -98,6 +103,7 @@ jobs:
       - name: guard - optional private identity path works without a key
         run: |
           set -euo pipefail
+          export PATH="$HOME/.nix-profile/bin:$PATH"
           test ! -e "$HOME/.config/git/private" || { echo "private identity should NOT be linked in CI"; exit 1; }
           zsh -ic 'exit'
           git config --get user.name >/dev/null || true
@@ -127,5 +133,7 @@ jobs:
       - name: flake check (pure eval)
         run: nix flake check ./nix
 
+      # Pure build: identity falls back to jordanhoare, matching the hardcoded
+      # system.primaryUser. macOS is build-only, so it needs no env-derived identity.
       - name: build macos system
-        run: nix build --impure ./nix#darwinConfigurations."jordan@macos".system
+        run: nix build ./nix#darwinConfigurations."jordan@macos".system
