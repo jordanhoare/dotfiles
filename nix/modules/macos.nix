@@ -1,16 +1,14 @@
-{ pkgs, dotfiles, ... }:
+{ dotfiles, ... }:
 
 {
-  home.packages = with pkgs; [
-    firefox
-    obsidian
-    ghostty
-  ];
+  # GUI apps (Ghostty, Firefox, Obsidian) are installed as Homebrew casks in
+  # macos-system.nix - nixpkgs cannot build them for darwin.
+  home.file = let link = path: { source = "${dotfiles}/${path}"; }; in {
+    # VSCode settings land in ~/Library/Application Support/Code/User/ on macOS
+    "Library/Application Support/Code/User/settings.json" = link "config/Code/User/settings.json";
+    "Library/Application Support/Code/User/keybindings.json" = link "config/Code/User/keybindings.json";
 
-  # VSCode settings land in ~/Library/Application Support/Code/User/ on macOS
-  home.file."Library/Application Support/Code/User/settings.json".source = "${dotfiles}/config/Code/User/settings.json";
-  home.file."Library/Application Support/Code/User/keybindings.json".source = "${dotfiles}/config/Code/User/keybindings.json";
-
-  # ghostty config is macOS-native on this machine
-  home.file.".config/ghostty/config".source = "${dotfiles}/config/ghostty/config";
+    # ghostty config is macOS-native on this machine
+    ".config/ghostty/config" = link "config/ghostty/config";
+  };
 }

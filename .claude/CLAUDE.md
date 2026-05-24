@@ -23,12 +23,11 @@ Only files declared in `nix/modules/common.nix` (or a platform module) are linke
 |---|---|
 | `nix/flake.nix` | Entry point - defines `jordan@macos`, `jordan@linux`, `jordan@wsl` |
 | `nix/flake.lock` | Committed - pins all package versions |
-| `nix/modules/common.nix` | Packages and dotfile links shared across all platforms |
-| `nix/modules/linux-base.nix` | Shared between Linux and WSL |
+| `nix/modules/base.nix` | Packages and dotfile links shared across all platforms |
+| `nix/modules/linux.nix` | Native Linux: shared Linux bits plus GUI apps (Obsidian, Bitwarden) |
+| `nix/modules/wsl.nix` | WSL: shared Linux bits only; GUI apps come from Windows via winget |
 | `nix/modules/macos.nix` | macOS Home Manager config |
 | `nix/modules/macos-system.nix` | nix-darwin system config (Homebrew cask for Docker Desktop) |
-| `nix/modules/linux.nix` | Native Linux specifics |
-| `nix/modules/wsl.nix` | WSL specifics |
 
 ### Windows
 

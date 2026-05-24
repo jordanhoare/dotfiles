@@ -22,7 +22,7 @@
       mkHome = { system, modules }: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         extraSpecialArgs = { inherit dotfiles; };
-        modules = [ ./modules/common.nix ] ++ modules;
+        modules = [ ./modules/base.nix ] ++ modules;
       };
     in
     {
@@ -37,7 +37,7 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit dotfiles; };
             home-manager.users.jordanhoare = {
-              imports = [ ./modules/common.nix ./modules/macos.nix ];
+              imports = [ ./modules/base.nix ./modules/macos.nix ];
             };
           }
         ];
@@ -46,13 +46,13 @@
       # Linux — activate with: make switch
       homeConfigurations."jordan@linux" = mkHome {
         system = "x86_64-linux";
-        modules = [ ./modules/linux-base.nix ./modules/linux.nix ];
+        modules = [ ./modules/linux.nix ];
       };
 
       # WSL — activate with: make switch
       homeConfigurations."jordan@wsl" = mkHome {
         system = "x86_64-linux";
-        modules = [ ./modules/linux-base.nix ./modules/wsl.nix ];
+        modules = [ ./modules/wsl.nix ];
       };
     };
 }

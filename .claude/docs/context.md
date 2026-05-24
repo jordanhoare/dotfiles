@@ -10,7 +10,7 @@ The repository solves one problem: bring a fresh machine to a known, fully-confi
 
 ## Users
 
-A single user - the maintainer - operating across three platforms: WSL (primary), native Linux (VMs), and macOS. There is no multi-tenant, no external consumer, no support surface.
+The primary user is the maintainer, operating across three platforms: WSL (primary), native Linux (VMs), and macOS. The configuration is **user-agnostic**: identity (`home.username`, `home.homeDirectory`) is derived from the environment at activation time rather than hardcoded, so anyone can clone and run it unedited - including on a work laptop where the username and home directory are not controlled by the maintainer. A user without the maintainer's SSH keys simply does not get the private git identity linked (gated by `builtins.pathExists` on the decrypted secret); nothing else is affected. Identity derivation requires `--impure`; the impurity is quarantined to a single point in `nix/flake.nix` and the modules receive identity as explicit parameters via `extraSpecialArgs`. Committed fallbacks keep pure `nix flake check` working.
 
 On WSL all repositories including dotfiles live at `/mnt/d/repositories/`. Project repos are cross-compiled or Windows-targeted, requiring native Windows filesystem access. The git performance cost of the 9P layer is an accepted tradeoff. See ADR 0006.
 
