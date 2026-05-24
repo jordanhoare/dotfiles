@@ -1,7 +1,0 @@
-# Internal docs layout: context, glossary, and ADRs under docs/internal/
-
-Agent-facing documentation lives under `docs/internal/` because it is maintainer/agent scaffolding, not user-facing setup material. The canonical files are `docs/internal/context.md` (prose domain framing plus a navigation hub for agents), `docs/internal/glossary.md` (every canonical term), and `docs/internal/adr/` (decision records). The split is deliberate: `context.md` carries no term definitions, and every "use the canonical word" instruction in the skills resolves to the glossary.
-
-We chose this to reconcile two colliding upstream skill lineages. The consumer skills (`setup`, `architecture`, `tdd`, `issue`, `prd`, `triage`) originally treated a single `docs/context.md` as the domain-language home, while the `grill` skill introduced a separate `docs/internal/glossary.md` and a `docs/internal/overview.md` nav hub. We kept the glossary as the sole vocabulary source, promoted `context.md` to the agent entry point, and dropped `overview.md` everywhere except `mkdocs` (where it is a legitimate published-docs title page, a different artifact for a different audience).
-
-Consequences: ADRs stay at `docs/internal/adr/` rather than the more common `docs/adr/`, since they are not user-facing. `CLAUDE.md` remains the operational source of truth and is intentionally distinct from `context.md`, which is pure domain orientation.
