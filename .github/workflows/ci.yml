@@ -56,12 +56,16 @@ jobs:
           nix build --impure ./nix#homeConfigurations."jordan@linux".activationPackage
           nix build --impure ./nix#homeConfigurations."jordan@wsl".activationPackage
 
-      # Identity is env-derived, so this activates as the runner user into /home/runner.
-      # -b backup avoids aborting on the runner's pre-existing dotfiles.
+      # Activate by running the built activation package's script directly. Going
+      # through `home-manager switch` does not forward --impure to its internal flake
+      # evaluation, so identity would fall back to jordanhoare. HOME_MANAGER_BACKUP_EXT
+      # lets activation back up the runner's pre-existing dotfiles instead of aborting.
       - name: activate wsl config
         run: |
           export USER="$(id -un)"
-          nix run home-manager/master -- switch --flake ./nix#"jordan@wsl" --impure -b backup
+          export HOME_MANAGER_BACKUP_EXT=bak
+          nix build --impure ./nix#homeConfigurations."jordan@wsl".activationPackage --out-link "$RUNNER_TEMP/hm-wsl"
+          "$RUNNER_TEMP/hm-wsl/activate"
 
       - name: smoke test - shell, tmux, tools (hard-fail)
         run: |
