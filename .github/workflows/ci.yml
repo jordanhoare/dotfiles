@@ -42,6 +42,14 @@ jobs:
 
       - uses: DeterminateSystems/magic-nix-cache-action@v8
 
+      # GitHub Actions run: shells do not export USER, so the env-derived identity
+      # in flake.nix would fall back to "jordanhoare" and Home Manager activation
+      # would abort with a user mismatch. Export the real runner identity.
+      - name: export runner identity
+        run: |
+          echo "USER=$(id -un)" >> "$GITHUB_ENV"
+          echo "HOME=$HOME" >> "$GITHUB_ENV"
+
       - name: flake check (pure eval)
         run: nix flake check ./nix
 
