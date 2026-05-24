@@ -18,6 +18,10 @@
     ];
   };
 
+  # Nix is installed and managed by Determinate (its own daemon), which conflicts
+  # with nix-darwin's native Nix management. Hand control to Determinate.
+  nix.enable = false;
+
   nixpkgs.config.allowUnfree = true;
 
   system.primaryUser = "jordanhoare";
