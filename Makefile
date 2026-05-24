@@ -6,7 +6,13 @@ PLATFORM ?= $(shell \
 	elif [ "$$(uname)" = "Darwin" ]; then echo "jordan@macos"; \
 	else echo "jordan@linux"; fi)
 
-NIX_RUN = $(if $(filter jordan@macos,$(PLATFORM)),nix run nix-darwin --,nix run home-manager/master --)
+# macOS system activation must run as root. sudo resets PATH (so call nix by absolute
+# path) and USER/HOME (so pass the invoking user's identity through, otherwise the
+# env-derived identity in flake.nix resolves to root:/var/root instead of the real user).
+# Home Manager (Linux/WSL) activates in user space and must NOT use sudo.
+NIX := $(shell command -v nix)
+SUDO_NIX = sudo USER="$$(logname)" HOME="$(HOME)" $(NIX) run nix-darwin --
+NIX_RUN = $(if $(filter jordan@macos,$(PLATFORM)),$(SUDO_NIX),nix run home-manager/master --)
 
 .DEFAULT_GOAL := help
 
@@ -16,7 +22,7 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 switch: ## activate nix profile for the detected platform
-	$(NIX_RUN) switch --flake $(NIX_FLAKE)#$(PLATFORM)
+	$(NIX_RUN) switch --flake $(NIX_FLAKE)#$(PLATFORM) --impure
 
 secrets: ## restore SSH keys from bitwarden and decrypt sops
 	$(DOTFILES)/bin/secrets
@@ -44,9 +50,13 @@ verify: ## verify key symlinks, tools, and git identity
 	@command -v kubectl      >/dev/null && echo "  ✓ kubectl"      || echo "  ✗ kubectl"
 	@command -v nvim         >/dev/null && echo "  ✓ nvim"         || echo "  ✗ nvim"
 	@echo "==> identity"
-	@git whoami 2>/dev/null             && echo "  ✓ git identity" || echo "  ✗ git identity (run make secrets)"
-	@ssh -T git@personal 2>&1 | grep -q "jordanhoare" && echo "  ✓ ssh personal" || echo "  ✗ ssh personal"
-	@ssh -T git@private  2>&1 | grep -q "Hi "         && echo "  ✓ ssh private"  || echo "  ✗ ssh private"
+	@if [ -f $(HOME)/.ssh/personal ]; then \
+		git whoami 2>/dev/null             && echo "  ✓ git identity" || echo "  ✗ git identity (run make secrets)"; \
+		ssh -T git@personal 2>&1 | grep -q "jordanhoare" && echo "  ✓ ssh personal" || echo "  ✗ ssh personal"; \
+		ssh -T git@private  2>&1 | grep -q "Hi "         && echo "  ✓ ssh private"  || echo "  ✗ ssh private"; \
+	else \
+		echo "  - identity checks skipped (no ~/.ssh/personal; run make secrets to enable)"; \
+	fi
 
 hooks: ## install pre-commit hooks
 	pre-commit install
