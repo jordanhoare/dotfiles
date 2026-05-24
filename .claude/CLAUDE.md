@@ -86,18 +86,13 @@ See `.github/wiki/Setup.md` for full per-platform bootstrap steps.
 Quick reference:
 
 ```bash
-# macOS
-make switch-macos
-
-# Linux
-make switch-linux
-
-# WSL
-make switch-wsl
-
-# Verify
+make switch   # auto-detects platform
+make secrets  # run once after first switch
+make switch   # second pass to link git identity
 make verify
 ```
+
+On WSL, clone to `/mnt/d/repositories/dotfiles` - not `~/repositories/`. See ADR 0010.
 
 ## What NOT to do
 

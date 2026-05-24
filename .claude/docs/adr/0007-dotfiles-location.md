@@ -1,4 +1,4 @@
-# ADR 0007 — Dotfiles repository location
+# ADR 0007 — Dotfiles repository location [SUPERSEDED by ADR 0010]
 
 ## Context
 

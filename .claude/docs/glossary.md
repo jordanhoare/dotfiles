@@ -10,7 +10,7 @@ A configuration file managed by this repository. Tracked dotfiles are symlinked 
 
 ## Dotfiles root
 
-The canonical location of the dotfiles repository on any machine: `~/repositories/dotfiles`. Consistent across WSL, native Linux, and macOS.
+The canonical location of the dotfiles repository. Differs by platform: `~/repositories/dotfiles` on macOS and native Linux; `/mnt/d/repositories/dotfiles` on WSL. See ADR 0010.
 
 ## Flake
 

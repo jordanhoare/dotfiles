@@ -1,10 +1,48 @@
-# Windows Manual Config
+# Windows
 
-Some tools install on Windows and store config in `%APPDATA%` or other Windows paths that cannot be reached by stow from WSL. This directory documents what needs to be handled manually on a Windows machine.
+Windows-native apps are managed declaratively via [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/). The app list lives at `windows/winget.json` in this repo.
 
-| Tool | Config tracked in repo | Windows config path |
-|---|---|---|
-| Ghostty | `config/ghostty/config` | `%APPDATA%\ghostty\config` |
-| VSCode | `config/Code/User/` | `%APPDATA%\Code\User\` |
+## Bootstrap
 
-For each tool, see its dedicated note below for the manual steps.
+### 1. winutil (one-time)
+
+Run in PowerShell as Administrator to debloat and tweak a fresh Windows install:
+
+```powershell
+irm "https://christitus.com/win" | iex
+```
+
+### 2. winget
+
+```powershell
+winget import --import-file D:\repositories\dotfiles\windows\winget.json --accept-package-agreements --accept-source-agreements
+```
+
+This installs WSL, VSCode, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, and Ghostty.
+
+### 3. WSL
+
+WSL is installed by winget above. Complete setup:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+Restart when prompted, complete the Ubuntu user setup, then continue with [Setup - WSL](Setup-WSL).
+
+## Adding Windows apps
+
+Add the package identifier to `windows/winget.json` and run:
+
+```powershell
+winget import --import-file D:\repositories\dotfiles\windows\winget.json --accept-package-agreements --accept-source-agreements
+```
+
+Never install Windows apps manually outside of winget - keep `winget.json` as the source of truth.
+
+## Config symlinks
+
+Some Windows apps store config in `%APPDATA%` and need a manual symlink to the repo. See:
+
+- [Ghostty](Windows-Ghostty)
+- [VSCode](Windows-VSCode)

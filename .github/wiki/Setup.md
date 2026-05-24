@@ -1,160 +1,40 @@
 # Setup
 
-All platforms use Nix and Home Manager to provision tools and dotfiles. The Windows side uses winget for Windows-native apps, with Nix running inside WSL.
+Dotfiles are managed via [Nix](https://nixos.org) and [Home Manager](https://github.com/nix-community/home-manager). On Windows, [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) handles native apps with Nix running inside WSL.
 
 `make switch` auto-detects the platform. Override with `make switch PLATFORM=jordan@linux` if needed.
 
-Bootstrap requires two passes on a fresh machine - the first installs `bw` and `sops` via Nix, the second picks up the private git identity after secrets are restored.
+## Prerequisites
 
----
+| Platform | Steps |
+|---|---|
+| macOS | `xcode-select --install` then install Nix: https://nixos.org/download/#nix-install-macos |
+| Linux | `sudo apt install -y git curl make` then install Nix: https://nixos.org/download/#nix-install-linux |
+| WSL | See [Setup - WSL](Setup-WSL) |
 
-## macOS
+Open a new shell after installing Nix to pick up the environment.
 
-### 1. Install Nix
-
-Follow the macOS instructions at https://nixos.org/download/#nix-install-macos
-
-Open a new shell to pick up the Nix environment.
-
-### 2. Clone dotfiles
+## Install
 
 ```bash
 mkdir -p ~/repositories
 git clone https://github.com/jordanhoare/dotfiles.git ~/repositories/dotfiles
 cd ~/repositories/dotfiles
-```
-
-### 3. First switch
-
-```bash
-make switch
-```
-
-### 4. Restore secrets
-
-```bash
-make secrets
+make switch        # pass 1: installs bw and sops via Nix
+make secrets       # restores SSH keys from Bitwarden, decrypts git identity
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
-```
-
-### 5. Second switch
-
-```bash
-make switch
-```
-
-### 6. Verify
-
-```bash
+make switch        # pass 2: links the now-decrypted git identity
 make verify
 ```
 
----
+> Two passes are required on a fresh machine. Pass 1 installs the tools needed by `make secrets`. Pass 2 picks up the private git identity that secrets restores.
 
-## Linux (Debian/Ubuntu)
-
-### 1. Install prerequisites
+## Updating
 
 ```bash
-sudo apt install -y git curl make
+up    # updates flake.lock, switches, and upgrades all other tools
 ```
-
-### 2. Install Nix
-
-Follow the Linux instructions at https://nixos.org/download/#nix-install-linux
-
-Open a new shell to pick up the Nix environment.
-
-### 3. Clone dotfiles
-
-```bash
-mkdir -p ~/repositories
-git clone https://github.com/jordanhoare/dotfiles.git ~/repositories/dotfiles
-cd ~/repositories/dotfiles
-```
-
-### 4. First switch
-
-```bash
-make switch
-```
-
-### 5. Restore secrets
-
-```bash
-make secrets
-git remote set-url origin git@personal:jordanhoare/dotfiles.git
-```
-
-### 6. Second switch
-
-```bash
-make switch
-```
-
-### 7. Verify
-
-```bash
-make verify
-```
-
----
-
-## Windows + WSL
-
-See [windows/README.md](../windows/README.md) for the full Windows-side steps (winutil, winget, WSL install).
-
-Once inside the WSL shell:
-
-### 1. Install prerequisites
-
-```bash
-sudo apt install -y git curl make
-```
-
-### 2. Install Nix
-
-Follow the Linux instructions at https://nixos.org/download/#nix-install-linux
-
-Open a new shell.
-
-### 3. Clone dotfiles
-
-```bash
-mkdir -p ~/repositories
-git clone https://github.com/jordanhoare/dotfiles.git ~/repositories/dotfiles
-cd ~/repositories/dotfiles
-```
-
-### 4. First switch
-
-```bash
-make switch
-```
-
-### 5. Restore secrets
-
-```bash
-make secrets
-git remote set-url origin git@personal:jordanhoare/dotfiles.git
-```
-
-### 6. Second switch
-
-```bash
-make switch
-```
-
-### 7. Verify
-
-```bash
-make verify
-```
-
----
 
 ## Adding tools
 
-Edit the appropriate module in `nix/modules/` and run `make switch`. Never install tools manually with `brew install`, `apt install`, or similar - all tools go through Nix.
-
-To update all packages to latest nixpkgs, run `up` from anywhere in your shell.
+Edit `nix/modules/common.nix` (or the relevant platform module under `nix/modules/`) and run `make switch`. Never install tools manually - all packages go through Nix.

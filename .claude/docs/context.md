@@ -12,6 +12,8 @@ The repository solves one problem: bring a fresh machine to a known, fully-confi
 
 A single user - the maintainer - operating across three platforms: WSL (primary), native Linux (VMs), and macOS. Anything written here should assume that audience. There is no multi-tenant, no external consumer, no support surface.
 
+On WSL all repositories including dotfiles live at `/mnt/d/repositories/`. Large project repos are cross-compiled or Windows-targeted, requiring native Windows filesystem access. The git performance cost of the 9P layer is an accepted tradeoff. See ADR 0010.
+
 ## In scope
 
 - Shell, prompt, terminal, multiplexer, and plugin configuration
