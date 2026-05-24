@@ -1,0 +1,120 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - nix/**
+      - home/**
+      - config/**
+      - bin/**
+      - Makefile
+      - .github/workflows/ci.yml
+  workflow_dispatch:
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      macos: ${{ steps.filter.outputs.macos }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            macos:
+              - nix/modules/macos.nix
+              - nix/modules/macos-system.nix
+              - nix/flake.nix
+              - nix/flake.lock
+
+  # Rung 4: build, activate as the runner user, and smoke-test the dotfiles.
+  # Runs with no secrets - exercises only the unprivileged "stranger clones the repo" path.
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          extra-conf: experimental-features = nix-command flakes
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - name: flake check (pure eval)
+        run: nix flake check ./nix
+
+      - name: build linux + wsl activation packages
+        run: |
+          nix build --impure ./nix#homeConfigurations."jordan@linux".activationPackage
+          nix build --impure ./nix#homeConfigurations."jordan@wsl".activationPackage
+
+      # Identity is env-derived, so this activates as the runner user into /home/runner.
+      # -b backup avoids aborting on the runner's pre-existing dotfiles.
+      - name: activate wsl config
+        run: |
+          nix run home-manager/master -- switch --flake ./nix#"jordan@wsl" --impure -b backup
+
+      - name: smoke test - shell, tmux, tools (hard-fail)
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.nix-profile/bin:$PATH"
+          zsh -ic 'exit'
+          tmux -f config/tmux/tmux.conf new-session -d && tmux kill-server
+          for tool in git starship sheldon mise tmux nvim fzf rg jq; do
+            command -v "$tool" >/dev/null || { echo "missing: $tool"; exit 1; }
+          done
+
+      - name: smoke test - symlinks landed
+        run: |
+          set -euo pipefail
+          for link in .zshrc .zshenv .zprofile .config/git/config \
+                      .config/starship/starship.toml .config/tmux/tmux.conf \
+                      .config/uv/uv.toml .config/nvim; do
+            test -L "$HOME/$link" || { echo "not linked: $link"; exit 1; }
+          done
+
+      - name: nvim config validity (no plugin bootstrap)
+        run: |
+          set -euo pipefail
+          nix run nixpkgs#stylua -- --check config/nvim/
+          test -L "$HOME/.config/nvim"
+
+      - name: make verify (identity checks self-skip without a key)
+        run: make verify
+
+      - name: guard - optional private identity path works without a key
+        run: |
+          set -euo pipefail
+          test ! -e "$HOME/.config/git/private" || { echo "private identity should NOT be linked in CI"; exit 1; }
+          zsh -ic 'exit'
+          git config --get user.name >/dev/null || true
+
+      - name: guard - plaintext secret is never tracked
+        run: |
+          set -euo pipefail
+          if git ls-files --error-unmatch config/git/private 2>/dev/null; then
+            echo "FATAL: plaintext config/git/private is tracked by git"; exit 1
+          fi
+
+  # Rung 2: macOS builds only (activating a nix-darwin system in CI is slow and fragile).
+  # Gated to changes that can affect the macOS config.
+  macos:
+    runs-on: macos-latest
+    needs: changes
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.macos == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          extra-conf: experimental-features = nix-command flakes
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - name: flake check (pure eval)
+        run: nix flake check ./nix
+
+      - name: build macos system
+        run: nix build --impure ./nix#darwinConfigurations."jordan@macos".system
