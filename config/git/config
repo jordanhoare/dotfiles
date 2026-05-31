@@ -4,10 +4,10 @@
   process = git-lfs filter-process
   required = true
 
-[user]
-  name = Jordan Hoare
-  email = jordanhoare0@gmail.com
-  username = jordanhoare
+; Personal identity is sourced from ~/.config/git/personal (decrypted by `make secrets`).
+; Private identity overrides for repos under the private path via [includeIf] below.
+[include]
+  path = ~/.config/git/personal
 
 [core]
   editor = code --wait
@@ -40,7 +40,7 @@
   autoSetupRemote = true
 
 [alias]
-  personal = "!git config user.name 'jordanhoare' && git config user.email 'jordanhoare0@gmail.com' && gh auth switch --user jordanhoare"
+  personal = "!git config user.name \"$(git config --file ~/.config/git/personal user.name)\" && git config user.email \"$(git config --file ~/.config/git/personal user.email)\" && gh auth switch --user \"$(git config --file ~/.config/git/personal github.user)\""
   private = "!git config user.name \"$(git config --file ~/.config/git/private user.name)\" && git config user.email \"$(git config --file ~/.config/git/private user.email)\" && gh auth switch --user \"$(git config --file ~/.config/git/private github.user)\""
   whoami = "!echo \"$(git config user.name) <$(git config user.email)>\""
 
