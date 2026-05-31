@@ -38,3 +38,6 @@ home/.kube/config
 # Neovim - runtime data written into config dir
 config/nvim/.repro
 config/nvim/doc/tags
+
+# Nix build artefact - produced by `make switch` on macOS
+nix/result

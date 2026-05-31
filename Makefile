@@ -6,13 +6,15 @@ PLATFORM ?= $(shell \
 	elif [ "$$(uname)" = "Darwin" ]; then echo "jordan@macos"; \
 	else echo "jordan@linux"; fi)
 
-# macOS system activation must run as root. sudo resets PATH (so call nix by absolute
-# path) and USER/HOME (so pass the invoking user's identity through, otherwise the
-# env-derived identity in flake.nix resolves to root:/var/root instead of the real user).
+# macOS system activation must run as root. sudo resets PATH and USER/HOME, so
+# pass the invoking user's identity through (otherwise the env-derived identity in
+# flake.nix resolves to root:/var/root instead of the real user).
 # Home Manager (Linux/WSL) activates in user space and must NOT use sudo.
-NIX := $(shell command -v nix)
-SUDO_NIX = sudo USER="$$(logname)" HOME="$(HOME)" $(NIX) run nix-darwin --
-NIX_RUN = $(if $(filter jordan@macos,$(PLATFORM)),$(SUDO_NIX),nix run home-manager/master --)
+#
+# Activation uses the darwin-rebuild from the lock-pinned nix-darwin (built locally
+# under nix/result/), NOT `nix run nix-darwin --`. The latter fetches the registry
+# version, which can drift from flake.lock and cause module-API mismatches like
+# `home-manager.users.root.home.homeDirectory: null`.
 
 # Flake attribute path to the active home.file set. On macOS, Home Manager is
 # nested inside the nix-darwin configuration under the activating user.
@@ -26,7 +28,12 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 switch: ## activate nix profile for the detected platform
-	$(NIX_RUN) switch --flake $(NIX_FLAKE)#$(PLATFORM) --impure
+ifeq ($(PLATFORM),jordan@macos)
+	nix build --impure $(NIX_FLAKE)#darwinConfigurations.\"$(PLATFORM)\".system --out-link $(NIX_FLAKE)/result
+	sudo USER="$$(logname)" HOME="$(HOME)" $(NIX_FLAKE)/result/sw/bin/darwin-rebuild switch --flake $(NIX_FLAKE)#$(PLATFORM) --impure
+else
+	nix run home-manager/master -- switch --flake $(NIX_FLAKE)#$(PLATFORM) --impure
+endif
 
 secrets: ## restore SSH keys from bitwarden and decrypt sops
 	$(DOTFILES)/bin/secrets
