@@ -39,26 +39,36 @@
     in
     {
       # macOS — activate with: make switch
-      darwinConfigurations."jordan@macos" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        specialArgs = { inherit username; };
-        modules = [
-          ./modules/macos-system.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = {
-              inherit dotfiles username;
-              homeDirectory = envOr "HOME" "/Users/${username}";
-              vscodeUserDir = macosVscodeUserDir;
-            };
-            home-manager.users.${username} = {
-              imports = [ ./modules/base.nix ./modules/profiles.nix ./modules/macos.nix ];
-            };
-          }
-        ];
-      };
+      # The darwin path activates as root via sudo, so USER inside nix evaluates
+      # to "root" (sudo's env_reset overrides any USER= prefix on the make line).
+      # That would make `home-manager.users.${envOr "USER" ...}` resolve to
+      # `home-manager.users.root`, which HM then null-defaults. macOS is also
+      # already structurally tied to "jordanhoare" via `system.primaryUser` and
+      # `users.users.jordanhoare` in macos-system.nix, so the env-derived
+      # identity pattern only makes sense for the user-space Linux/WSL paths.
+      darwinConfigurations."jordan@macos" =
+        let macosUser = "jordanhoare"; in
+        nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = { username = macosUser; };
+          modules = [
+            ./modules/macos-system.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit dotfiles;
+                username = macosUser;
+                homeDirectory = "/Users/${macosUser}";
+                vscodeUserDir = macosVscodeUserDir;
+              };
+              home-manager.users.${macosUser} = {
+                imports = [ ./modules/base.nix ./modules/profiles.nix ./modules/macos.nix ];
+              };
+            }
+          ];
+        };
 
       # Linux — activate with: make switch
       homeConfigurations."jordan@linux" = mkHome {
