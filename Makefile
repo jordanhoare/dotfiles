@@ -14,6 +14,11 @@ NIX := $(shell command -v nix)
 SUDO_NIX = sudo USER="$$(logname)" HOME="$(HOME)" $(NIX) run nix-darwin --
 NIX_RUN = $(if $(filter jordan@macos,$(PLATFORM)),$(SUDO_NIX),nix run home-manager/master --)
 
+# Attribute path into the declared home.file set, dispatched by platform.
+# On macOS, Home Manager is nested inside the nix-darwin configuration under
+# the activating user; elsewhere it lives at the top-level homeConfigurations.
+HM_FILES_ATTR = $(if $(filter jordan@macos,$(PLATFORM)),darwinConfigurations.\"jordan@macos\".config.home-manager.users.$(shell echo $$USER).home.file,homeConfigurations.\"$(PLATFORM)\".config.home.file)
+
 .DEFAULT_GOAL := help
 
 .PHONY: help switch secrets verify hooks decrypt
@@ -30,18 +35,13 @@ secrets: ## restore SSH keys from bitwarden and decrypt sops
 decrypt: ## unpack any encrypted sops secrets into local repo
 	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc
 
-verify: ## verify key symlinks, tools, and git identity
-	@echo "==> symlinks"
-	@test -L $(HOME)/.zshrc             && echo "  ✓ .zshrc"       || echo "  ✗ .zshrc"
-	@test -L $(HOME)/.zshenv            && echo "  ✓ .zshenv"      || echo "  ✗ .zshenv"
-	@test -L $(HOME)/.zprofile          && echo "  ✓ .zprofile"    || echo "  ✗ .zprofile"
-	@test -L $(HOME)/.ssh/config        && echo "  ✓ .ssh/config"  || echo "  ✗ .ssh/config"
-	@test -L $(HOME)/.config/git/config && echo "  ✓ .config/git"  || echo "  ✗ .config/git"
-	@test -L $(HOME)/.config/starship/starship.toml && echo "  ✓ starship" || echo "  ✗ starship"
-	@test -L $(HOME)/.config/tmux/tmux.conf && echo "  ✓ tmux"    || echo "  ✗ tmux"
-	@test -L $(HOME)/.config/uv/uv.toml && echo "  ✓ uv"          || echo "  ✗ uv"
-	@test -L $(HOME)/.config/nvim       && echo "  ✓ nvim"         || echo "  ✗ nvim"
-	@test -L $(HOME)/bin/up             && echo "  ✓ bin/up"       || echo "  ✗ bin/up"
+verify: ## verify declared symlinks, tools, and git identity
+	@echo "==> symlinks (derived from home.file in $(PLATFORM))"
+	@nix eval --impure --json $(NIX_FLAKE)#$(HM_FILES_ATTR) --apply 'fs: builtins.attrNames fs' 2>/dev/null \
+		| jq -r '.[] | select(startswith("/") | not) | select(test("^(Applications/Home Manager Apps|Library/Fonts/)") | not) | select(endswith("/.keep") | not)' \
+		| while IFS= read -r f; do \
+			test -L "$(HOME)/$$f" && echo "  ✓ $$f" || echo "  ✗ $$f"; \
+		done
 	@echo "==> tools"
 	@command -v nix          >/dev/null && echo "  ✓ nix"          || echo "  ✗ nix"
 	@command -v mise         >/dev/null && echo "  ✓ mise"         || echo "  ✗ mise"
