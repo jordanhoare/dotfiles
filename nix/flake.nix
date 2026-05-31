@@ -57,6 +57,11 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              # Pre-existing files at a Symlink target (a hand-edited config, a
+              # directory already populated by an app, etc) are renamed with this
+              # suffix instead of aborting activation. Same behaviour CI relies on
+              # via HOME_MANAGER_BACKUP_EXT=bak.
+              home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
                 inherit dotfiles;
                 username = macosUser;
