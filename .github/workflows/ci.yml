@@ -82,22 +82,14 @@ jobs:
             command -v "$tool" >/dev/null || { echo "missing: $tool"; exit 1; }
           done
 
-      - name: smoke test - symlinks landed
-        run: |
-          set -euo pipefail
-          for link in .zshrc .zshenv .zprofile .config/git/config \
-                      .config/starship/starship.toml .config/tmux/tmux.conf \
-                      .config/uv/uv.toml .config/nvim; do
-            test -L "$HOME/$link" || { echo "not linked: $link"; exit 1; }
-          done
-
       - name: nvim config validity (no plugin bootstrap)
-        run: |
-          set -euo pipefail
-          nix run nixpkgs#stylua -- --check config/nvim/
-          test -L "$HOME/.config/nvim"
+        run: nix run nixpkgs#stylua -- --check config/nvim/
 
-      - name: make verify (identity checks self-skip without a key)
+      # Asserts every declared home.file Symlink is in place, every expected
+      # tool is on PATH, and (when ~/.ssh/personal is present) git/ssh identity
+      # is working. Identity self-skips on CI runners with no key. Strict:
+      # exits non-zero on the first missing entry.
+      - name: make verify
         run: make verify
 
       - name: guard - optional private identity path works without a key
