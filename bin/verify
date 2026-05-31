@@ -2,15 +2,24 @@
 # Assert every declared home.file Symlink for the given Home Manager
 # configuration is in place under $HOME. Exits non-zero on the first miss.
 #
+# Depends only on `nix` and `bash` - the bootstrap floor - so this runs
+# in any state from "just installed nix" onward, with or without an
+# activated profile.
+#
 # Usage: verify <flake-attribute>
 set -eo pipefail
 
 attr="${1:?usage: $(basename "$0") <flake-attribute>}"
 flake="$(cd "$(dirname "$0")/../nix" && pwd)"
 
-nix eval --impure --json "${flake}#${attr}" --apply 'fs: builtins.attrNames fs' \
-  | jq -r '.[] | select(startswith("/") | not)
-      | select(test("Home Manager Apps|/Fonts/|/\\.keep$") | not)' \
+nix eval --impure --raw "${flake}#${attr}" --apply '
+  fs: builtins.concatStringsSep "\n" (
+    builtins.filter
+      (n: builtins.substring 0 1 n != "/"
+        && builtins.match "Applications/Home Manager Apps" n == null
+        && builtins.match "Library/Fonts/.*" n == null
+        && builtins.match ".*/\\.keep" n == null)
+      (builtins.attrNames fs))' \
   | while IFS= read -r t; do
       [[ -L "$HOME/$t" ]] || { echo "missing: $HOME/$t" >&2; exit 1; }
     done
