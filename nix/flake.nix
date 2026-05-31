@@ -25,10 +25,13 @@
       envOr = name: fallback: let v = builtins.getEnv name; in if v != "" then v else fallback;
       username = envOr "USER" "jordanhoare";
 
-      mkHome = { system, homeFallback, modules }: home-manager.lib.homeManagerConfiguration {
+      linuxVscodeUserDir = ".config/Code/User";
+      macosVscodeUserDir = "Library/Application Support/Code/User";
+
+      mkHome = { system, homeFallback, vscodeUserDir, modules }: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         extraSpecialArgs = {
-          inherit dotfiles username;
+          inherit dotfiles username vscodeUserDir;
           homeDirectory = envOr "HOME" homeFallback;
         };
         modules = [ ./modules/base.nix ] ++ modules;
@@ -48,6 +51,7 @@
             home-manager.extraSpecialArgs = {
               inherit dotfiles username;
               homeDirectory = envOr "HOME" "/Users/${username}";
+              vscodeUserDir = macosVscodeUserDir;
             };
             home-manager.users.${username} = {
               imports = [ ./modules/base.nix ./modules/macos.nix ];
@@ -60,6 +64,7 @@
       homeConfigurations."jordan@linux" = mkHome {
         system = "x86_64-linux";
         homeFallback = "/home/${username}";
+        vscodeUserDir = linuxVscodeUserDir;
         modules = [ ./modules/linux.nix ];
       };
 
@@ -67,6 +72,7 @@
       homeConfigurations."jordan@wsl" = mkHome {
         system = "x86_64-linux";
         homeFallback = "/home/${username}";
+        vscodeUserDir = linuxVscodeUserDir;
         modules = [ ./modules/wsl.nix ];
       };
     };

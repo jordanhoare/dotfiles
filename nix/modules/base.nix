@@ -1,6 +1,11 @@
-{ config, pkgs, lib, dotfiles, username, homeDirectory, ... }:
+{ config, pkgs, lib, dotfiles, username, homeDirectory, vscodeUserDir, ... }:
 
+let
+  link = path: { source = "${dotfiles}/${path}"; };
+in
 {
+  _module.args.link = link;
+
   home.stateVersion = "24.11";
 
   home.username = username;
@@ -61,7 +66,7 @@
     nixfmt-rfc-style
   ];
 
-  home.file = let link = path: { source = "${dotfiles}/${path}"; }; in {
+  home.file = {
     # shell
     ".zshrc" = link "home/.zshrc";
     ".zshenv" = link "home/.zshenv";
@@ -103,6 +108,10 @@
     # runtimes
     ".config/uv/uv.toml" = link "config/uv/uv.toml";
     ".bunfig.toml" = link "home/.bunfig.toml";
+
+    # vscode (target path differs per Platform; see flake.nix)
+    "${vscodeUserDir}/settings.json" = link "config/Code/User/settings.json";
+    "${vscodeUserDir}/keybindings.json" = link "config/Code/User/keybindings.json";
 
     # claude
     ".claude" = link "home/.claude";

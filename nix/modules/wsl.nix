@@ -1,4 +1,4 @@
-{ pkgs, dotfiles, ... }:
+{ pkgs, ... }:
 
 {
   # WSL runs GUI apps (VSCode, Obsidian, Bitwarden) as native Windows apps
@@ -6,10 +6,4 @@
   home.packages = with pkgs; [
     xdg-utils
   ];
-
-  # VSCode settings land in ~/.config/Code/User/ on WSL
-  home.file = let link = path: { source = "${dotfiles}/${path}"; }; in {
-    ".config/Code/User/settings.json" = link "config/Code/User/settings.json";
-    ".config/Code/User/keybindings.json" = link "config/Code/User/keybindings.json";
-  };
 }
