@@ -4,7 +4,7 @@
 # diagnostic, not a gate. Use `verify` for the strict assertion.
 #
 # Usage: doctor <flake-attribute>
-set -uo pipefail
+set -u
 
 attr="${1:?usage: $(basename "$0") <flake-attribute>}"
 flake="$(cd "$(dirname "$0")/../nix" && pwd)"
