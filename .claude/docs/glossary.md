@@ -36,6 +36,8 @@ The OS context in which the shell runs. Three supported platforms: **WSL** (prim
 
 A git identity context - either **personal** (`jordanhoare`) or **private** (anon). Controls `user.name`, `user.email`, and the active `gh` CLI account.
 
+Each Profile's identity lives in a single file at `~/.config/git/<profile>`, a git-config fragment with `[user]` and `[github]` sections. `config/git/config` loads the personal identity by default via `[include]`, and overrides to private inside the private-repos path via `[includeIf]`. The `git personal` and `git private` aliases switch the active identity by reading from these files. The Nix wiring lives in `nix/modules/profiles.nix`: the personal Profile is always linked (committed plaintext, not sensitive); the private Profile is linked only after `make secrets` has decrypted `config/git/private.enc`. Adding or replacing a Profile is one file change.
+
 ## Symlink
 
 A filesystem pointer from a target path (e.g. `~/.zshrc`) to the corresponding file in the dotfiles repo. Managed by Home Manager `home.file`. Editing the repo file is immediately reflected in the live shell.

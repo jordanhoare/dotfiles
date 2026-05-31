@@ -34,7 +34,7 @@
           inherit dotfiles username vscodeUserDir;
           homeDirectory = envOr "HOME" homeFallback;
         };
-        modules = [ ./modules/base.nix ] ++ modules;
+        modules = [ ./modules/base.nix ./modules/profiles.nix ] ++ modules;
       };
     in
     {
@@ -54,7 +54,7 @@
               vscodeUserDir = macosVscodeUserDir;
             };
             home-manager.users.${username} = {
-              imports = [ ./modules/base.nix ./modules/macos.nix ];
+              imports = [ ./modules/base.nix ./modules/profiles.nix ./modules/macos.nix ];
             };
           }
         ];

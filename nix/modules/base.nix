@@ -79,13 +79,8 @@ in
     # ssh
     ".ssh/config" = link "home/.ssh/config";
 
-    # git
+    # git (identity files are owned by modules/profiles.nix)
     ".config/git/config" = link "config/git/config";
-
-    # private git identity - only linked after 'make secrets' has decrypted it
-    ".config/git/private" = lib.mkIf
-      (builtins.pathExists "${dotfiles}/config/git/private")
-      (link "config/git/private");
 
     # cloud CLIs
     ".config/gh/config.yml" = link "config/gh/config.yml";
