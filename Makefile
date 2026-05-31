@@ -14,9 +14,13 @@ NIX := $(shell command -v nix)
 SUDO_NIX = sudo USER="$$(logname)" HOME="$(HOME)" $(NIX) run nix-darwin --
 NIX_RUN = $(if $(filter jordan@macos,$(PLATFORM)),$(SUDO_NIX),nix run home-manager/master --)
 
+# Flake attribute path to the active home.file set. On macOS, Home Manager is
+# nested inside the nix-darwin configuration under the activating user.
+HM_FILES_ATTR = $(if $(filter jordan@macos,$(PLATFORM)),darwinConfigurations.\"jordan@macos\".config.home-manager.users.$(USER).home.file,homeConfigurations.\"$(PLATFORM)\".config.home.file)
+
 .DEFAULT_GOAL := help
 
-.PHONY: help switch secrets verify hooks decrypt
+.PHONY: help switch secrets verify doctor hooks decrypt
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -30,8 +34,11 @@ secrets: ## restore SSH keys from bitwarden and decrypt sops
 decrypt: ## unpack any encrypted sops secrets into local repo
 	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc
 
-verify: ## verify declared symlinks, tools, and git identity (exits non-zero on failure)
-	@$(DOTFILES)/bin/verify
+verify: ## strict check - every declared Symlink is in place (CI gate)
+	@$(DOTFILES)/bin/verify $(HM_FILES_ATTR)
+
+doctor: ## verbose local diagnostic - symlinks, tools, git/ssh identity
+	@$(DOTFILES)/bin/doctor $(HM_FILES_ATTR)
 
 hooks: ## install pre-commit hooks
 	pre-commit install

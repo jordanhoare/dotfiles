@@ -116,7 +116,6 @@ in
     "bin/secrets" = link "bin/secrets";
     "bin/sync" = link "bin/sync";
     "bin/up" = link "bin/up";
-    "bin/verify" = link "bin/verify";
   };
 
   home.sessionPath = [ "$HOME/bin" ];

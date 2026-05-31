@@ -1,40 +1,16 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# Assert every declared home.file Symlink for the given Home Manager
+# configuration is in place under $HOME. Exits non-zero on the first miss.
+#
+# Usage: verify <flake-attribute>
+set -eo pipefail
 
-DOTFILES="$(cd "$(dirname "$0")/.." && pwd)"
+attr="${1:?usage: $(basename "$0") <flake-attribute>}"
+flake="$(cd "$(dirname "$0")/../nix" && pwd)"
 
-if   [ -n "${WSL_DISTRO_NAME:-}" ]; then PLATFORM=jordan@wsl
-elif [ "$(uname)" = Darwin ];       then PLATFORM=jordan@macos
-else                                     PLATFORM=jordan@linux
-fi
-
-if [ "$PLATFORM" = jordan@macos ]; then
-  ATTR="darwinConfigurations.\"jordan@macos\".config.home-manager.users.${USER}.home.file"
-else
-  ATTR="homeConfigurations.\"$PLATFORM\".config.home.file"
-fi
-
-fail=0
-check() { test -L "$HOME/$1" && echo "  ✓ $1" || { echo "  ✗ $1"; fail=1; }; }
-have()  { command -v "$1" >/dev/null && echo "  ✓ $1" || { echo "  ✗ $1"; fail=1; }; }
-
-echo "==> symlinks ($PLATFORM)"
-while read -r f; do check "$f"; done < <(
-  nix eval --impure --json "$DOTFILES/nix#$ATTR" --apply 'fs: builtins.attrNames fs' 2>/dev/null \
-    | jq -r '.[]' \
-    | grep -Ev '^/|^Applications/Home|^Library/Fonts/|/\.keep$'
-)
-
-echo "==> tools"
-for t in nix mise uv gh kubectl nvim; do have "$t"; done
-
-echo "==> identity"
-if [ ! -f "$HOME/.ssh/personal" ]; then
-  echo "  - skipped (no ~/.ssh/personal)"
-  exit $fail
-fi
-git whoami >/dev/null 2>&1                     && echo "  ✓ git identity" || { echo "  ✗ git identity"; fail=1; }
-ssh -T git@personal 2>&1 | grep -q jordanhoare && echo "  ✓ ssh personal" || { echo "  ✗ ssh personal"; fail=1; }
-ssh -T git@private  2>&1 | grep -q "Hi "       && echo "  ✓ ssh private"  || { echo "  ✗ ssh private";  fail=1; }
-
-exit $fail
+nix eval --impure --json "${flake}#${attr}" --apply 'fs: builtins.attrNames fs' \
+  | jq -r '.[] | select(startswith("/") | not)
+      | select(test("Home Manager Apps|/Fonts/|/\\.keep$") | not)' \
+  | while IFS= read -r t; do
+      [[ -L "$HOME/$t" ]] || { echo "missing: $HOME/$t" >&2; exit 1; }
+    done
