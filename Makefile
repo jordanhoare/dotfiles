@@ -44,7 +44,7 @@ ifeq ($(PLATFORM),jordan@macos)
 	nix build --impure '$(DARWIN_SYSTEM)' --out-link $(DARWIN_RESULT)
 	sudo USER="$$(logname)" HOME="$(HOME)" $(DARWIN_REBUILD) switch --flake $(FLAKE_REF) --impure
 else
-	nix run home-manager/master -- switch --flake $(FLAKE_REF) --impure
+	nix run '$(NIX_FLAKE)#home-manager' -- switch --flake $(FLAKE_REF) --impure
 endif
 
 secrets: ## restore SSH keys from bitwarden and decrypt sops

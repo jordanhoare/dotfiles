@@ -68,6 +68,11 @@
           ];
         };
 
+      # Re-export the pinned home-manager CLI so `make switch` on Linux/WSL
+      # uses the version from flake.lock rather than the Nix registry.
+      packages.x86_64-linux.home-manager =
+        home-manager.packages.x86_64-linux.home-manager;
+
       # Linux — activate with: make switch
       homeConfigurations."jordan@linux" = mkHome {
         system = "x86_64-linux";
