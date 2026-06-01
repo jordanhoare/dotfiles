@@ -1,24 +1,32 @@
-DOTFILES := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
+DOTFILES  := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
 NIX_FLAKE := $(DOTFILES)/nix
 
-PLATFORM ?= $(shell \
-	if [ -n "$$WSL_DISTRO_NAME" ]; then echo "jordan@wsl"; \
-	elif [ "$$(uname)" = "Darwin" ]; then echo "jordan@macos"; \
-	else echo "jordan@linux"; fi)
+# Platform detection - pick the named flake configuration. Override with
+# PLATFORM=<name> on the make command line.
+ifdef WSL_DISTRO_NAME
+PLATFORM ?= jordan@wsl
+else ifeq ($(shell uname),Darwin)
+PLATFORM ?= jordan@macos
+else
+PLATFORM ?= jordan@linux
+endif
 
-# macOS system activation must run as root. sudo resets PATH and USER/HOME, so
-# pass the invoking user's identity through (otherwise the env-derived identity in
-# flake.nix resolves to root:/var/root instead of the real user).
-# Home Manager (Linux/WSL) activates in user space and must NOT use sudo.
-#
-# Activation uses the darwin-rebuild from the lock-pinned nix-darwin (built locally
-# under nix/result/), NOT `nix run nix-darwin --`. The latter fetches the registry
-# version, which can drift from flake.lock and cause module-API mismatches like
-# `home-manager.users.root.home.homeDirectory: null`.
+# `\#` is the literal `#` escape - bare `#` starts a Make comment.
+FLAKE_REF := $(NIX_FLAKE)\#$(PLATFORM)
 
-# Flake attribute path to the active home.file set. On macOS, Home Manager is
-# nested inside the nix-darwin configuration under the activating user.
-HM_FILES_ATTR = $(if $(filter jordan@macos,$(PLATFORM)),darwinConfigurations.\"jordan@macos\".config.home-manager.users.$(USER).home.file,homeConfigurations.\"$(PLATFORM)\".config.home.file)
+# Attribute path to the active home.file set, consumed by bin/verify and
+# bin/doctor. On macOS, Home Manager is nested inside nix-darwin under the
+# activating user; on Linux/WSL it is the top-level configuration.
+HM_FILES_DARWIN := darwinConfigurations."jordan@macos".config.home-manager.users.$(USER).home.file
+HM_FILES_HM     := homeConfigurations."$(PLATFORM)".config.home.file
+HM_FILES_ATTR   := $(if $(filter jordan@macos,$(PLATFORM)),$(HM_FILES_DARWIN),$(HM_FILES_HM))
+
+# macOS activation uses the lock-pinned darwin-rebuild built locally under
+# nix/result/, not `nix run nix-darwin --`. The latter pulls the registry
+# version, which can drift from flake.lock and trigger module-API mismatches.
+DARWIN_SYSTEM  := $(NIX_FLAKE)\#darwinConfigurations."jordan@macos".system
+DARWIN_RESULT  := $(NIX_FLAKE)/result
+DARWIN_REBUILD := $(DARWIN_RESULT)/sw/bin/darwin-rebuild
 
 .DEFAULT_GOAL := help
 
@@ -27,12 +35,16 @@ HM_FILES_ATTR = $(if $(filter jordan@macos,$(PLATFORM)),darwinConfigurations.\"j
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
+# macOS system activation must run as root. sudo resets PATH/USER/HOME, so we
+# pass the invoking user's identity through - otherwise the env-derived identity
+# in flake.nix resolves to root:/var/root. Home Manager (Linux/WSL) activates
+# in user space and must NOT use sudo.
 switch: ## activate nix profile for the detected platform
 ifeq ($(PLATFORM),jordan@macos)
-	nix build --impure $(NIX_FLAKE)#darwinConfigurations.\"$(PLATFORM)\".system --out-link $(NIX_FLAKE)/result
-	sudo USER="$$(logname)" HOME="$(HOME)" $(NIX_FLAKE)/result/sw/bin/darwin-rebuild switch --flake $(NIX_FLAKE)#$(PLATFORM) --impure
+	nix build --impure '$(DARWIN_SYSTEM)' --out-link $(DARWIN_RESULT)
+	sudo USER="$$(logname)" HOME="$(HOME)" $(DARWIN_REBUILD) switch --flake $(FLAKE_REF) --impure
 else
-	nix run home-manager/master -- switch --flake $(NIX_FLAKE)#$(PLATFORM) --impure
+	nix run home-manager/master -- switch --flake $(FLAKE_REF) --impure
 endif
 
 secrets: ## restore SSH keys from bitwarden and decrypt sops
@@ -42,10 +54,10 @@ decrypt: ## unpack any encrypted sops secrets into local repo
 	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc
 
 verify: ## strict check - every declared Symlink is in place (CI gate)
-	@$(DOTFILES)/bin/verify $(HM_FILES_ATTR)
+	@$(DOTFILES)/bin/verify '$(HM_FILES_ATTR)'
 
 doctor: ## verbose local diagnostic - symlinks, tools, git/ssh identity
-	@$(DOTFILES)/bin/doctor $(HM_FILES_ATTR)
+	@$(DOTFILES)/bin/doctor '$(HM_FILES_ATTR)'
 
 hooks: ## install pre-commit hooks
 	pre-commit install
