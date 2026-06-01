@@ -23,13 +23,10 @@
       envOr = name: fallback: let v = builtins.getEnv name; in if v != "" then v else fallback;
       username = envOr "USER" "user";
 
-      linuxVscodeUserDir = ".config/Code/User";
-      macosVscodeUserDir = "Library/Application Support/Code/User";
-
-      mkHome = { system, homeFallback, vscodeUserDir, modules }: home-manager.lib.homeManagerConfiguration {
+      mkHome = { system, homeFallback, modules }: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         extraSpecialArgs = {
-          inherit username vscodeUserDir;
+          inherit username;
           homeDirectory = envOr "HOME" homeFallback;
         };
         modules = [ ./modules/base.nix ./modules/profiles.nix ] ++ modules;
@@ -37,13 +34,10 @@
     in
     {
       # macOS — activate with: make switch
-      # The darwin path activates as root via sudo, so USER inside nix evaluates
-      # to "root" (sudo's env_reset overrides any USER= prefix on the make line).
-      # That would make `home-manager.users.${envOr "USER" ...}` resolve to
-      # `home-manager.users.root`, which HM then null-defaults. macOS is also
-      # already structurally tied to "jordanhoare" via `system.primaryUser` and
-      # `users.users.jordanhoare` in macos-system.nix, so the env-derived
-      # identity pattern only makes sense for the user-space Linux/WSL paths.
+      # darwin-rebuild runs under sudo, which resets USER to root via env_reset.
+      # The Makefile passes USER="$(logname)" and HOME explicitly so envOr
+      # resolves to the invoking user, not root. Both nix build and darwin-rebuild
+      # switch receive the correct identity through those env vars.
       darwinConfigurations."jordan@macos" =
         nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
@@ -62,7 +56,6 @@
               home-manager.extraSpecialArgs = {
                 inherit username;
                 homeDirectory = "/Users/${username}";
-                vscodeUserDir = macosVscodeUserDir;
               };
               home-manager.users.${username} = {
                 imports = [ ./modules/base.nix ./modules/profiles.nix ./modules/macos.nix ];
@@ -75,7 +68,6 @@
       homeConfigurations."jordan@linux" = mkHome {
         system = "x86_64-linux";
         homeFallback = "/home/${username}";
-        vscodeUserDir = linuxVscodeUserDir;
         modules = [ ./modules/linux.nix ];
       };
 
@@ -83,7 +75,6 @@
       homeConfigurations."jordan@wsl" = mkHome {
         system = "x86_64-linux";
         homeFallback = "/home/${username}";
-        vscodeUserDir = linuxVscodeUserDir;
         modules = [ ./modules/wsl.nix ];
       };
     };
