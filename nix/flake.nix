@@ -17,8 +17,6 @@
 
   outputs = { nixpkgs, home-manager, nix-darwin, ... }:
     let
-      dotfiles = builtins.toString ../.;
-
       # Identity is derived from the environment at activation (requires --impure),
       # with committed fallbacks so pure `nix flake check` still evaluates. This is
       # the single point of impurity; modules receive identity as explicit args.
@@ -31,7 +29,7 @@
       mkHome = { system, homeFallback, vscodeUserDir, modules }: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         extraSpecialArgs = {
-          inherit dotfiles username vscodeUserDir;
+          inherit username vscodeUserDir;
           homeDirectory = envOr "HOME" homeFallback;
         };
         modules = [ ./modules/base.nix ./modules/profiles.nix ] ++ modules;
@@ -63,7 +61,6 @@
               # via HOME_MANAGER_BACKUP_EXT=bak.
               home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
-                inherit dotfiles;
                 username = macosUser;
                 homeDirectory = "/Users/${macosUser}";
                 vscodeUserDir = macosVscodeUserDir;

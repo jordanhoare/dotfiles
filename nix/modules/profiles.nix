@@ -1,4 +1,4 @@
-{ lib, dotfiles, link, ... }:
+{ lib, ... }:
 
 # A Profile is a git identity context (see glossary). Two Profiles exist:
 #   - personal: committed plaintext at config/git/personal, always linked.
@@ -10,10 +10,10 @@
 
 {
   home.file = {
-    ".config/git/personal" = link "config/git/personal";
+    ".config/git/personal".source = ../../config/git/personal;
 
     ".config/git/private" = lib.mkIf
-      (builtins.pathExists "${dotfiles}/config/git/private")
-      (link "config/git/private");
+      (builtins.pathExists ../../config/git/private)
+      { source = ../../config/git/private; };
   };
 }
