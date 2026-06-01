@@ -45,26 +45,18 @@ jobs:
       - name: flake check (pure eval)
         run: nix flake check ./nix
 
-      # GitHub Actions run: shells do not export USER, so the env-derived identity
-      # in flake.nix falls back to "jordanhoare" and Home Manager activation aborts
-      # with a user mismatch. Export the real runner identity in the same shell that
-      # invokes nix so getEnv reads it at evaluation time.
       - name: build linux + wsl activation packages
         run: |
-          export USER="$(id -un)"
-          echo "building as USER=$USER HOME=$HOME"
-          nix build --impure ./nix#homeConfigurations."jordan@linux".activationPackage
-          nix build --impure ./nix#homeConfigurations."jordan@wsl".activationPackage
+          nix build --impure ./nix#homeConfigurations."linux".activationPackage
+          nix build --impure ./nix#homeConfigurations."wsl".activationPackage
 
-      # Activate by running the built activation package's script directly. Going
-      # through `home-manager switch` does not forward --impure to its internal flake
-      # evaluation, so identity would fall back to jordanhoare. HOME_MANAGER_BACKUP_EXT
-      # lets activation back up the runner's pre-existing dotfiles instead of aborting.
+      # Activate by running the built activation package's script directly.
+      # HOME_MANAGER_BACKUP_EXT lets activation back up the runner's pre-existing
+      # dotfiles instead of aborting.
       - name: activate wsl config
         run: |
-          export USER="$(id -un)"
           export HOME_MANAGER_BACKUP_EXT=bak
-          nix build --impure ./nix#homeConfigurations."jordan@wsl".activationPackage --out-link "$RUNNER_TEMP/hm-wsl"
+          nix build --impure ./nix#homeConfigurations."wsl".activationPackage --out-link "$RUNNER_TEMP/hm-wsl"
           "$RUNNER_TEMP/hm-wsl/activate"
 
       # zsh is the login shell, provided by the OS on real machines, not by this
@@ -125,7 +117,5 @@ jobs:
       - name: flake check (pure eval)
         run: nix flake check ./nix
 
-      # Pure build: identity falls back to jordanhoare, matching the hardcoded
-      # system.primaryUser. macOS is build-only, so it needs no env-derived identity.
       - name: build macos system
-        run: nix build ./nix#darwinConfigurations."jordan@macos".system
+        run: nix build --impure ./nix#darwinConfigurations."macos".system
