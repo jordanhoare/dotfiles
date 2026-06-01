@@ -17,8 +17,7 @@
 
   outputs = { nixpkgs, home-manager, nix-darwin, ... }:
     let
-      # The only value to change when forking for your own use.
-      # Must match USERNAME in the Makefile.
+      # Change this when forking for your own use.
       username = "jordanhoare";
 
       # pathExists on a gitignored file is the sole reason --impure is required.
@@ -34,7 +33,7 @@
     in
     {
       # macOS — activate with: make switch
-      darwinConfigurations."jordan@macos" =
+      darwinConfigurations."macos" =
         nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = { inherit username; };
@@ -64,14 +63,14 @@
         home-manager.packages.x86_64-linux.home-manager;
 
       # Linux — activate with: make switch
-      homeConfigurations."jordan@linux" = mkHome {
+      homeConfigurations."linux" = mkHome {
         system = "x86_64-linux";
         homeDirectory = "/home/${username}";
         modules = [ ./modules/linux.nix ];
       };
 
       # WSL — activate with: make switch
-      homeConfigurations."jordan@wsl" = mkHome {
+      homeConfigurations."wsl" = mkHome {
         system = "x86_64-linux";
         homeDirectory = "/home/${username}";
         modules = [ ./modules/wsl.nix ];
