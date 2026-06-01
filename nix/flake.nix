@@ -20,8 +20,15 @@
       # Identity is derived from the environment at activation (requires --impure),
       # with a neutral fallback so pure `nix flake check` still evaluates. This is
       # the single point of impurity; modules receive identity as explicit args.
+      #
+      # USER is unreliable on macOS: darwin-rebuild runs under sudo, which resets
+      # USER to root, and darwin-rebuild itself resets HOME to ~root. Both are
+      # unusable as identity sources under sudo. DOTFILES_USER is a custom variable
+      # set by the Makefile that sudo passes through and darwin-rebuild does not
+      # touch, making it the authoritative source on macOS. On Linux/WSL, USER is
+      # always correct (no sudo in the activation path).
       envOr = name: fallback: let v = builtins.getEnv name; in if v != "" then v else fallback;
-      username = envOr "USER" "user";
+      username = envOr "DOTFILES_USER" (envOr "USER" "user");
       # Checked at evaluation time (requires --impure) so the result is visible
       # at the flake level rather than buried inside profiles.nix. False on a
       # fresh clone where `make secrets` has not yet run.
@@ -38,10 +45,10 @@
     in
     {
       # macOS — activate with: make switch
-      # darwin-rebuild runs under sudo, which resets USER to root via env_reset.
-      # The Makefile passes USER="$(logname)" and HOME explicitly so envOr
-      # resolves to the invoking user, not root. Both nix build and darwin-rebuild
-      # switch receive the correct identity through those env vars.
+      # darwin-rebuild runs under sudo, which resets USER to root. username is
+      # derived from HOME (passed explicitly by the Makefile) via baseNameOf,
+      # so it resolves to the invoking user in both the nix build and
+      # darwin-rebuild switch evaluation passes.
       darwinConfigurations."jordan@macos" =
         nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";

@@ -1,5 +1,9 @@
-DOTFILES  := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
-NIX_FLAKE := $(DOTFILES)/nix
+DOTFILES      := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
+NIX_FLAKE     := $(DOTFILES)/nix
+# Captured at Make-parse time so the value is a literal string in every recipe,
+# avoiding unreliable shell-time expansion after sudo changes the environment.
+# id -un reflects the effective user (who ran make), not the login session user.
+INVOKING_USER := $(shell id -un)
 
 # Platform detection - pick the named flake configuration. Override with
 # PLATFORM=<name> on the make command line.
@@ -17,7 +21,7 @@ FLAKE_REF := $(NIX_FLAKE)\#$(PLATFORM)
 # Attribute path to the active home.file set, consumed by bin/verify and
 # bin/doctor. On macOS, Home Manager is nested inside nix-darwin under the
 # activating user; on Linux/WSL it is the top-level configuration.
-HM_FILES_DARWIN := darwinConfigurations."jordan@macos".config.home-manager.users.$(USER).home.file
+HM_FILES_DARWIN := darwinConfigurations."jordan@macos".config.home-manager.users.$(INVOKING_USER).home.file
 HM_FILES_HM     := homeConfigurations."$(PLATFORM)".config.home.file
 HM_FILES_ATTR   := $(if $(filter jordan@macos,$(PLATFORM)),$(HM_FILES_DARWIN),$(HM_FILES_HM))
 
@@ -35,14 +39,15 @@ DARWIN_REBUILD := $(DARWIN_RESULT)/sw/bin/darwin-rebuild
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-# macOS system activation must run as root. sudo resets PATH/USER/HOME, so we
-# pass the invoking user's identity through - otherwise the env-derived identity
-# in flake.nix resolves to root:/var/root. Home Manager (Linux/WSL) activates
-# in user space and must NOT use sudo.
+# macOS system activation must run as root. sudo resets USER/HOME, and
+# darwin-rebuild itself resets HOME to ~root, so neither is usable as an
+# identity source. DOTFILES_USER is a custom variable that sudo passes through
+# and darwin-rebuild does not touch; flake.nix reads it first.
+# Home Manager (Linux/WSL) activates in user space and must NOT use sudo.
 switch: ## activate nix profile for the detected platform
 ifeq ($(PLATFORM),jordan@macos)
 	nix build --impure '$(DARWIN_SYSTEM)' --out-link $(DARWIN_RESULT)
-	sudo USER="$$(logname)" HOME="$(HOME)" $(DARWIN_REBUILD) switch --flake $(FLAKE_REF) --impure
+	sudo DOTFILES_USER="$(INVOKING_USER)" $(DARWIN_REBUILD) switch --flake $(FLAKE_REF) --impure
 else
 	nix run '$(NIX_FLAKE)#home-manager' -- switch --flake $(FLAKE_REF) --impure
 endif
