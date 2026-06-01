@@ -1,5 +1,6 @@
 DOTFILES  := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
 NIX_FLAKE := $(DOTFILES)/nix
+USERNAME  := jordanhoare
 
 # Platform detection - pick the named flake configuration. Override with
 # PLATFORM=<name> on the make command line.
@@ -17,9 +18,7 @@ FLAKE_REF := $(NIX_FLAKE)\#$(PLATFORM)
 # Attribute path to the active home.file set, consumed by bin/verify and
 # bin/doctor. On macOS, Home Manager is nested inside nix-darwin under the
 # activating user; on Linux/WSL it is the top-level configuration.
-# The username in HM_FILES_DARWIN is structurally required: nix-darwin registers
-# Home Manager config under home-manager.users.<username>, not under the config key.
-HM_FILES_DARWIN := darwinConfigurations."macos".config.home-manager.users.jordanhoare.home.file
+HM_FILES_DARWIN := darwinConfigurations."macos".config.home-manager.users.$(USERNAME).home.file
 HM_FILES_HM     := homeConfigurations."$(PLATFORM)".config.home.file
 HM_FILES_ATTR   := $(if $(filter macos,$(PLATFORM)),$(HM_FILES_DARWIN),$(HM_FILES_HM))
 
