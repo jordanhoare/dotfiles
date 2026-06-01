@@ -1,6 +1,5 @@
 DOTFILES  := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
 NIX_FLAKE := $(DOTFILES)/nix
-USERNAME  := jordanhoare
 
 # Platform detection - pick the named flake configuration. Override with
 # PLATFORM=<name> on the make command line.
@@ -15,12 +14,8 @@ endif
 # `\#` is the literal `#` escape - bare `#` starts a Make comment.
 FLAKE_REF := $(NIX_FLAKE)\#$(PLATFORM)
 
-# Attribute path to the active home.file set, consumed by bin/verify and
-# bin/doctor. On macOS, Home Manager is nested inside nix-darwin under the
-# activating user; on Linux/WSL it is the top-level configuration.
-HM_FILES_DARWIN := darwinConfigurations."macos".config.home-manager.users.$(USERNAME).home.file
-HM_FILES_HM     := homeConfigurations."$(PLATFORM)".config.home.file
-HM_FILES_ATTR   := $(if $(filter macos,$(PLATFORM)),$(HM_FILES_DARWIN),$(HM_FILES_HM))
+# Stable attribute path for make verify / make doctor - same key for all platforms.
+HM_FILES_ATTR := homeManagerFiles.$(PLATFORM)
 
 # macOS activation uses the lock-pinned darwin-rebuild built locally under
 # nix/result/, not `nix run nix-darwin --`. The latter pulls the registry
