@@ -22,11 +22,15 @@
       # the single point of impurity; modules receive identity as explicit args.
       envOr = name: fallback: let v = builtins.getEnv name; in if v != "" then v else fallback;
       username = envOr "USER" "user";
+      # Checked at evaluation time (requires --impure) so the result is visible
+      # at the flake level rather than buried inside profiles.nix. False on a
+      # fresh clone where `make secrets` has not yet run.
+      hasPrivateProfile = builtins.pathExists ../config/git/private;
 
       mkHome = { system, homeFallback, modules }: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         extraSpecialArgs = {
-          inherit username;
+          inherit username hasPrivateProfile;
           homeDirectory = envOr "HOME" homeFallback;
         };
         modules = [ ./modules/base.nix ./modules/profiles.nix ] ++ modules;
@@ -54,7 +58,7 @@
               # via HOME_MANAGER_BACKUP_EXT=bak.
               home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
-                inherit username;
+                inherit username hasPrivateProfile;
                 homeDirectory = "/Users/${username}";
               };
               home-manager.users.${username} = {
