@@ -18,10 +18,10 @@
   outputs = { nixpkgs, home-manager, nix-darwin, ... }:
     let
       # Identity is derived from the environment at activation (requires --impure),
-      # with committed fallbacks so pure `nix flake check` still evaluates. This is
+      # with a neutral fallback so pure `nix flake check` still evaluates. This is
       # the single point of impurity; modules receive identity as explicit args.
       envOr = name: fallback: let v = builtins.getEnv name; in if v != "" then v else fallback;
-      username = envOr "USER" "jordanhoare";
+      username = envOr "USER" "user";
 
       linuxVscodeUserDir = ".config/Code/User";
       macosVscodeUserDir = "Library/Application Support/Code/User";
@@ -45,10 +45,9 @@
       # `users.users.jordanhoare` in macos-system.nix, so the env-derived
       # identity pattern only makes sense for the user-space Linux/WSL paths.
       darwinConfigurations."jordan@macos" =
-        let macosUser = "jordanhoare"; in
         nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
-          specialArgs = { username = macosUser; };
+          specialArgs = { inherit username; };
           modules = [
             ./modules/macos-system.nix
             home-manager.darwinModules.home-manager
@@ -61,11 +60,11 @@
               # via HOME_MANAGER_BACKUP_EXT=bak.
               home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
-                username = macosUser;
-                homeDirectory = "/Users/${macosUser}";
+                inherit username;
+                homeDirectory = "/Users/${username}";
                 vscodeUserDir = macosVscodeUserDir;
               };
-              home-manager.users.${macosUser} = {
+              home-manager.users.${username} = {
                 imports = [ ./modules/base.nix ./modules/profiles.nix ./modules/macos.nix ];
               };
             }

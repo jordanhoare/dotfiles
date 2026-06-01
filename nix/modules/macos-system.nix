@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ username, ... }:
 
 {
   # Homebrew handles macOS GUI apps that nixpkgs cannot build for darwin
@@ -24,11 +24,11 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  system.primaryUser = "jordanhoare";
+  system.primaryUser = username;
 
-  users.users.jordanhoare = {
-    name = "jordanhoare";
-    home = "/Users/jordanhoare";
+  users.users.${username} = {
+    name = username;
+    home = "/Users/${username}";
   };
 
   system.stateVersion = 5;
