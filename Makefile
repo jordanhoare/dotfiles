@@ -17,9 +17,10 @@ FLAKE_REF := $(NIX_FLAKE)\#$(PLATFORM)
 # Stable attribute path for make verify / make doctor - same key for all platforms.
 HM_FILES_ATTR := homeManagerFiles.$(PLATFORM)
 
-# macOS activation uses the lock-pinned darwin-rebuild built locally under
-# nix/result/, not `nix run nix-darwin --`. The latter pulls the registry
-# version, which can drift from flake.lock and trigger module-API mismatches.
+# macOS activation builds the system derivation first so that darwin-rebuild
+# comes from the flake-pinned nix-darwin, not whatever `nix run nix-darwin`
+# resolves from the registry. This also handles fresh machines where
+# darwin-rebuild is not yet on PATH.
 DARWIN_SYSTEM  := $(NIX_FLAKE)\#darwinConfigurations."macos".system
 DARWIN_RESULT  := $(NIX_FLAKE)/result
 DARWIN_REBUILD := $(DARWIN_RESULT)/sw/bin/darwin-rebuild
