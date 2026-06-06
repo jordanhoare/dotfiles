@@ -20,7 +20,10 @@ fi
 
 if ! tmux has-session -t "$session" 2>/dev/null; then
   tmux new-session -d -s "$session" -c "$PWD" -n code
-  tmux split-window -h -t "$session:code" -c "$PWD" claude
+  # IS_DEMO=1 strips org/email/banner chrome from the claude tui, freeing
+  # rows for actual content. undocumented in public docs but referenced
+  # in the binary as process.env.IS_DEMO.
+  tmux split-window -h -t "$session:code" -c "$PWD" -e "IS_DEMO=1" claude
   tmux select-pane -t "$session:code" -L
 fi
 
