@@ -1,5 +1,5 @@
 {
-  "theme": "Catppuccin Mocha",
+  "theme": "Catppuccin Mocha (Blur)",
   "icon_theme": "Catppuccin Mocha",
   "window_background_appearance": "blurred",
   "base_keymap": "VSCode",
@@ -61,6 +61,7 @@
   "auto_update": false,
   "auto_install_extensions": {
     "catppuccin": true,
+    "catppuccin-blur": true,
     "catppuccin-icons": true,
     "nix": true,
     "toml": true,
