@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# open or attach a tmux dev session for the current project.
+# layout: left pane = zsh at $PWD, right pane = claude code.
+
+set -euo pipefail
+
+session="$(basename "$PWD" | tr '. ' '__')"
+
+if ! tmux has-session -t "$session" 2>/dev/null; then
+  tmux new-session -d -s "$session" -c "$PWD" -n code
+  tmux split-window -h -t "$session:code" -c "$PWD" claude
+  tmux select-pane -t "$session:code" -L
+fi
+
+if [ -n "${TMUX:-}" ]; then
+  exec tmux switch-client -t "$session"
+else
+  exec tmux attach-session -t "$session"
+fi
