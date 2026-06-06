@@ -40,8 +40,8 @@
   "agent_servers": {
     "Claude Code": {
       "type": "custom",
-      "command": "npx",
-      "args": ["@agentclientprotocol/claude-agent-acp@latest", "--acp"],
+      "command": "zsh",
+      "args": ["-ic", "exec bunx @agentclientprotocol/claude-agent-acp@latest --acp"],
       "env": {}
     }
   },
