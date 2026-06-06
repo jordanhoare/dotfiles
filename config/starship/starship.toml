@@ -22,7 +22,7 @@ $line_break\
 $character"""
 
 add_newline = true
-palette = 'nord'
+palette = 'catppuccin_mocha'
 
 [directory]
 style = 'bold fg:dark_blue'
@@ -109,31 +109,18 @@ min_time = 500
 style = 'fg:gray'
 format = '[$duration]($style)'
 
-[palettes.nord]
-dark_blue = '#5E81AC'
-blue = '#81A1C1'
-teal = '#88C0D0'
-red = '#BF616A'
-orange = '#D08770'
-green = '#A3BE8C'
-yellow = '#EBCB8B'
-purple = '#B48EAD'
-gray = '#434C5E'
-black = '#2E3440'
-white='#D8DEE9'
-
-[palettes.onedark]
-dark_blue='#61afef'
-blue='#56b6c2'
-red='#e06c75'
-green='#98c379'
-purple='#c678dd'
-cyan='#56b6c2'
-orange='#be5046'
-yellow='#e5c07b'
-gray='#828997'
-white ='#abb2bf'
-black='#2c323c'
+[palettes.catppuccin_mocha]
+dark_blue = '#89b4fa'
+blue = '#74c7ec'
+teal = '#94e2d5'
+red = '#f38ba8'
+orange = '#fab387'
+green = '#a6e3a1'
+yellow = '#f9e2af'
+purple = '#cba6f7'
+gray = '#6c7086'
+black = '#1e1e2e'
+white = '#cdd6f4'
 
 [env_var]
 style = 'fg:green'
