@@ -14,6 +14,7 @@
       "docker"
       "ghostty"
       "firefox"
+      "nikitabobko/tap/aerospace"
       "obsidian"
       "zed"
     ];
@@ -79,6 +80,7 @@
   home-manager.users.${username} = {
     home.file = {
       ".config/ghostty/config".source = ../../config/ghostty/config;
+      ".config/aerospace/aerospace.toml".source = ../../config/aerospace/aerospace.toml;
     };
 
     # Applied at activation time alongside all other home config.
