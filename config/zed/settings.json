@@ -88,6 +88,8 @@
     "lua": true,
     "make": true,
     "dockerfile": true,
+    "basher": true,
+    "hyprlang": true,
     "git-firefly": true,
     "marksman": true,
     "html": false
@@ -148,6 +150,11 @@
       "language_servers": ["vtsls", "!typescript-language-server"],
       "format_on_save": "on"
     },
+    "Shell Script": {
+      "language_servers": ["bash-language-server"],
+      "format_on_save": "on",
+      "tab_size": 2
+    },
     "Markdown": {
       "language_servers": ["marksman", "!markdown-oxide"],
       "format_on_save": "on",
@@ -183,7 +190,9 @@
       ".pre-commit-hooks.yaml",
       ".markdownlint.yaml",
       ".secrets.baseline"
-    ]
+    ],
+    "Shell Script": [".zshrc", ".zshenv", ".zprofile", ".zlogin", ".bashrc"],
+    "HyprLang": ["hyprland.conf", "hyprpaper.conf", "hypridle.conf", "hyprlock.conf"]
   },
   "lsp": {
     "yaml-language-server": {

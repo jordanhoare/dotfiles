@@ -34,6 +34,8 @@
     bitwarden-cli
     imagemagick
     fastfetch
+    shellcheck
+    shfmt
   ];
 
   home.file = {
