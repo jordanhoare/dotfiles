@@ -33,6 +33,14 @@
     "nix": true,
     "html": false
   },
+  "agent_servers": {
+    "Claude Code": {
+      "type": "custom",
+      "command": "npx",
+      "args": ["@agentclientprotocol/claude-agent-acp@latest", "--acp"],
+      "env": {}
+    }
+  },
   "load_direnv": "shell_hook",
   "terminal": {
     "shell": {
