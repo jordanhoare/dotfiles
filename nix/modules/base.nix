@@ -49,6 +49,7 @@
     "bin/secrets".source = ../../bin/secrets;
     "bin/sync".source = ../../bin/sync;
     "bin/up".source = ../../bin/up;
+    "bin/work".source = ../../bin/work;
   };
 
   home.sessionPath = [ "$HOME/bin" ];
