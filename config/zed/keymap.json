@@ -11,7 +11,28 @@
       "cmd-p": ["task::Spawn", { "task_name": "Television: Find File" }],
       "ctrl-p": ["task::Spawn", { "task_name": "Television: Find File" }],
       "cmd-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
-      "ctrl-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }]
+      "ctrl-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
+      "cmd-shift-r": "task::Spawn",
+      "cmd-shift-o": "project_symbols::Toggle",
+      "cmd-shift-d": "diagnostics::Deploy",
+      "cmd-shift-b": "git_panel::ToggleFocus",
+      "cmd-shift-g": "git_panel::ToggleFocus",
+      "cmd-e": "tab_switcher::Toggle",
+      "cmd-shift-m": "diagnostics::Deploy",
+      "cmd-shift-l": "editor::SelectAllMatches"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-.": "editor::ToggleCodeActions",
+      "f2": "editor::Rename",
+      "f12": "editor::GoToDefinition",
+      "shift-f12": "editor::FindAllReferences",
+      "cmd-shift-i": "editor::Format",
+      "cmd-k cmd-i": "editor::Hover",
+      "f8": "editor::GoToDiagnostic",
+      "shift-f8": "editor::GoToPreviousDiagnostic"
     }
   }
 ]
