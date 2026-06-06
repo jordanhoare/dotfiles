@@ -9,6 +9,9 @@
   "session": {
     "trust_all_worktrees": true
   },
+  "project_panel": {
+    "dock": "left"
+  },
   "tab_size": 2,
   "format_on_save": "on",
   "soft_wrap": "none",
