@@ -7,6 +7,7 @@
     ./cloud.nix
     ./dev.nix
     ./vscode.nix
+    ./zed.nix
   ];
 
   home.stateVersion = "24.11";

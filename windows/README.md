@@ -18,7 +18,13 @@ Install all Windows apps from the declarative list:
 winget import --import-file winget.json --accept-package-agreements --accept-source-agreements
 ```
 
-This installs WSL, VSCode, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, and Ghostty.
+This installs WSL, VSCode, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, Ghostty, and Zed.
+
+Zed on Windows reads its config from `%APPDATA%\Zed\` rather than `~/.config/zed/`. To share the repo config, create a directory symlink from PowerShell as Administrator:
+
+```powershell
+New-Item -ItemType SymbolicLink -Path "$env:APPDATA\Zed" -Target "\\wsl$\Ubuntu\home\jordan\.config\zed"
+```
 
 To export the current state back to the file (if you have added apps and want to capture them):
 

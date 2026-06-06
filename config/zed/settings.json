@@ -1,0 +1,47 @@
+{
+  "theme": "Catppuccin Mocha",
+  "icon_theme": "Catppuccin Mocha",
+  "buffer_font_family": "Cascadia Code NF",
+  "buffer_font_size": 14,
+  "ui_font_size": 14,
+  "vim_mode": false,
+  "tab_size": 2,
+  "format_on_save": "on",
+  "soft_wrap": "none",
+  "show_whitespaces": "selection",
+  "minimap": {
+    "show": "never"
+  },
+  "scrollbar": {
+    "show": "auto"
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "auto_update": false,
+  "auto_install_extensions": {
+    "catppuccin": true,
+    "catppuccin-icons": true,
+    "nix": true,
+    "html": false
+  },
+  "load_direnv": "shell_hook",
+  "terminal": {
+    "shell": {
+      "program": "zsh"
+    },
+    "font_family": "Cascadia Code NF"
+  },
+  "languages": {
+    "Nix": {
+      "language_servers": ["nil"]
+    },
+    "Markdown": {
+      "format_on_save": "off"
+    },
+    "JSON": {
+      "format_on_save": "off"
+    }
+  }
+}

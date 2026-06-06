@@ -15,6 +15,7 @@
       "ghostty"
       "firefox"
       "obsidian"
+      "zed"
     ];
   };
 

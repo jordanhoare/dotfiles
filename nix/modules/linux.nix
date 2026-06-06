@@ -5,5 +5,6 @@
     xdg-utils
     obsidian
     bitwarden-desktop
+    zed-editor
   ];
 }
