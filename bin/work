@@ -20,7 +20,8 @@ fi
 
 if ! tmux has-session -t "$session" 2>/dev/null; then
   tmux new-session -d -s "$session" -c "$PWD" -n code
-  tmux split-window -h -t "$session:code" -c "$PWD" claude
+  # IS_DEMO=1 makes the claude tui use the full pane width without padding
+  tmux split-window -h -t "$session:code" -c "$PWD" -e "IS_DEMO=1" claude
   tmux select-pane -t "$session:code" -L
 fi
 
