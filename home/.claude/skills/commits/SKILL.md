@@ -17,6 +17,31 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 [optional footer(s)]
 ```
 
+## Casing
+
+**Always lowercase. Subject and body. Acronyms included (`api`, `cli`, `dsl`, `adr`, `ci`, `wsl`, `nix`, `pr`).**
+
+Only two exceptions:
+
+- The `BREAKING CHANGE:` footer token. The Conventional Commits spec mandates this exact uppercase form and tools parse for it literally. Prose after the token is still lowercase.
+- Backticked code identifiers, since they are code rather than prose: `` `Transform` ``, `` `get_dag` ``, `` `ADR-0006` ``, `` `Cargo.toml` ``. Anything not backticked is lowercased.
+
+✅ Good:
+
+```text
+feat(nix): expose home-manager files output to drop username from makefile
+fix(cli): grid view not refreshing after task actions
+refactor(executor): extract bytecode interpreter, reducing coupling per `ADR-0006`
+```
+
+❌ Bad:
+
+```text
+feat(Nix): Expose home-manager files output to drop USERNAME from Makefile
+fix(CLI): Grid view not refreshing after task actions
+refactor(executor): Extract bytecode interpreter, reducing coupling per ADR-0006
+```
+
 ## Types
 
 - `feat`: New feature (→ MINOR version bump)
@@ -47,9 +72,9 @@ Common scopes for this project (use the module/area affected):
 Add `BREAKING CHANGE:` footer or `!` after type/scope:
 
 ```
-feat(compiler)!: change DSL syntax to method chains
+feat(compiler)!: change dsl syntax to method chains
 
-BREAKING CHANGE: Rule class removed, use Transform instead
+BREAKING CHANGE: `Rule` class removed, use `Transform` instead
 ```
 
 ## Guidelines for Agents
@@ -102,44 +127,44 @@ Agents should commit locally but NEVER push to remote unless specifically reques
 ## Examples
 
 ```bash
-# Feature with scope
+# feature with scope
 feat(compiler): add support for nested function calls
 
-Allows expressions like max(min(a, b), c). Parser now handles
+allows expressions like max(min(a, b), c). parser now handles
 recursive call structures with proper precedence.
 
-# Bug fix
+# bug fix
 fix(reconcile): prevent null-materialization for update targets
 
-Previously tolerant mode would null-materialize missing fields
-for both add and update. Now only add targets get this behavior,
+previously tolerant mode would null-materialize missing fields
+for both add and update. now only add targets get this behavior,
 preserving the hard rule that update requires existing fields.
 
-# Documentation
-docs(api): update Transform API examples with new syntax
+# documentation
+docs(api): update `Transform` api examples with new syntax
 
-# Refactoring
+# refactoring
 refactor(executor): extract bytecode interpreter into runtime pillar
 
-Moves interpretation logic from executor/local.py to new runtime/
-module, reducing coupling per ADR-0006.
+moves interpretation logic from `executor/local.py` to new `runtime/`
+module, reducing coupling per `ADR-0006`.
 
-# Test addition
+# test addition
 test(compiler): add parametrized test for builtin validation
 
-# Breaking change
-feat(compiler)!: replace Rule with Transform
+# breaking change
+feat(compiler)!: replace `Rule` with `Transform`
 
-BREAKING CHANGE: Rule class has been removed. All DSL code must
-use Transform instead. See migration guide in docs/api/migration.md
+BREAKING CHANGE: `Rule` class has been removed. all dsl code must
+use `Transform` instead. see migration guide in `docs/api/migration.md`
 ```
 
 ## Message Quality
 
 Focus on **user impact**, not implementation details:
 
-✅ Good: `fix: Grid view not refreshing after task actions`
-❌ Bad: `fix: Initialize Dag bundles in CLI get_dag function`
+✅ Good: `fix(cli): grid view not refreshing after task actions`
+❌ Bad: `fix(cli): initialize dag bundles in get_dag function`
 
 ✅ Good: `feat(compiler): support nested function calls in expressions`
 ❌ Bad: `feat: add recursive parser`
