@@ -35,7 +35,6 @@
         system = "aarch64-darwin";
         specialArgs = { inherit username; };
         modules = [
-          ./modules/macos-system.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -47,10 +46,10 @@
               inherit username hasPrivateProfile;
               homeDirectory = "/Users/${username}";
             };
-            home-manager.users.${username} = {
-              imports = [ ./modules/base.nix ./modules/profiles.nix ./modules/macos.nix ];
-            };
+            home-manager.users.${username}.imports =
+              [ ./modules/base.nix ./modules/profiles.nix ];
           }
+          ./modules/macos.nix
         ];
       };
 

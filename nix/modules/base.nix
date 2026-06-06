@@ -32,6 +32,7 @@
     sops
     age
     bitwarden-cli
+    imagemagick
   ];
 
   home.file = {
@@ -50,6 +51,11 @@
     "bin/sync".source = ../../bin/sync;
     "bin/up".source = ../../bin/up;
     "bin/work".source = ../../bin/work;
+    "bin/wallpaper".source = ../../bin/wallpaper;
+    "bin/set-wallpaper".source = ../../bin/set-wallpaper;
+
+    ".config/wallpapers/source.jpg".source = ../../config/wallpapers/source.jpg;
+    ".config/wallpapers/wallpaper.jpg".source = ../../config/wallpapers/wallpaper.jpg;
   };
 
   home.sessionPath = [ "$HOME/bin" ];

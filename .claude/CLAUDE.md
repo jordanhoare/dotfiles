@@ -26,8 +26,7 @@ Only files declared in `nix/modules/common.nix` (or a platform module) are linke
 | `nix/modules/base.nix` | Packages and dotfile links shared across all platforms |
 | `nix/modules/linux.nix` | Native Linux: shared Linux bits plus GUI apps (Obsidian, Bitwarden) |
 | `nix/modules/wsl.nix` | WSL: shared Linux bits only; GUI apps come from Windows via winget |
-| `nix/modules/macos.nix` | macOS Home Manager config |
-| `nix/modules/macos-system.nix` | nix-darwin system config (Homebrew cask for Docker Desktop) |
+| `nix/modules/macos.nix` | macOS nix-darwin system config + nested home-manager user config |
 
 ### Windows
 
@@ -91,7 +90,7 @@ Edit `nix/modules/common.nix` (or the appropriate platform module) and run `make
 
 - Never commit `config/git/private` - gitignored plaintext secrets
 - Never hardcode the private GitHub username in any public file
-- Never run `brew install` directly - declare casks in `nix/modules/macos-system.nix`
+- Never run `brew install` directly - declare casks in `nix/modules/macos.nix`
 - Never use `/mnt/d` paths in shared zsh config - WSL-only
 
 ## Agent context

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Regenerate the processed wallpaper from the committed source.
+# Tweak -modulate brightness,saturation,hue to change the look.
+set -euo pipefail
+
+DOTFILES="${DOTFILES:-$HOME/repositories/dotfiles}"
+SRC="$DOTFILES/config/wallpapers/source.jpg"
+OUT="$DOTFILES/config/wallpapers/wallpaper.jpg"
+
+if [[ ! -f "$SRC" ]]; then
+  echo "missing source wallpaper: $SRC" >&2
+  exit 1
+fi
+
+magick "$SRC" -modulate 40,20,100 -fill "#1e1e3a" -colorize 50% -quality 90 "$OUT"
+echo "wrote $OUT"
