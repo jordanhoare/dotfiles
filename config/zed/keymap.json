@@ -15,7 +15,7 @@
       "cmd-shift-r": "task::Spawn",
       "cmd-shift-o": "project_symbols::Toggle",
       "cmd-shift-d": "diagnostics::Deploy",
-      "cmd-shift-b": "git_panel::ToggleFocus",
+      "cmd-shift-b": "project_panel::ToggleFocus",
       "cmd-shift-g": "git_panel::ToggleFocus",
       "cmd-e": "tab_switcher::Toggle",
       "cmd-shift-m": "diagnostics::Deploy",

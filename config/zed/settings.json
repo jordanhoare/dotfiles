@@ -35,7 +35,11 @@
     "dock": "left"
   },
   "git_panel": {
-    "dock": "left"
+    "dock": "left",
+    "default_width": 320,
+    "status_style": "label_color",
+    "sort_by_path": false,
+    "collapse_untracked_diff": true
   },
   "tab_size": 2,
   "format_on_save": "on",
@@ -57,7 +61,8 @@
     "inline_blame": {
       "enabled": true,
       "delay_ms": 600,
-      "show_commit_summary": true
+      "show_commit_summary": true,
+      "min_column": 80
     },
     "git_gutter": "tracked_files"
   },
