@@ -1,5 +1,14 @@
 [
   {
+    "label": "Claude Code",
+    "command": "claude",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "reveal_target": "dock",
+    "shell": "system"
+  },
+  {
     "label": "Television: Find File",
     "command": "zed \"$(tv files)\"",
     "use_new_terminal": false,
