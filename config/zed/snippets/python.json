@@ -1,0 +1,17 @@
+{
+  "main guard": {
+    "prefix": "main",
+    "body": ["def main() -> None:", "    $0", "", "", "if __name__ == \"__main__\":", "    main()"],
+    "description": "if __name__ == '__main__' entry point"
+  },
+  "pytest function": {
+    "prefix": "tst",
+    "body": ["def test_${1:subject}_${2:scenario}_${3:expected}() -> None:", "    $0"],
+    "description": "pytest function following project naming"
+  },
+  "dataclass": {
+    "prefix": "dc",
+    "body": ["from dataclasses import dataclass", "", "", "@dataclass(frozen=True, slots=True)", "class ${1:Name}:", "    $0"],
+    "description": "frozen slotted dataclass"
+  }
+}
