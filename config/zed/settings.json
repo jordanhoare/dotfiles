@@ -9,12 +9,9 @@
   "session": {
     "trust_all_worktrees": true
   },
+  "disable_ai": true,
   "project_panel": {
     "dock": "left"
-  },
-  "agent": {
-    "dock": "right",
-    "default_view": "thread_history"
   },
   "tab_size": 2,
   "format_on_save": "on",
@@ -36,14 +33,6 @@
     "catppuccin-icons": true,
     "nix": true,
     "html": false
-  },
-  "agent_servers": {
-    "Claude Code": {
-      "type": "custom",
-      "command": "zsh",
-      "args": ["-ic", "exec bunx @agentclientprotocol/claude-agent-acp@latest --acp"],
-      "env": {}
-    }
   },
   "load_direnv": "shell_hook",
   "terminal": {
