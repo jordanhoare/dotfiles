@@ -1,6 +1,6 @@
 {
   "extras": [
-
+    "lazyvim.plugins.extras.colorscheme.catppuccin"
   ],
   "install_version": 8,
   "news": {
