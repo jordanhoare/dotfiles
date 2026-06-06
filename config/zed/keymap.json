@@ -8,8 +8,10 @@
   {
     "context": "Workspace",
     "bindings": {
-      "ctrl-alt-p": ["task::Spawn", { "task_name": "Television: Find File" }],
-      "ctrl-alt-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }]
+      "cmd-p": ["task::Spawn", { "task_name": "Television: Find File" }],
+      "ctrl-p": ["task::Spawn", { "task_name": "Television: Find File" }],
+      "cmd-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
+      "ctrl-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }]
     }
   }
 ]
