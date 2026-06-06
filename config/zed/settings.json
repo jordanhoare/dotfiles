@@ -12,6 +12,10 @@
   "project_panel": {
     "dock": "left"
   },
+  "agent": {
+    "dock": "right",
+    "default_view": "thread_history"
+  },
   "tab_size": 2,
   "format_on_save": "on",
   "soft_wrap": "none",
