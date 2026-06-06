@@ -35,17 +35,60 @@
     home = "/Users/${username}";
   };
 
+  system.defaults = {
+    NSGlobalDomain = {
+      AppleInterfaceStyle = "Dark";
+      AppleICUForce24HourTime = true;
+      # Disable natural scrolling (unnatural for a keyboard-driven workflow)
+      "com.apple.swipescrolldirection" = false;
+      KeyRepeat = 2;
+      InitialKeyRepeat = 15;
+    };
+
+    dock = {
+      autohide = true;
+      autohide-delay = 0.0;
+      autohide-time-modifier = 0.4;
+      tilesize = 48;
+      orientation = "bottom";
+      mineffect = "scale";
+      show-recents = false;
+      mru-spaces = false;
+    };
+
+    finder = {
+      AppleShowAllExtensions = true;
+      ShowPathbar = true;
+      ShowStatusBar = true;
+      FXEnableExtensionChangeWarning = false;
+      FXDefaultSearchScope = "SCcf";
+    };
+
+    screencapture = {
+      location = "~/Pictures/Screenshots";
+      type = "png";
+      disable-shadow = true;
+    };
+
+    spaces.spans-displays = false;
+  };
+
   system.stateVersion = 5;
 
   # User-level config nested under nix-darwin's home-manager integration.
   home-manager.users.${username} = {
-    home.packages = with pkgs; [
-      desktoppr
-    ];
-
     home.file = {
-      # ghostty config is macOS-native on this machine
       ".config/ghostty/config".source = ../../config/ghostty/config;
     };
+
+    # Applied at activation time alongside all other home config.
+    # First run from a bare Ghostty window triggers a one-time TCC prompt;
+    # after that it works from tmux or anywhere else under Ghostty.
+    home.activation.setWallpaper = ''
+      WALLPAPER=$(readlink -f "$HOME/.config/wallpapers/wallpaper.jpg" 2>/dev/null)
+      if [[ -f "$WALLPAPER" ]]; then
+        osascript -e "tell application \"System Events\" to tell every desktop to set picture to POSIX file \"$WALLPAPER\"" 2>/dev/null || true
+      fi
+    '';
   };
 }

@@ -27,7 +27,7 @@ DARWIN_REBUILD := $(DARWIN_RESULT)/sw/bin/darwin-rebuild
 
 .DEFAULT_GOAL := help
 
-.PHONY: help switch secrets verify doctor hooks decrypt wallpaper
+.PHONY: help switch secrets verify doctor hooks decrypt
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -41,7 +41,6 @@ ifeq ($(PLATFORM),macos)
 else
 	nix run '$(NIX_FLAKE)#home-manager' -- switch --flake $(FLAKE_REF) --impure
 endif
-	-$(DOTFILES)/bin/set-wallpaper
 
 secrets: ## restore SSH keys from bitwarden and decrypt sops
 	$(DOTFILES)/bin/secrets
@@ -58,6 +57,3 @@ doctor: ## verbose local diagnostic - symlinks, tools, git/ssh identity
 hooks: ## install pre-commit hooks
 	pre-commit install
 	pre-commit install --hook-type commit-msg
-
-wallpaper: ## regenerate processed wallpaper from config/wallpapers/source.jpg
-	DOTFILES=$(DOTFILES) $(DOTFILES)/bin/wallpaper
