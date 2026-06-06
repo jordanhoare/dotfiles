@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Television: Find File",
+    "command": "zed \"$(tv files)\"",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "reveal_target": "center",
+    "hide": "on_success",
+    "shell": "system"
+  },
+  {
+    "label": "Television: Live Grep",
+    "command": "zed \"$(tv text)\"",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "reveal_target": "center",
+    "hide": "on_success",
+    "shell": "system"
+  }
+]

@@ -4,5 +4,12 @@
     "bindings": {
       "alt-s": "workspace::SaveWithoutFormat"
     }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-p": ["task::Spawn", { "task_name": "Television: Find File" }],
+      "ctrl-alt-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }]
+    }
   }
 ]

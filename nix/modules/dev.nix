@@ -12,6 +12,7 @@
     luajit
     nil
     nixfmt-rfc-style
+    television
   ];
 
   home.file = {
