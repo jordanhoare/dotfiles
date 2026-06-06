@@ -2,10 +2,13 @@
   "theme": "Catppuccin Mocha",
   "icon_theme": "Catppuccin Mocha",
   "base_keymap": "VSCode",
-  "buffer_font_family": "Cascadia Code NF",
-  "buffer_font_size": 14,
-  "ui_font_size": 14,
+  "buffer_font_family": "IosevkaTerm Nerd Font",
+  "buffer_font_size": 13,
+  "ui_font_size": 13,
   "vim_mode": false,
+  "session": {
+    "trust_all_worktrees": true
+  },
   "tab_size": 2,
   "format_on_save": "on",
   "soft_wrap": "none",
@@ -32,7 +35,8 @@
     "shell": {
       "program": "zsh"
     },
-    "font_family": "Cascadia Code NF"
+    "font_family": "IosevkaTerm Nerd Font",
+    "font_size": 13
   },
   "languages": {
     "Nix": {
