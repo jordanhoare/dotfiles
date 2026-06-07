@@ -2,6 +2,7 @@ autoload -Uz compinit && compinit
 eval "$(starship init zsh)"
 eval "$(sheldon source)"
 eval "$(mise activate zsh)"
+eval "$(zoxide init zsh)"
 
 _update_git_identity() {
   export STARSHIP_GIT_USER=$(git config user.name 2>/dev/null)

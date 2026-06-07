@@ -25,6 +25,7 @@
     fd
     fzf
     ripgrep
+    zoxide
     jq
     just
     pwgen
