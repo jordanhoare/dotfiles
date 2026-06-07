@@ -10,7 +10,7 @@
   path = ~/.config/git/personal
 
 [core]
-  editor = code --wait
+  editor = zed --wait
   preloadindex = true
   fscache = true
   autocrlf = input
