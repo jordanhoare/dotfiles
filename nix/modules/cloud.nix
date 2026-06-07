@@ -4,13 +4,7 @@
   home.packages = with pkgs; [
     gh
     claude-code
-    kubernetes-helm
-    k9s
-    kubectx
-    kubectl
-    kustomize
     socat
-    argocd
   ];
 
   home.file = {
