@@ -35,7 +35,7 @@ Never hardcode the private GitHub username in any public file.
 - **Plugin manager:** Sheldon
 - **Symlinks:** Home Manager `home.file` (dotfiles managed at `~/repositories/dotfiles`)
 - **Python:** uv (versions, packages, and virtualenvs — never use pip or virtualenv directly)
-- **Node:** nvm
+- **Node:** mise (reads `.nvmrc` automatically)
 
 ## Before starting any task
 
