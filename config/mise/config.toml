@@ -48,6 +48,7 @@ biome = "2.4"
 
 # language servers
 lua-language-server = "3.18"
+terraform-ls = "0.38"
 
 # build tools
 cmake = "4.3"
