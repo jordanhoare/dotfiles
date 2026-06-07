@@ -33,6 +33,7 @@
     ripgrep
     zoxide
     eza
+    bat
     jq
     just
     pwgen
