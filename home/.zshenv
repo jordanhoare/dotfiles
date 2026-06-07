@@ -13,7 +13,13 @@ export GARDEN="$REPOS/garden"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
 export LANG="en_US.UTF-8"
-export EDITOR="nano"
+if command -v zed >/dev/null 2>&1; then
+  export EDITOR="zed --wait"
+  export VISUAL="zed --wait"
+else
+  export EDITOR="nano"
+  export VISUAL="nano"
+fi
 export BROWSER="firefox"
 export GIT_USERNAME="jordanhoare"
 export SOPS_AGE_KEY_FILE=~/.aincrad/.sops.age.key
