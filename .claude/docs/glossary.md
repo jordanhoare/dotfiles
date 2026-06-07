@@ -2,7 +2,7 @@
 
 ## Bootstrap
 
-The process of provisioning a new machine. Run `make switch` twice - once to install tools, once after `make secrets` to link the decrypted git identity. On Windows: run winutil, import `windows/winget.json`, install WSL, then bootstrap inside WSL.
+The process of provisioning a new machine. Run `make switch` twice - once to install tools, once after `make secrets` to link the decrypted git identity. On Windows: run winutil, import `win/winget.json`, install WSL, then bootstrap inside WSL.
 
 ## Dotfile
 

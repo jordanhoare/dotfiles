@@ -32,8 +32,8 @@ Only files declared in `nix/modules/common.nix` (or a platform module) are linke
 
 | File | Purpose |
 |---|---|
-| `windows/winget.json` | Declarative Windows app list |
-| `windows/README.md` | Windows bootstrap steps |
+| `win/winget.json` | Declarative Windows app list |
+| `win/README.md` | Windows bootstrap steps |
 
 ### Non-managed directories
 

@@ -1,6 +1,6 @@
 # Windows
 
-Windows-native apps are managed declaratively via [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/). The app list lives at `windows/winget.json` in this repo.
+Windows-native apps are managed declaratively via [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/). The app list lives at `win/winget.json` in this repo.
 
 ## Bootstrap
 
@@ -32,7 +32,7 @@ Restart when prompted, complete the Ubuntu user setup, then continue with [Setup
 
 ## Adding Windows apps
 
-Add the package identifier to `windows/winget.json` and run:
+Add the package identifier to `win/winget.json` and run:
 
 ```powershell
 winget import --import-file D:\repositories\dotfiles\windows\winget.json --accept-package-agreements --accept-source-agreements

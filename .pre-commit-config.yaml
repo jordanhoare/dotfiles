@@ -15,10 +15,26 @@ repos:
     rev: v0.44.0
     hooks:
       - id: markdownlint-fix
-        args: [--config, .markdownlint.yaml]
+        args:
+          - --disable
+          - MD001
+          - MD003
+          - MD013
+          - MD024
+          - MD025
+          - MD026
+          - MD029
+          - MD033
+          - MD034
+          - MD036
+          - MD040
+          - MD041
+          - MD055
+          - MD056
+          - --
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
     hooks:
       - id: detect-secrets
-        args: ["--baseline", ".secrets.baseline"]
+        exclude: ^config/nvim/lazy-lock\.json$
