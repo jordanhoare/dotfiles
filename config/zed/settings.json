@@ -97,6 +97,7 @@
     "hyprlang": true,
     "git-firefly": true,
     "marksman": true,
+    "terraform": true,
     "html": false
   },
   "load_direnv": "shell_hook",
