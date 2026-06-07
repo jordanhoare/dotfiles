@@ -70,4 +70,10 @@
   };
 
   home.sessionPath = [ "$HOME/bin" ];
+
+  home.activation.miseInstall = ''
+    if [ -x "${pkgs.mise}/bin/mise" ]; then
+      ${pkgs.mise}/bin/mise install --yes 2>&1 || true
+    fi
+  '';
 }
