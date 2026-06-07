@@ -40,6 +40,7 @@
     mise
     sops
     age
+    gnupg
     bitwarden-cli
     imagemagick
     fastfetch
