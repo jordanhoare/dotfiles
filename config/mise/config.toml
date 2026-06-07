@@ -15,9 +15,6 @@ zig = "0.14"
 lua = "5.4"
 luajit = "2.1"
 
-# javascript toolchain
-typescript = "5.7"
-
 # python toolchain
 uv = "0.11"
 
