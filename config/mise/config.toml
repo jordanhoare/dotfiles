@@ -23,6 +23,22 @@ terraform = "1.15"
 opentofu = "1.12"
 sops = "3.13"
 
+# kubernetes
+kubectl = "1.36"
+helm = "4.2"
+kustomize = "5.8"
+kubeconform = "0.8"
+
+# linters and formatters
+pre-commit = "4.6"
+actionlint = "1.7"
+tflint = "0.63"
+golangci-lint = "2.12"
+hadolint = "2.14"
+prettier = "3.8"
+markdownlint-cli2 = "0.22"
+
 # utilities
+yq = "4.53"
 restic = "0.18"
 sqlite = "3.53"
