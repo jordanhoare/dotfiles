@@ -52,6 +52,7 @@ terraform-ls = "0.38"
 
 # build tools
 cmake = "4.3"
+conan = "2.29"
 
 # utilities
 yq = "4.53"
