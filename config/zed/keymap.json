@@ -24,12 +24,9 @@
     }
   },
   {
-    "context": "Editor && mode == full",
+    "context": "Pane",
     "bindings": {
-      "cmd-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
-      "ctrl-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
-      "cmd-p": ["task::Spawn", { "task_name": "Television: Find File" }],
-      "ctrl-p": ["task::Spawn", { "task_name": "Television: Find File" }]
+      "cmd-shift-f": null
     }
   },
   {
