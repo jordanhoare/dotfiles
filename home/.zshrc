@@ -28,6 +28,9 @@ alias ....='cd ../../..'
 alias vdot='cd $DOTFILES && code .'
 alias vsb='cd $GARDEN && code .'
 alias c='clear'
+alias ls='eza --group-directories-first'
+alias ll='eza -la --group-directories-first --git'
+alias lt='eza --tree --level=2 --group-directories-first'
 alias reload='source ~/.zshrc'
 
 gclone() { gh repo clone "$1" }

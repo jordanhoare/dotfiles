@@ -32,6 +32,7 @@
     fzf
     ripgrep
     zoxide
+    eza
     jq
     just
     pwgen
