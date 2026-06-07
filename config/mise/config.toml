@@ -10,6 +10,13 @@ node = "24.15"
 python = "3.13"
 bun = "1.3"
 dotnet = "10.0"
+rust = "1.84"
+zig = "0.14"
+lua = "5.4"
+luajit = "2.1"
+
+# javascript toolchain
+typescript = "5.7"
 
 # python toolchain
 uv = "0.11"
