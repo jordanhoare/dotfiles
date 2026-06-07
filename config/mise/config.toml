@@ -2,6 +2,7 @@
 trusted_config_paths = ["~/repositories"]
 auto_install = true
 jobs = 4
+python.compile = false
 
 [tools]
 # runtimes
@@ -12,8 +13,6 @@ bun = "1.3"
 dotnet = "10.0"
 rust = "1.96"
 zig = "0.16"
-lua = "5.4"
-luajit = "2.1"
 
 # python toolchain
 uv = "0.11"
@@ -28,6 +27,13 @@ kubectl = "1.36"
 helm = "4.2"
 kustomize = "5.8"
 kubeconform = "0.8"
+k9s = "0.51"
+argocd = "3.4"
+kubectx = "0.11"
+
+# cloud
+localstack = "2026.5"
+vault = "2.0"
 
 # linters and formatters
 pre-commit = "4.6"
@@ -35,8 +41,6 @@ actionlint = "1.7"
 tflint = "0.63"
 golangci-lint = "2.12"
 hadolint = "2.14"
-prettier = "3.8"
-markdownlint-cli2 = "0.22"
 
 # utilities
 yq = "4.53"
