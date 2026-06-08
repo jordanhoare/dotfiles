@@ -46,7 +46,8 @@
     fastfetch
     shellcheck
     shfmt
-    luajit
+    luarocks
+    llvm
   ];
 
   home.file = {
