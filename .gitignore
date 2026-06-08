@@ -13,7 +13,7 @@ home/.ssh/*
 config/git/private
 
 # macOS
-home/.DS_Store
+.DS_Store
 
 # AWS
 home/.aws/credentials
