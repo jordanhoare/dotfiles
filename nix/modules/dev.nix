@@ -11,7 +11,11 @@
     lua-language-server
     luajit
     nil
-    nixfmt-rfc-style
+    gopls
+    bash-language-server
+    yaml-language-server
+    typescript-language-server
+    nixfmt
     television
   ];
 
