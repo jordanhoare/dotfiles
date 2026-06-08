@@ -10,7 +10,7 @@
     "bindings": {
       "cmd-p": ["task::Spawn", { "task_name": "Television: Find File" }],
       "ctrl-p": ["task::Spawn", { "task_name": "Television: Find File" }],
-      "cmd-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
+      "cmd-shift-f": "zed::NoAction",
       "ctrl-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
       "cmd-shift-r": "task::Spawn",
       "cmd-shift-o": "project_symbols::Toggle",
