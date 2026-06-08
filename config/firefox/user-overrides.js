@@ -127,3 +127,11 @@ user_pref("browser.download.alwaysOpenPanel", false);
 ****************************************************************************/
 
 user_pref("browser.aboutConfig.showWarning", false);
+
+/****************************************************************************
+ * SECTION: THEME                                                           *
+ * Activate the Catppuccin Mocha Lavender static theme on profile init.     *
+ * The theme XPI is force-installed via ExtensionSettings in security.nix.  *
+****************************************************************************/
+
+user_pref("extensions.activeThemeID", "{ad81280b-0506-473b-815b-9fbbdd754448}");

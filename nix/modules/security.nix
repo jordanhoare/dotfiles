@@ -29,6 +29,7 @@ in
         "@news-feed-eradicator"                  = { installation_mode = "force_installed"; install_url = amoUrl "@news-feed-eradicator"; };
         "jid1-MnnxcxisBPnSXQ@jetpack"           = { installation_mode = "force_installed"; install_url = amoUrl "jid1-MnnxcxisBPnSXQ@jetpack"; };
         "vpn@proton.ch"                          = { installation_mode = "force_installed"; install_url = amoUrl "vpn@proton.ch"; };
+        "{ad81280b-0506-473b-815b-9fbbdd754448}" = { installation_mode = "force_installed"; install_url = amoUrl "{ad81280b-0506-473b-815b-9fbbdd754448}"; };
       };
     };
 
