@@ -1,8 +1,8 @@
 # Glossary
 
-## Betterfox Securefox
+## Arkenfox
 
-The hardening preset applied to all Firefox browser profiles via `user.js`. Drawn from the [Betterfox](https://github.com/yokoffing/Betterfox) project's `Securefox` section. Disables telemetry, speculative connections, and unsafe defaults without enabling `privacy.resistFingerprinting` (which would make the browser fingerprint uniquely identifiable). See ADR 0009.
+The hardening preset applied to all Firefox browser profiles via `user.js`. The upstream [arkenfox/user.js](https://github.com/arkenfox/user.js) is committed verbatim at `config/firefox/arkenfox.js` and concatenated with `config/firefox/user-overrides.js` (personal adjustments) via `programs.firefox.profiles.<name>.extraConfig`. `privacy.resistFingerprinting` is intentionally left off - it would make the browser fingerprint uniquely identifiable outside a large anonymity set. See ADR 0008.
 
 ## Bootstrap
 
