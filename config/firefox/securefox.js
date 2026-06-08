@@ -1642,3 +1642,22 @@ user_pref("browser.tabs.crashReporting.sendReport", false);
 //user_pref("signon.recipes.remoteRecipes.enabled", false);
 //user_pref("privacy.trackingprotection.emailtracking.data_collection.enabled", false);
 //user_pref("messaging-system.askForFeedback", true); // DEFAULT [FF120+]
+
+/****************************************************************************
+ * SECTION: AI / ML FEATURES                                                *
+****************************************************************************/
+
+// PREF: disable Firefox's on-device ML inference engine [FF130+]
+// Master switch for all ML-powered features (Smart tab grouping, alt-text generation, etc.)
+// [1] https://support.mozilla.org/en-US/kb/ai-features-firefox
+user_pref("browser.ml.enable", false);
+
+// PREF: disable AI chatbot sidebar integration [FF130+]
+// Removes the AI chatbot shortcut from the toolbar and sidebar.
+// [1] https://support.mozilla.org/en-US/kb/ai-chatbot-firefox
+user_pref("browser.ml.chat.enabled", false);
+user_pref("browser.ml.chat.sidebar", false);
+
+// PREF: disable Genai summarise/page-actions features
+user_pref("browser.genai.chat.enabled", false);
+user_pref("browser.genai.summarize.enabled", false);

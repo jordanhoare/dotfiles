@@ -1,8 +1,7 @@
 { pkgs, username, ... }:
 
 {
-  # Homebrew handles macOS GUI apps that nixpkgs cannot build for darwin
-  # (Docker Desktop and the GUI apps below all lack darwin support in nixpkgs).
+  # Homebrew handles macOS GUI apps that nixpkgs cannot build for darwin.
   # cleanup = "zap" makes this list authoritative - any unlisted cask is removed on rebuild.
   homebrew = {
     enable = true;
@@ -13,7 +12,6 @@
     casks = [
       "docker"
       "ghostty"
-      "firefox"
       "protonvpn"
       "nikitabobko/tap/aerospace"
       "obsidian"
@@ -83,6 +81,26 @@
     home.file = {
       ".config/ghostty/config".source = ../../config/ghostty/config;
       ".config/aerospace/aerospace.toml".source = ../../config/aerospace/aerospace.toml;
+    };
+
+    # Copy home-manager .app bundles to ~/Applications after linkGeneration creates
+    # the "Home Manager Apps" directory. Must run after linkGeneration, not just
+    # writeBoundary, otherwise the source directory does not exist yet.
+    home.activation.linkApps = {
+      after = [ "linkGeneration" ];
+      before = [];
+      data = ''
+        src="$HOME/Applications/Home Manager Apps"
+        dst="$HOME/Applications"
+        if [[ -d "$src" ]]; then
+          find -L "$src" -maxdepth 1 -name "*.app" | while IFS= read -r app; do
+            name=$(basename "$app")
+            $DRY_RUN_CMD chmod -R u+w "$dst/$name" 2>/dev/null || true
+            $DRY_RUN_CMD rm -rf "$dst/$name"
+            $DRY_RUN_CMD cp -RL "$app" "$dst/$name"
+          done
+        fi
+      '';
     };
 
     # Applied at activation time alongside all other home config.

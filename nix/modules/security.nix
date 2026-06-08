@@ -1,43 +1,42 @@
 { pkgs, lib, ... }:
 
 let
-  addons = pkgs.nur.repos.rycee.firefox-addons;
+  arkenfox  = builtins.readFile ../../config/firefox/arkenfox.js;
+  overrides = builtins.readFile ../../config/firefox/user-overrides.js;
 
-  sharedExtensions = [
-    addons.ublock-origin
-    addons.bitwarden
-    addons.leechblock-ng
-    addons.news-feed-eradicator
-    addons.privacy-badger
-    addons.proton-vpn
-  ];
-
-  securefox = builtins.readFile ../../config/firefox/securefox.js;
+  # force_installed with install_url is required per Mozilla policy docs.
+  # Firefox ignores installation_mode without install_url for sideloaded extensions.
+  # https://mozilla.github.io/policy-templates/#extensionsettings
+  amoUrl = id: "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
 in
 {
   programs.firefox = {
     enable = true;
-    # macOS: Firefox is a Homebrew cask; nix manages config only. See ADR 0008.
-    package = if pkgs.stdenv.isDarwin then null else pkgs.firefox;
-
-    # Enterprise policies - applied before profile loads, cannot be overridden
-    # by user interaction. Suppresses telemetry consent screen and first-run UI.
     policies = {
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
       DisableCrashReporter = true;
+      SkipTermsOfUse = true;
       OverrideFirstRunPage = "";
       OverridePostUpdatePage = "";
       DontCheckDefaultBrowser = true;
       NoDefaultBookmarks = true;
+
+      ExtensionSettings = {
+        "uBlock0@raymondhill.net"                = { installation_mode = "force_installed"; install_url = amoUrl "uBlock0@raymondhill.net"; };
+        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = { installation_mode = "force_installed"; install_url = amoUrl "{446900e4-71c2-419f-a6a7-df9c091e268b}"; };
+        "leechblockng@proginosko.com"            = { installation_mode = "force_installed"; install_url = amoUrl "leechblockng@proginosko.com"; };
+        "@news-feed-eradicator"                  = { installation_mode = "force_installed"; install_url = amoUrl "@news-feed-eradicator"; };
+        "jid1-MnnxcxisBPnSXQ@jetpack"           = { installation_mode = "force_installed"; install_url = amoUrl "jid1-MnnxcxisBPnSXQ@jetpack"; };
+        "vpn@proton.ch"                          = { installation_mode = "force_installed"; install_url = amoUrl "vpn@proton.ch"; };
+      };
     };
 
     profiles.personal = {
       id = 0;
       isDefault = true;
       name = "personal";
-      extensions.packages = sharedExtensions;
-      extraConfig = securefox;
+      extraConfig = arkenfox + overrides;
     };
   };
 
