@@ -1,36 +1,40 @@
-# ADR 0009 - Betterfox Securefox as the Firefox hardening baseline
+# ADR 0009 - Arkenfox as the Firefox hardening baseline
 
 ## Status
 
-Accepted
+Accepted (supersedes Betterfox Securefox decision)
 
 ## Context
 
-Firefox's default settings leak telemetry, enable speculative connections, and offer weak tracker resistance. A `user.js` hardening preset is needed for both browser profiles.
+Firefox's default settings leak telemetry, enable speculative connections, and offer weak tracker resistance. A `user.js` hardening preset is needed for all browser profiles.
 
 Two presets were evaluated:
 
+**Betterfox Securefox** - pragmatic hardening (previously used)
+
+- Disables telemetry, crash reporting, studies, and speculative connections
+- Does not cover newer Firefox features (AI/ML, on-device inference, genai)
+- Rarely breaks sites; low maintenance
+- Less comprehensive than arkenfox on network and fingerprinting hardening
+
 **Arkenfox** - maximum hardening
 
-- Enables `privacy.resistFingerprinting` (RFP), which normalises canvas, fonts, timezone, and screen resolution
-- Breaks sites regularly; requires maintaining a `user-overrides.js` to restore needed APIs
-- Paradox: RFP makes the browser fingerprint _more_ unique because very few users run it, defeating its purpose outside a large anonymity set (e.g. Tor Browser)
-
-**Betterfox Securefox** - pragmatic hardening
-
-- Disables all telemetry, crash reporting, studies, and speculative connections
-- Hardens SSL/TLS, disables unsafe APIs, enforces strict content blocking
-- Does not enable RFP - fingerprint stays within the common Firefox + uBlock Origin population
-- Rarely breaks sites; no override maintenance required
+- Comprehensive coverage: telemetry, network hardening, fingerprinting resistance, unsafe API removal
+- Actively maintained against new Firefox releases
+- Requires a `user-overrides.js` for personal adjustments and re-enabling needed APIs
+- `privacy.resistFingerprinting` (RFP) is available but intentionally not enabled - RFP makes the fingerprint more unique outside a large anonymity set (e.g. Tor Browser), defeating its purpose for a personal browser
 
 ## Decision
 
-Use **Betterfox Securefox** as the `user.js` baseline for both browser profiles.
+Use **arkenfox `user.js`** as the hardening baseline for all browser profiles, with personal adjustments in `user-overrides.js`.
 
-RFP is intentionally omitted. The goal is 80:20 privacy improvement - strong telemetry and tracking resistance - not resistance against active fingerprinting adversaries, which would require Tor Browser to be effective.
+`config/firefox/arkenfox.js` is the upstream arkenfox `user.js` fetched verbatim. `config/firefox/user-overrides.js` contains personal overrides applied on top, following the standard arkenfox override pattern. Both files are concatenated via `programs.firefox.profiles.<name>.extraConfig` in `nix/modules/security.nix`.
+
+`privacy.resistFingerprinting` is intentionally omitted from the overrides. The goal is strong telemetry and tracking resistance within the common hardened-Firefox population, not resistance against active fingerprinting adversaries.
 
 ## Consequences
 
-- Both profiles share the same `user.js` base; per-profile overrides are minimal
-- No ongoing maintenance burden from broken sites
-- Fingerprint is indistinguishable from a typical hardened Firefox user, which is a large population
+- All browser profiles share the arkenfox base; per-profile differences live in `user-overrides.js`
+- AI/ML features (on-device inference, chatbot, link preview, tab suggestions, translations) are explicitly disabled in `user-overrides.js`
+- `arkenfox.js` should be periodically refreshed from upstream to track new Firefox releases
+- Some sites may require per-site exceptions added to `user-overrides.js`

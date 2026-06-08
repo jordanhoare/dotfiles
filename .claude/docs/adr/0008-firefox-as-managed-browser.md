@@ -23,12 +23,18 @@ Candidates evaluated:
 
 ## Decision
 
-Use **Firefox** managed via Home Manager's `programs.firefox` module.
+Use **Firefox** managed entirely via Home Manager's `programs.firefox` module on all platforms.
 
-On macOS, Firefox is installed as a Homebrew cask (`package = null` in the module) and Home Manager manages only the profile config at `~/Library/Application Support/Firefox/`. On Linux, Firefox is installed from nixpkgs. On WSL, Firefox is a Windows application outside nix scope.
+On macOS, Firefox is installed from nixpkgs via `programs.firefox` (not as a Homebrew cask). Home Manager wraps the package to bake `policies.json` directly into the app bundle's `distribution/` directory - the only path the Nix-packaged Firefox reads for enterprise policies. The wrapped `.app` is copied to `~/Applications/` via a `home.activation` script so Spotlight and Launchpad can find it.
+
+On Linux, Firefox is installed from nixpkgs directly. On WSL, Firefox is a Windows application outside nix scope.
+
+Enterprise policies are declared in `nix/modules/security.nix` under `programs.firefox.policies` and cover: telemetry suppression, first-run UI suppression, and force-installation of extensions.
 
 ## Consequences
 
-- Browser profiles, extensions, containers, and `user.js` hardening are all declared in `nix/modules/firefox.nix`
+- Browser profiles, extensions, and `user.js` hardening are all declared in `nix/modules/security.nix`
 - Reproducing the full browser environment on a new machine requires only `make switch`
-- Firefox on macOS self-updates via its built-in updater - this is intentional. nixpkgs does not reliably package macOS GUI apps (code signing and notarization requirements); Homebrew is the correct owner of the binary on macOS, consistent with every other GUI app in the repo. nix owns the profile configuration layer only.
+- Firefox auto-updates are disabled via policy (`DisableAppUpdate`) - nix owns the binary version
+- The Nix-packaged Firefox sets `MOZ_SYSTEM_DIR` to a read-only nix store path, so `/Library/Application Support/Mozilla/` is not read on macOS - policies must be baked into the app bundle
+- Extensions are force-installed silently on first launch via enterprise policy; no user interaction required
