@@ -14,6 +14,7 @@
       "docker"
       "ghostty"
       "firefox"
+      "protonvpn"
       "nikitabobko/tap/aerospace"
       "obsidian"
       "zed"

@@ -8,6 +8,7 @@
     ./dev.nix
     ./vscode.nix
     ./zed.nix
+    ./security.nix
   ];
 
   home.stateVersion = "24.11";
