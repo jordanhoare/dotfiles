@@ -35,6 +35,22 @@ Use **arkenfox `user.js`** as the hardening baseline for all browser profiles, w
 ## Consequences
 
 - All browser profiles share the arkenfox base; per-profile differences live in `user-overrides.js`
-- AI/ML features (on-device inference, chatbot, link preview, tab suggestions, translations) are explicitly disabled in `user-overrides.js`
 - `arkenfox.js` should be periodically refreshed from upstream to track new Firefox releases
 - Some sites may require per-site exceptions added to `user-overrides.js`
+
+### Locked override decisions
+
+The following deviations from arkenfox defaults are deliberate and live in `config/firefox/user-overrides.js`:
+
+- **AI/ML off** - on-device inference, chatbot, link preview, smart tab groups, translations, and genai summarise/chat are all disabled
+- **Sanitize on shutdown** - cookies and history persist across restarts; only cache, form data, and open windows are wiped. Trackers are handled by ETP strict + uBlock Origin rather than a full nuke
+- **DNS-over-HTTPS disabled** (`network.trr.mode=5`) - DNS resolution flows through the OS resolver into the ProtonVPN tunnel (ADR 0010). Avoids splitting trust across a second DoH provider and prevents Firefox bypassing the VPN before the kill-switch engages on network change
+- **Built-in password manager disabled** - Bitwarden is the sole credential store (force-installed via policy in ADR 0008). Eliminates double-storage and "save password?" prompts
+- **HTTPS-only on, OCSP soft-fail** - hard-fail OCSP breaks captive portals on travel; CRLite covers revocation for major CAs. Loopback is exempt from HTTPS upgrades, so localhost dev is unaffected
+- **Search suggestions off** - no live keystroke stream to the default search engine. Quicksuggest, trending, weather, recent searches, and topsites are explicitly killed in case Mozilla flips defaults
+- **Fresh launch each time** (`browser.startup.page=1`) - tabs do not restore; home and new tab are `about:blank`. Cookies and history still persist (see shutdown decision above)
+- **WebRTC left enabled** - arkenfox's `ice.default_address_only=true` plus the VPN exit IP bound the leak. Disabling outright would break browser video calls and get flipped back the first time it bit
+- **ETP pinned to strict** (`browser.contentblocking.category="strict"`) - arkenfox sets `cookieBehavior=5` but not the category; this pins the UI state
+- **Cookie banners auto-rejected** in normal and private windows
+- **Pocket and Firefox form autofill (addresses, credit cards) disabled**
+- **DRM (`media.eme.enabled`) left at Firefox default** - streaming services would otherwise break
