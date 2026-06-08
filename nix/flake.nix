@@ -13,9 +13,11 @@
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nur.url = "github:nix-community/NUR";
   };
 
-  outputs = { nixpkgs, home-manager, nix-darwin, ... }:
+  outputs = { nixpkgs, home-manager, nix-darwin, nur, ... }:
     let
       # Change this when forking for your own use.
       username = "jordanhoare";
@@ -24,9 +26,11 @@
       # Evaluates to false on a fresh clone before `make secrets` has run.
       hasPrivateProfile = builtins.pathExists ../config/git/private;
 
+      nurOverlay = nur.overlays.default;
+
       mkHome = { system, homeDirectory, modules }:
         home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; overlays = [ nurOverlay ]; };
           extraSpecialArgs = { inherit username homeDirectory hasPrivateProfile; };
           modules = [ ./modules/base.nix ./modules/profiles.nix ] ++ modules;
         };
@@ -37,6 +41,7 @@
         modules = [
           home-manager.darwinModules.home-manager
           {
+            nixpkgs.overlays = [ nurOverlay ];
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             # Pre-existing files at a symlink target are renamed with this
