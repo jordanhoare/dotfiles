@@ -1,14 +1,16 @@
 { pkgs, lib, ... }:
 
 let
-  sharedExtensions = with pkgs.firefox-addons; [
-    ublock-origin
-    bitwarden
-    leechblock-ng
-    news-feed-eradicator
-    privacy-badger17
-    proton-vpn-firefox-extension
-    # unhook (Unhook - Remove YouTube Recommended) is not in nixpkgs firefox-addons.
+  addons = pkgs.nur.repos.rycee.firefox-addons;
+
+  sharedExtensions = [
+    addons.ublock-origin
+    addons.bitwarden
+    addons.leechblock-ng
+    addons.news-feed-eradicator
+    addons.privacy-badger
+    addons.proton-vpn
+    # unhook (Unhook - Remove YouTube Recommended) is not in NUR rycee.
     # Install manually from AMO: https://addons.mozilla.org/addon/youtube-recommended-videos/
   ];
 
@@ -25,13 +27,13 @@ in
   programs.firefox = {
     enable = true;
     # macOS: Firefox is a Homebrew cask; nix manages config only. See ADR 0008.
-    package = lib.mkIf (!pkgs.stdenv.isDarwin) pkgs.firefox;
+    package = if pkgs.stdenv.isDarwin then null else pkgs.firefox;
 
     profiles.personal = {
       id = 0;
       isDefault = true;
       name = "personal";
-      extensions = sharedExtensions;
+      extensions.packages = sharedExtensions;
       extraConfig = securefox;
       containers = sharedContainers;
       containersForce = true;
