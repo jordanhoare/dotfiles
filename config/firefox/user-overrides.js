@@ -135,3 +135,13 @@ user_pref("browser.aboutConfig.showWarning", false);
 ****************************************************************************/
 
 user_pref("extensions.activeThemeID", "{ad81280b-0506-473b-815b-9fbbdd754448}");
+
+/****************************************************************************
+ * SECTION: LAYOUT - vertical tabs on the left, minimal chrome              *
+****************************************************************************/
+
+user_pref("sidebar.revamp", true);
+user_pref("sidebar.verticalTabs", true);
+user_pref("sidebar.position_start", true);
+user_pref("sidebar.main.tools", "history,bookmarks");
+user_pref("browser.tabs.tabmanager.enabled", false);
