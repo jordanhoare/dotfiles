@@ -12,10 +12,6 @@ The process of provisioning a new machine. Run `make switch` twice - once to ins
 
 A fully isolated Firefox instance with its own process, cookie store, history, credentials, and extensions. Distinct from a git Profile. Two browser profiles are declared: **personal** (default, daily driver) and **private** (anonymised, separate identity). Managed declaratively via `programs.firefox` in Home Manager. See ADR 0008.
 
-## Container
-
-A tab-level isolation context within a single Firefox browser profile. Each container has its own cookie store and login state but shares the same process and extension set as the parent browser profile. Used within the personal browser profile for contextual separation (Personal, Work, Banking, Shopping). Not a substitute for a browser profile - containers isolate sites, profiles isolate identities.
-
 ## Dotfile
 
 A configuration file managed by this repository. Tracked dotfiles are symlinked into their target directory via Home Manager `home.file` - editing the file in the repo is immediately live.

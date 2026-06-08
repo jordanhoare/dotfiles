@@ -10,16 +10,7 @@ let
     addons.news-feed-eradicator
     addons.privacy-badger
     addons.proton-vpn
-    # unhook (Unhook - Remove YouTube Recommended) is not in NUR rycee.
-    # Install manually from AMO: https://addons.mozilla.org/addon/youtube-recommended-videos/
   ];
-
-  sharedContainers = {
-    "Personal" = { id = 1; color = "blue";   icon = "fingerprint"; };
-    "Work"     = { id = 2; color = "orange"; icon = "briefcase";   };
-    "Banking"  = { id = 3; color = "green";  icon = "dollar";      };
-    "Shopping" = { id = 4; color = "pink";   icon = "cart";        };
-  };
 
   securefox = builtins.readFile ../../config/firefox/securefox.js;
 in
@@ -35,8 +26,6 @@ in
       name = "personal";
       extensions.packages = sharedExtensions;
       extraConfig = securefox;
-      containers = sharedContainers;
-      containersForce = true;
     };
   };
 
