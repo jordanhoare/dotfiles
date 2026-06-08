@@ -1,8 +1,20 @@
 # Glossary
 
+## Betterfox Securefox
+
+The hardening preset applied to all Firefox browser profiles via `user.js`. Drawn from the [Betterfox](https://github.com/yokoffing/Betterfox) project's `Securefox` section. Disables telemetry, speculative connections, and unsafe defaults without enabling `privacy.resistFingerprinting` (which would make the browser fingerprint uniquely identifiable). See ADR 0009.
+
 ## Bootstrap
 
 The process of provisioning a new machine. Run `make switch` twice - once to install tools, once after `make secrets` to link the decrypted git identity. On Windows: run winutil, import `win/winget.json`, install WSL, then bootstrap inside WSL.
+
+## Browser Profile
+
+A fully isolated Firefox instance with its own process, cookie store, history, credentials, and extensions. Distinct from a git Profile. Two browser profiles are declared: **personal** (default, daily driver) and **private** (anonymised, separate identity). Managed declaratively via `programs.firefox` in Home Manager. See ADR 0008.
+
+## Container
+
+A tab-level isolation context within a single Firefox browser profile. Each container has its own cookie store and login state but shares the same process and extension set as the parent browser profile. Used within the personal browser profile for contextual separation (Personal, Work, Banking, Shopping). Not a substitute for a browser profile - containers isolate sites, profiles isolate identities.
 
 ## Dotfile
 
@@ -31,6 +43,10 @@ A top-level directory in the dotfiles repo whose files are linked into place by 
 ## Platform
 
 The OS context in which the shell runs. Three supported platforms: **WSL** (primary), **Linux** (native, e.g. VMs), **macOS**. Each has a named configuration in `nix/flake.nix`.
+
+## ProtonVPN
+
+The VPN client installed on all platforms. Runs as an OS-level daemon covering all machine traffic. Configured with a standard kill switch (blocks internet if the tunnel drops, but permits LAN traffic). Installed declaratively via nix. See ADR 0010.
 
 ## Profile
 
