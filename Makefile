@@ -27,7 +27,7 @@ DARWIN_REBUILD := $(DARWIN_RESULT)/sw/bin/darwin-rebuild
 
 .DEFAULT_GOAL := help
 
-.PHONY: help switch secrets verify doctor hooks decrypt
+.PHONY: help switch secrets verify doctor hooks decrypt encrypt
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -47,6 +47,9 @@ secrets: ## restore SSH keys from bitwarden and decrypt sops
 
 decrypt: ## unpack any encrypted sops secrets into local repo
 	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc
+
+encrypt: ## re-encrypt local plaintext secrets back into sops files
+	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --encrypt --output $(DOTFILES)/config/git/private.enc $(DOTFILES)/config/git/private
 
 verify: ## strict check - every declared Symlink is in place (CI gate)
 	@$(DOTFILES)/bin/verify '$(HM_FILES_ATTR)'
