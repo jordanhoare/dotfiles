@@ -41,14 +41,6 @@ in
       };
 
       ExtensionSettings = {
-        # Previously force-installed; explicitly blocked so it uninstalls.
-        # Firefox blocks file:// access for extensions, so the only remaining
-        # path was a per-machine file picker - not worth it. Mocha homepage
-        # still shows on launch + home button via browser.startup.homepage.
-        "newtaboverride@agenedia.com" = {
-          installation_mode = "blocked";
-        };
-
         "uBlock0@raymondhill.net" = {
           installation_mode = "force_installed";
           install_url = amoUrl "uBlock0@raymondhill.net";
