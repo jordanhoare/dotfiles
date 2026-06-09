@@ -24,17 +24,27 @@ in
 
       ManagedBookmarks = [
         { toplevel_name = "Bookmarks"; }
-        { name = "AWS";          url = "https://console.aws.amazon.com"; }
-        { name = "Azure";        url = "https://portal.azure.com"; }
-        { name = "Bitwarden";    url = "https://vault.bitwarden.com"; }
-        { name = "Cloudflare";   url = "https://dash.cloudflare.com"; }
-        { name = "GCP";          url = "https://console.cloud.google.com"; }
-        { name = "GitHub";       url = "https://github.com"; }
-        { name = "GitLab";       url = "https://gitlab.com"; }
-        { name = "Google Drive"; url = "https://drive.google.com"; }
-        { name = "HashiCorp";    url = "https://portal.cloud.hashicorp.com"; }
         { name = "Outlook";      url = "https://outlook.live.com"; }
-        { name = "Proton";       url = "https://account.proton.me"; }
+        { name = "Drive";        url = "https://drive.google.com"; }
+        { name = "GitHub";       url = "https://github.com"; }
+        {
+          name = "Cloud";
+          children = [
+            { name = "AWS";        url = "https://console.aws.amazon.com"; }
+            { name = "Azure";      url = "https://portal.azure.com"; }
+            { name = "GCP";        url = "https://console.cloud.google.com"; }
+            { name = "Cloudflare"; url = "https://dash.cloudflare.com"; }
+            { name = "HashiCorp";  url = "https://portal.cloud.hashicorp.com"; }
+          ];
+        }
+        {
+          name = "Accounts";
+          children = [
+            { name = "Bitwarden"; url = "https://vault.bitwarden.com"; }
+            { name = "Proton";    url = "https://account.proton.me"; }
+            { name = "GitLab";    url = "https://gitlab.com"; }
+          ];
+        }
       ];
 
       ExtensionSettings = {
