@@ -16,7 +16,7 @@
       cleanup = "zap";
     };
     casks = [
-      "docker"
+      "docker-desktop"
       "ghostty"
       "protonvpn"
       "nikitabobko/tap/aerospace"
