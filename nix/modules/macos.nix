@@ -109,7 +109,7 @@
       '';
     };
 
-    # macOS UI-gates default browser changes for anti-hijack reasons. The CLI
+# macOS UI-gates default browser changes for anti-hijack reasons. The CLI
     # triggers a one-time system confirmation dialog; subsequent runs are a no-op
     # if Firefox is already default.
     home.activation.setDefaultBrowser = ''

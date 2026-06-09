@@ -1,7 +1,7 @@
 /****************************************************************************
  * user-overrides.js                                                        *
  * Applied on top of arkenfox user.js. Overrides and additions specific     *
- * to this profile. See ADR 0009 for the threat model and rationale.        *
+ * to this profile.                                                         *
 ****************************************************************************/
 
 /****************************************************************************
@@ -37,6 +37,7 @@ user_pref("browser.genai.summarize.enabled", false);
 // PREF: fresh launch each time, blank home, blank new tab
 user_pref("browser.startup.page", 1);
 user_pref("browser.startup.homepage", "file://__HOME__/.config/firefox/newtab.html");
+user_pref("browser.newtabpage.enabled", false);
 
 // PREF: strip activity-stream content from new tab even when shown
 user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
@@ -47,7 +48,7 @@ user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 
 /****************************************************************************
- * SECTION: DNS - rely on OS resolver via ProtonVPN tunnel (ADR 0010)       *
+ * SECTION: DNS - rely on OS resolver via ProtonVPN tunnel                  *
 ****************************************************************************/
 
 // PREF: disable DoH entirely; OS resolver hands DNS to the VPN tunnel

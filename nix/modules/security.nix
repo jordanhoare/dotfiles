@@ -5,6 +5,15 @@ let
   overridesRaw = builtins.readFile ../../config/firefox/user-overrides.js;
   overrides = lib.replaceStrings [ "__HOME__" ] [ config.home.homeDirectory ] overridesRaw;
 
+  # Firefox autoconfig (mozilla.cfg) runs in the privileged chrome context, so it
+  # can route new tabs to a local file:// that the WebExtension sandbox no longer
+  # reaches. extraPrefs bakes it into the app bundle - the only resource path the
+  # nix-built Firefox actually reads from.
+  mozillaCfg = lib.replaceStrings
+    [ "__NEWTAB_URL__" ]
+    [ "file://${config.home.homeDirectory}/.config/firefox/newtab.html" ]
+    (builtins.readFile ../../config/firefox/mozilla.cfg);
+
   # force_installed with install_url is required per Mozilla policy docs.
   # Firefox ignores installation_mode without install_url for sideloaded extensions.
   # https://mozilla.github.io/policy-templates/#extensionsettings
@@ -13,6 +22,9 @@ in
 {
   programs.firefox = {
     enable = true;
+    package = pkgs.firefox.override {
+      extraPrefs = mozillaCfg;
+    };
     policies = {
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
@@ -29,9 +41,12 @@ in
       };
 
       ExtensionSettings = {
+        # Previously force-installed; explicitly blocked so it uninstalls.
+        # Firefox blocks file:// access for extensions, so the only remaining
+        # path was a per-machine file picker - not worth it. Mocha homepage
+        # still shows on launch + home button via browser.startup.homepage.
         "newtaboverride@agenedia.com" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "newtaboverride@agenedia.com";
+          installation_mode = "blocked";
         };
 
         "uBlock0@raymondhill.net" = {
@@ -178,7 +193,7 @@ in
     };
   };
 
-  # ProtonVPN: macOS uses a Homebrew cask (declared in macos.nix). See ADR 0010.
+  # ProtonVPN: macOS uses a Homebrew cask (declared in macos.nix).
   home.packages = lib.optionals (!pkgs.stdenv.isDarwin) [
     pkgs.protonvpn-gui
   ];
