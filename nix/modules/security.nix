@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 let
-  arkenfox  = builtins.readFile ../../config/firefox/arkenfox.js;
+  arkenfox = builtins.readFile ../../config/firefox/arkenfox.js;
   overrides = builtins.readFile ../../config/firefox/user-overrides.js;
 
   # force_installed with install_url is required per Mozilla policy docs.
@@ -22,13 +22,40 @@ in
       DontCheckDefaultBrowser = true;
 
       ExtensionSettings = {
-        "uBlock0@raymondhill.net"                = { installation_mode = "force_installed"; install_url = amoUrl "uBlock0@raymondhill.net"; };
-        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = { installation_mode = "force_installed"; install_url = amoUrl "{446900e4-71c2-419f-a6a7-df9c091e268b}"; };
-        "leechblockng@proginosko.com"            = { installation_mode = "force_installed"; install_url = amoUrl "leechblockng@proginosko.com"; };
-        "@news-feed-eradicator"                  = { installation_mode = "force_installed"; install_url = amoUrl "@news-feed-eradicator"; };
-        "vpn@proton.ch"                          = { installation_mode = "force_installed"; install_url = amoUrl "vpn@proton.ch"; };
-        "clipper@obsidian.md"                    = { installation_mode = "force_installed"; install_url = amoUrl "clipper@obsidian.md"; };
-        "{ad81280b-0506-473b-815b-9fbbdd754448}" = { installation_mode = "force_installed"; install_url = amoUrl "{ad81280b-0506-473b-815b-9fbbdd754448}"; };
+        "uBlock0@raymondhill.net" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "uBlock0@raymondhill.net";
+          private_browsing = true;
+        };
+        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "{446900e4-71c2-419f-a6a7-df9c091e268b}";
+          private_browsing = true;
+        };
+        "leechblockng@proginosko.com" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "leechblockng@proginosko.com";
+          private_browsing = true;
+        };
+        "@news-feed-eradicator" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "@news-feed-eradicator";
+          private_browsing = true;
+        };
+        "vpn@proton.ch" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "vpn@proton.ch";
+          private_browsing = true;
+        };
+        "clipper@obsidian.md" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "clipper@obsidian.md";
+          private_browsing = true;
+        };
+        "{ad81280b-0506-473b-815b-9fbbdd754448}" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "{ad81280b-0506-473b-815b-9fbbdd754448}";
+        };
       };
     };
 
@@ -45,26 +72,92 @@ in
             name = "toolbar";
             toolbar = true;
             bookmarks = [
-              { name = "Outlook"; url = "https://outlook.live.com"; }
-              { name = "Drive";   url = "https://drive.google.com"; }
-              { name = "GitHub";  url = "https://github.com"; }
               {
-                name = "Cloud";
+                name = "Personal";
                 bookmarks = [
-                  { name = "AWS";        url = "https://console.aws.amazon.com"; }
-                  { name = "Azure";      url = "https://portal.azure.com"; }
-                  { name = "GCP";        url = "https://console.cloud.google.com"; }
-                  { name = "Cloudflare"; url = "https://dash.cloudflare.com"; }
-                  { name = "HashiCorp";  url = "https://portal.cloud.hashicorp.com"; }
+                  {
+                    name = "LinkedIn";
+                    url = "https://www.linkedin.com";
+                  }
+                  {
+                    name = "Drive";
+                    url = "https://drive.google.com";
+                  }
                 ];
               }
               {
-                name = "Accounts";
+                name = "Cloud";
                 bookmarks = [
-                  { name = "Bitwarden"; url = "https://vault.bitwarden.com"; }
-                  { name = "Proton";    url = "https://account.proton.me"; }
-                  { name = "GitLab";    url = "https://gitlab.com"; }
+                  {
+                    name = "AWS";
+                    url = "https://console.aws.amazon.com";
+                  }
+                  {
+                    name = "Azure";
+                    url = "https://portal.azure.com";
+                  }
+                  {
+                    name = "Google";
+                    url = "https://console.cloud.google.com";
+                  }
+                  {
+                    name = "Terraform";
+                    url = "https://app.terraform.io";
+                  }
+                  {
+                    name = "HashiCorp";
+                    url = "https://portal.cloud.hashicorp.com";
+                  }
+                  {
+                    name = "Cloudflare";
+                    url = "https://dash.cloudflare.com";
+                  }
+                  {
+                    name = "Vault";
+                    url = "https://portal.cloud.hashicorp.com/services/secrets";
+                  }
                 ];
+              }
+              {
+                name = "Other";
+                bookmarks = [
+                  {
+                    name = "Claude";
+                    url = "https://claude.ai";
+                  }
+                  {
+                    name = "JIRA";
+                    url = "https://www.atlassian.com/software/jira";
+                  }
+                  {
+                    name = "Confluence";
+                    url = "https://www.atlassian.com/software/confluence";
+                  }
+                  {
+                    name = "Loom";
+                    url = "https://loom.com";
+                  }
+                  {
+                    name = "GitLab";
+                    url = "https://gitlab.com";
+                  }
+                  {
+                    name = "Bitwarden";
+                    url = "https://vault.bitwarden.com";
+                  }
+                  {
+                    name = "Proton";
+                    url = "https://account.proton.me";
+                  }
+                ];
+              }
+              {
+                name = "Outlook";
+                url = "https://outlook.live.com";
+              }
+              {
+                name = "GitHub";
+                url = "https://github.com";
               }
             ];
           }
