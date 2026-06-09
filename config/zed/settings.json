@@ -198,7 +198,8 @@
       ".secrets.baseline"
     ],
     "Shell Script": [".zshrc", ".zshenv", ".zprofile", ".zlogin", ".bashrc"],
-    "HyprLang": ["hyprland.conf", "hyprpaper.conf", "hypridle.conf", "hyprlock.conf"]
+    "HyprLang": ["hyprland.conf", "hyprpaper.conf", "hypridle.conf", "hyprlock.conf"],
+    "JavaScript": ["mozilla.cfg"]
   },
   "lsp": {
     "yaml-language-server": {
