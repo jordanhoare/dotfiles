@@ -1,4 +1,4 @@
-<h1 align="center">dotfiles</h1>
+<h1 align="center">~/</h1>
 
 <div align="center">
 
