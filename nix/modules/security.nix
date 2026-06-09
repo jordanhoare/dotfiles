@@ -1,8 +1,9 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   arkenfox = builtins.readFile ../../config/firefox/arkenfox.js;
-  overrides = builtins.readFile ../../config/firefox/user-overrides.js;
+  overridesRaw = builtins.readFile ../../config/firefox/user-overrides.js;
+  overrides = lib.replaceStrings [ "__HOME__" ] [ config.home.homeDirectory ] overridesRaw;
 
   # force_installed with install_url is required per Mozilla policy docs.
   # Firefox ignores installation_mode without install_url for sideloaded extensions.

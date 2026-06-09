@@ -21,6 +21,7 @@
     let
       # Change this when forking for your own use.
       username = "jordanhoare";
+      firstName = "Jordan";
 
       # pathExists on a gitignored file is the sole reason --impure is required.
       # Evaluates to false on a fresh clone before `make secrets` has run.
@@ -31,13 +32,13 @@
       mkHome = { system, homeDirectory, modules }:
         home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { inherit system; config.allowUnfree = true; overlays = [ nurOverlay ]; };
-          extraSpecialArgs = { inherit username homeDirectory hasPrivateProfile; };
+          extraSpecialArgs = { inherit username firstName homeDirectory hasPrivateProfile; };
           modules = [ ./modules/base.nix ./modules/profiles.nix ] ++ modules;
         };
 
       darwinSystem = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
-        specialArgs = { inherit username; };
+        specialArgs = { inherit username firstName; };
         modules = [
           home-manager.darwinModules.home-manager
           {
@@ -48,7 +49,7 @@
             # suffix instead of aborting activation.
             home-manager.backupFileExtension = "bak";
             home-manager.extraSpecialArgs = {
-              inherit username hasPrivateProfile;
+              inherit username firstName hasPrivateProfile;
               homeDirectory = "/Users/${username}";
             };
             home-manager.users.${username}.imports =

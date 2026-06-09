@@ -1,4 +1,4 @@
-{ pkgs, username, ... }:
+{ pkgs, lib, username, firstName, ... }:
 
 {
   # Homebrew handles macOS GUI apps that nixpkgs cannot build for darwin.
@@ -83,6 +83,10 @@
     home.file = {
       ".config/ghostty/config".source = ../../config/ghostty/config;
       ".config/aerospace/aerospace.toml".source = ../../config/aerospace/aerospace.toml;
+      ".config/firefox/newtab.html".text =
+        lib.replaceStrings [ "__NAME__" ]
+                          [ firstName ]
+                          (builtins.readFile ../../config/firefox/newtab.html);
     };
 
     # Copy home-manager .app bundles to ~/Applications after linkGeneration creates

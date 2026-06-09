@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New Tab</title>
+<style>
+  :root {
+    --base:     #1e1e2e;
+    --mantle:   #181825;
+    --crust:    #11111b;
+    --text:     #cdd6f4;
+    --subtext1: #bac2de;
+    --subtext0: #a6adc8;
+    --overlay0: #6c7086;
+    --surface0: #313244;
+    --lavender: #b4befe;
+    --mauve:    #cba6f7;
+    --green:    #a6e3a1;
+    --red:      #f38ba8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+    color: var(--text);
+    background: radial-gradient(ellipse at 50% 30%, var(--base) 0%, var(--mantle) 50%, var(--crust) 100%);
+    overflow: hidden;
+  }
+  main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 2rem;
+  }
+  #greeting {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--subtext1);
+    letter-spacing: 0.02em;
+  }
+  #clock {
+    font-size: 7rem;
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  #date {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--subtext0);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  #quote {
+    margin-top: 2.5rem;
+    max-width: 36rem;
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--subtext0);
+    text-align: center;
+    line-height: 1.6;
+  }
+  #quote cite {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--subtext0);
+    font-style: normal;
+    font-size: 0.8rem;
+  }
+
+  #pomo {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--surface0);
+    border-radius: 999px;
+    color: var(--subtext0);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+  }
+  #pomo button {
+    background: transparent;
+    border: none;
+    color: var(--lavender);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+  }
+  #pomo button:hover { background: var(--base); }
+  #pomo.running #pomo-time { color: var(--green); }
+  #pomo.done    #pomo-time { color: var(--red); }
+</style>
+</head>
+<body>
+<main>
+  <div id="greeting"></div>
+  <div id="clock"></div>
+  <div id="date"></div>
+  <blockquote id="quote"></blockquote>
+</main>
+
+<div id="pomo">
+  <span id="pomo-time">25:00</span>
+  <button id="pomo-toggle">start</button>
+  <button id="pomo-reset">reset</button>
+</div>
+
+<script>
+  const NAME = "__NAME__";
+
+  const QUOTES = [
+    ["Simplicity is prerequisite for reliability.", "Edsger Dijkstra"],
+    ["We suffer more often in imagination than in reality.", "Seneca"],
+    ["He who has a why to live for can bear almost any how.", "Friedrich Nietzsche"],
+    ["Make it work, then make it beautiful, then if you really, really have to, make it fast.", "Joe Armstrong"],
+    ["You have power over your mind, not outside events. Realise this and you will find strength.", "Marcus Aurelius"],
+    ["A complex system that works is invariably found to have evolved from a simple system that worked.", "John Gall"],
+    ["Controlling complexity is the essence of computer programming.", "Brian Kernighan"],
+    ["The unexamined life is not worth living.", "Socrates"],
+    ["Bad programmers worry about the code. Good programmers worry about data structures and their relationships.", "Linus Torvalds"],
+    ["A foolish consistency is the hobgoblin of little minds.", "Ralph Waldo Emerson"],
+    ["Plan to throw one away; you will, anyhow.", "Fred Brooks"],
+    ["Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.", "Antoine de Saint-Exupéry"],
+    ["The mind is everything. What you think, you become.", "Buddha"],
+    ["Programs must be written for people to read, and only incidentally for machines to execute.", "Harold Abelson"],
+    ["Waste no more time arguing about what a good person should be. Be one.", "Marcus Aurelius"],
+    ["It is not enough to be busy; so are the ants. The question is: what are we busy about?", "Henry David Thoreau"],
+    ["If you think technology can solve your security problems, then you don't understand the problems and you don't understand the technology.", "Bruce Schneier"],
+    ["It is not what happens to you, but how you react that matters.", "Epictetus"],
+    ["Debugging is twice as hard as writing the code. Therefore, if you write the code as cleverly as possible, you are not smart enough to debug it.", "Brian Kernighan"],
+    ["All of humanity's problems stem from man's inability to sit quietly in a room alone.", "Blaise Pascal"]
+  ];
+
+  function dayOfYear(d) {
+    const start = new Date(d.getFullYear(), 0, 0);
+    return Math.floor((d - start) / 86400000);
+  }
+
+  function render() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const greet =
+      h < 5  ? "Good night" :
+      h < 12 ? "Good morning" :
+      h < 18 ? "Good afternoon" :
+               "Good evening";
+    document.getElementById("greeting").textContent = `${greet}, ${NAME}`;
+    document.getElementById("clock").textContent =
+      `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    document.getElementById("date").textContent =
+      now.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
+
+    const day = dayOfYear(now);
+    const [text, who] = QUOTES[day % QUOTES.length];
+    document.getElementById("quote").innerHTML = `"${text}" <cite>- ${who}</cite>`;
+  }
+  render();
+  setInterval(render, 30000);
+
+  // Pomodoro
+  const POMO_MS = 25 * 60 * 1000;
+  let remaining = POMO_MS;
+  let endsAt = null;
+  let tickId = null;
+  const pomo = document.getElementById("pomo");
+  const time = document.getElementById("pomo-time");
+  const toggle = document.getElementById("pomo-toggle");
+  const reset = document.getElementById("pomo-reset");
+
+  function fmt(ms) {
+    const total = Math.max(0, Math.round(ms / 1000));
+    const mm = String(Math.floor(total / 60)).padStart(2, "0");
+    const ss = String(total % 60).padStart(2, "0");
+    return `${mm}:${ss}`;
+  }
+  function tick() {
+    remaining = endsAt - Date.now();
+    if (remaining <= 0) {
+      remaining = 0;
+      clearInterval(tickId); tickId = null; endsAt = null;
+      pomo.classList.remove("running");
+      pomo.classList.add("done");
+      toggle.textContent = "start";
+    }
+    time.textContent = fmt(remaining);
+  }
+  toggle.onclick = () => {
+    if (tickId) {
+      remaining = endsAt - Date.now();
+      clearInterval(tickId); tickId = null; endsAt = null;
+      pomo.classList.remove("running");
+      toggle.textContent = "resume";
+    } else {
+      endsAt = Date.now() + remaining;
+      tickId = setInterval(tick, 250);
+      pomo.classList.add("running");
+      pomo.classList.remove("done");
+      toggle.textContent = "pause";
+    }
+  };
+  reset.onclick = () => {
+    if (tickId) { clearInterval(tickId); tickId = null; }
+    endsAt = null;
+    remaining = POMO_MS;
+    pomo.classList.remove("running", "done");
+    toggle.textContent = "start";
+    time.textContent = fmt(remaining);
+  };
+</script>
+</body>
+</html>
