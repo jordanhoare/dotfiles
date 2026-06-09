@@ -5,6 +5,7 @@
     gh
     claude-code
     socat
+    google-cloud-sdk
   ];
 
   home.file = {

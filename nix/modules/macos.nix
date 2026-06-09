@@ -22,7 +22,6 @@
       "nikitabobko/tap/aerospace"
       "obsidian"
       "zed"
-      "gcloud-cli"
       "vlc"
     ];
   };
