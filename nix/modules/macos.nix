@@ -23,6 +23,7 @@
       "obsidian"
       "zed"
       "gcloud-cli"
+      "vlc"
     ];
   };
 
@@ -109,6 +110,17 @@
       "com.apple.SubmitDiagInfo" = {
         AutoSubmit = false;
         AutoSubmitVersion = 4;
+      };
+
+      # VLC: no recent-document persistence, no online metadata fetch, no
+      # auto-update pings, skip the first-run metadata prompt.
+      "org.videolan.vlc" = {
+        NSRecentDocumentsLimit = 0;
+        recentlyPlayedMedia = { };
+        recentlyPlayedMediaList = { };
+        SUEnableAutomaticChecks = false;
+        MetadataNetworkAccess = false;
+        OldPrefsVersion = 4;
       };
 
       # Default-app bindings via LaunchServices (Apple's own API, no third-party
@@ -198,6 +210,7 @@
     home.file = {
       ".config/ghostty/config".source = ../../config/ghostty/config;
       ".config/aerospace/aerospace.toml".source = ../../config/aerospace/aerospace.toml;
+      "Library/Preferences/org.videolan.vlc/vlcrc".source = ../../config/vlc/vlcrc;
       ".config/firefox/newtab.html".text = lib.replaceStrings [ "__NAME__" ] [ firstName ] (
         builtins.readFile ../../config/firefox/newtab.html
       );
@@ -223,7 +236,21 @@
       '';
     };
 
-# Kick LaunchServices to re-scan after the LSHandlers plist is updated by
+    # Strip the macOS quarantine xattr off Homebrew-cask apps so they don't
+    # show "downloaded from the internet" Gatekeeper prompts on first launch.
+    home.activation.dequarantineCasks = {
+      after = [ "linkApps" ];
+      before = [ ];
+      data = ''
+        for app in VLC.app Obsidian.app "Zed.app" Ghostty.app ProtonVPN.app; do
+          if [[ -e "/Applications/$app" ]]; then
+            $DRY_RUN_CMD /usr/bin/xattr -dr com.apple.quarantine "/Applications/$app" 2>/dev/null || true
+          fi
+        done
+      '';
+    };
+
+    # Kick LaunchServices to re-scan after the LSHandlers plist is updated by
     # setDarwinDefaults. Without this flush, the new bindings sit in the plist
     # but Finder/Spotlight keep using the cached defaults until next login.
     home.activation.refreshLaunchServices = {

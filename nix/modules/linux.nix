@@ -6,6 +6,7 @@
     obsidian
     bitwarden-desktop
     zed-editor
+    vlc
     hyprland
     hyprpaper
     waybar
@@ -18,5 +19,6 @@
 
   home.file = {
     ".config/hypr/hyprland.conf".source = ../../config/hypr/hyprland.conf;
+    ".config/vlc/vlcrc".source = ../../config/vlc/vlcrc;
   };
 }

@@ -1,0 +1,36 @@
+# VLC configuration. Read at launch from the platform-specific config dir.
+# Goal: VLC plays local media and nothing else. No network metadata, no update
+# checks, no LAN discovery, no internet directories, no extra control surfaces.
+# macosx-* keys are silently ignored on Linux.
+
+# === Network / privacy ===
+metadata-network-access=0
+update-check=0
+auto-preparse=0
+http-proxy=
+extraintf=
+
+# === Services discovery (kills Bonjour/UPnP/SAP/Podcasts/Jamendo/Icecast) ===
+services-discovery=
+
+# === Media library scan hygiene ===
+medialibrary-scan-recursive=0
+playlist-autostart=0
+random=0
+loop=0
+
+# === macOS-specific UI ===
+macosx-recentitems-size=0
+macosx-stats=0
+macosx-continue-playback=0
+macosx-autoplay=0
+macosx-pause-minimized=1
+macosx-video-autoresize=0
+macosx-nativefullscreenmode=1
+
+# === Qt-side privacy ask (Linux) ===
+qt-privacy-ask=0
+qt-recentplay=0
+
+# === Quieter logs ===
+quiet=1
