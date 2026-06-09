@@ -20,32 +20,6 @@ in
       OverrideFirstRunPage = "";
       OverridePostUpdatePage = "";
       DontCheckDefaultBrowser = true;
-      NoDefaultBookmarks = true;
-
-      ManagedBookmarks = [
-        { toplevel_name = "Bookmarks"; }
-        { name = "Outlook";      url = "https://outlook.live.com"; }
-        { name = "Drive";        url = "https://drive.google.com"; }
-        { name = "GitHub";       url = "https://github.com"; }
-        {
-          name = "Cloud";
-          children = [
-            { name = "AWS";        url = "https://console.aws.amazon.com"; }
-            { name = "Azure";      url = "https://portal.azure.com"; }
-            { name = "GCP";        url = "https://console.cloud.google.com"; }
-            { name = "Cloudflare"; url = "https://dash.cloudflare.com"; }
-            { name = "HashiCorp";  url = "https://portal.cloud.hashicorp.com"; }
-          ];
-        }
-        {
-          name = "Accounts";
-          children = [
-            { name = "Bitwarden"; url = "https://vault.bitwarden.com"; }
-            { name = "Proton";    url = "https://account.proton.me"; }
-            { name = "GitLab";    url = "https://gitlab.com"; }
-          ];
-        }
-      ];
 
       ExtensionSettings = {
         "uBlock0@raymondhill.net"                = { installation_mode = "force_installed"; install_url = amoUrl "uBlock0@raymondhill.net"; };
@@ -63,6 +37,39 @@ in
       isDefault = true;
       name = "personal";
       extraConfig = arkenfox + overrides;
+
+      bookmarks = {
+        force = true;
+        settings = [
+          {
+            name = "toolbar";
+            toolbar = true;
+            bookmarks = [
+              { name = "Outlook"; url = "https://outlook.live.com"; }
+              { name = "Drive";   url = "https://drive.google.com"; }
+              { name = "GitHub";  url = "https://github.com"; }
+              {
+                name = "Cloud";
+                bookmarks = [
+                  { name = "AWS";        url = "https://console.aws.amazon.com"; }
+                  { name = "Azure";      url = "https://portal.azure.com"; }
+                  { name = "GCP";        url = "https://console.cloud.google.com"; }
+                  { name = "Cloudflare"; url = "https://dash.cloudflare.com"; }
+                  { name = "HashiCorp";  url = "https://portal.cloud.hashicorp.com"; }
+                ];
+              }
+              {
+                name = "Accounts";
+                bookmarks = [
+                  { name = "Bitwarden"; url = "https://vault.bitwarden.com"; }
+                  { name = "Proton";    url = "https://account.proton.me"; }
+                  { name = "GitLab";    url = "https://gitlab.com"; }
+                ];
+              }
+            ];
+          }
+        ];
+      };
     };
   };
 
