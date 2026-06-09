@@ -1,4 +1,10 @@
-{ pkgs, lib, username, firstName, ... }:
+{
+  pkgs,
+  lib,
+  username,
+  firstName,
+  ...
+}:
 
 {
   # Homebrew handles macOS GUI apps that nixpkgs cannot build for darwin.
@@ -104,6 +110,82 @@
         AutoSubmit = false;
         AutoSubmitVersion = 4;
       };
+
+      # Default-app bindings via LaunchServices (Apple's own API, no third-party
+      # tooling). lsregister is flushed in an activation script below so the
+      # new bindings take effect without a logout.
+      "com.apple.LaunchServices/com.apple.launchservices.secure" = {
+        LSHandlers = [
+          {
+            LSHandlerURLScheme = "mailto";
+            LSHandlerRoleAll = "org.nixos.firefox";
+          }
+          {
+            LSHandlerURLScheme = "http";
+            LSHandlerRoleAll = "org.nixos.firefox";
+          }
+          {
+            LSHandlerURLScheme = "https";
+            LSHandlerRoleAll = "org.nixos.firefox";
+          }
+          {
+            LSHandlerContentType = "public.html";
+            LSHandlerRoleAll = "org.nixos.firefox";
+          }
+          {
+            LSHandlerContentType = "com.adobe.pdf";
+            LSHandlerRoleAll = "org.nixos.firefox";
+          }
+          {
+            LSHandlerContentType = "net.daringfireball.markdown";
+            LSHandlerRoleAll = "md.obsidian";
+          }
+          {
+            LSHandlerContentType = "public.python-script";
+            LSHandlerRoleAll = "dev.zed.Zed";
+          }
+          {
+            LSHandlerContentType = "public.shell-script";
+            LSHandlerRoleAll = "dev.zed.Zed";
+          }
+          {
+            LSHandlerContentType = "public.json";
+            LSHandlerRoleAll = "dev.zed.Zed";
+          }
+          {
+            LSHandlerContentType = "public.yaml";
+            LSHandlerRoleAll = "dev.zed.Zed";
+          }
+          {
+            LSHandlerContentType = "org.tomlang.toml";
+            LSHandlerRoleAll = "dev.zed.Zed";
+          }
+          {
+            LSHandlerContentType = "public.movie";
+            LSHandlerRoleAll = "org.videolan.vlc";
+          }
+          {
+            LSHandlerContentType = "public.audio";
+            LSHandlerRoleAll = "org.videolan.vlc";
+          }
+          {
+            LSHandlerContentType = "public.mp4";
+            LSHandlerRoleAll = "org.videolan.vlc";
+          }
+          {
+            LSHandlerContentType = "public.mpeg-4";
+            LSHandlerRoleAll = "org.videolan.vlc";
+          }
+          {
+            LSHandlerContentType = "public.mp3";
+            LSHandlerRoleAll = "org.videolan.vlc";
+          }
+          {
+            LSHandlerContentType = "com.microsoft.waveform-audio";
+            LSHandlerRoleAll = "org.videolan.vlc";
+          }
+        ];
+      };
     };
   };
 
@@ -116,10 +198,9 @@
     home.file = {
       ".config/ghostty/config".source = ../../config/ghostty/config;
       ".config/aerospace/aerospace.toml".source = ../../config/aerospace/aerospace.toml;
-      ".config/firefox/newtab.html".text =
-        lib.replaceStrings [ "__NAME__" ]
-                          [ firstName ]
-                          (builtins.readFile ../../config/firefox/newtab.html);
+      ".config/firefox/newtab.html".text = lib.replaceStrings [ "__NAME__" ] [ firstName ] (
+        builtins.readFile ../../config/firefox/newtab.html
+      );
     };
 
     # Copy home-manager .app bundles to ~/Applications after linkGeneration creates
@@ -127,7 +208,7 @@
     # writeBoundary, otherwise the source directory does not exist yet.
     home.activation.linkApps = {
       after = [ "linkGeneration" ];
-      before = [];
+      before = [ ];
       data = ''
         src="$HOME/Applications/Home Manager Apps"
         dst="$HOME/Applications"
@@ -142,7 +223,22 @@
       '';
     };
 
-# macOS UI-gates default browser changes for anti-hijack reasons. The CLI
+# Kick LaunchServices to re-scan after the LSHandlers plist is updated by
+    # setDarwinDefaults. Without this flush, the new bindings sit in the plist
+    # but Finder/Spotlight keep using the cached defaults until next login.
+    home.activation.refreshLaunchServices = {
+      after = [
+        "setDarwinDefaults"
+        "linkApps"
+      ];
+      before = [ ];
+      data = ''
+        $DRY_RUN_CMD /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister \
+          -kill -r -domain local -domain system -domain user 2>/dev/null || true
+      '';
+    };
+
+    # macOS UI-gates default browser changes for anti-hijack reasons. The CLI
     # triggers a one-time system confirmation dialog; subsequent runs are a no-op
     # if Firefox is already default.
     home.activation.setDefaultBrowser = ''

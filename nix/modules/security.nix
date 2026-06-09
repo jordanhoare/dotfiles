@@ -40,6 +40,19 @@ in
         Remove = [ "Google" "Bing" "Amazon.com" "eBay" "Wikipedia (en)" ];
       };
 
+      Handlers = {
+        schemes = {
+          mailto = {
+            action = "useHelperApp";
+            ask = false;
+            handlers = [{
+              name = "Outlook";
+              uriTemplate = "https://outlook.live.com/owa/?path=/mail/action/compose&to=%s";
+            }];
+          };
+        };
+      };
+
       ExtensionSettings = {
         "uBlock0@raymondhill.net" = {
           installation_mode = "force_installed";
