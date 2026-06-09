@@ -21,6 +21,12 @@ in
       OverridePostUpdatePage = "";
       DontCheckDefaultBrowser = true;
 
+      SearchEngines = {
+        Default = "DuckDuckGo";
+        PreventInstalls = true;
+        Remove = [ "Google" "Bing" "Amazon.com" "eBay" "Wikipedia (en)" ];
+      };
+
       ExtensionSettings = {
         "uBlock0@raymondhill.net" = {
           installation_mode = "force_installed";
