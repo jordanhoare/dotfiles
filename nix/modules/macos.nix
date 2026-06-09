@@ -201,6 +201,25 @@
     };
   };
 
+  # Weekly Nix garbage collection. Determinate owns /etc/nix/nix.conf so
+  # min-free/max-free auto-gc gets clobbered on its updates; a launchd job is
+  # the predictable path. 7 days is enough rollback headroom since flake.lock
+  # is committed and any older state is reachable from git.
+  launchd.user.agents.nix-gc = {
+    command = "/nix/var/nix/profiles/default/bin/nix-collect-garbage --delete-older-than 7d";
+    serviceConfig = {
+      StartCalendarInterval = [
+        {
+          Weekday = 0;
+          Hour = 3;
+          Minute = 0;
+        }
+      ];
+      StandardOutPath = "/tmp/nix-gc.log";
+      StandardErrorPath = "/tmp/nix-gc.log";
+    };
+  };
+
   system.stateVersion = 5;
 
   # User-level config nested under nix-darwin's home-manager integration.
@@ -232,6 +251,19 @@
             $DRY_RUN_CMD rm -rf "$dst/$name"
             $DRY_RUN_CMD cp -RL "$app" "$dst/$name"
           done
+        fi
+      '';
+    };
+
+    # Prune Homebrew's download cache (bottles, cask installers). nix-darwin's
+    # `cleanup = "zap"` removes untracked casks but leaves the download cache
+    # untouched, which grows to multiple GB over time.
+    home.activation.brewPruneCache = {
+      after = [ "linkApps" ];
+      before = [ ];
+      data = ''
+        if [[ -x /opt/homebrew/bin/brew ]]; then
+          $DRY_RUN_CMD /opt/homebrew/bin/brew cleanup -s --prune=all 2>/dev/null || true
         fi
       '';
     };
