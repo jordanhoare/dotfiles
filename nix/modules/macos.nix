@@ -78,6 +78,8 @@
 
   # User-level config nested under nix-darwin's home-manager integration.
   home-manager.users.${username} = {
+    home.packages = [ pkgs.defaultbrowser ];
+
     home.file = {
       ".config/ghostty/config".source = ../../config/ghostty/config;
       ".config/aerospace/aerospace.toml".source = ../../config/aerospace/aerospace.toml;
@@ -102,6 +104,18 @@
         fi
       '';
     };
+
+    # macOS UI-gates default browser changes for anti-hijack reasons. The CLI
+    # triggers a one-time system confirmation dialog; subsequent runs are a no-op
+    # if Firefox is already default.
+    home.activation.setDefaultBrowser = ''
+      if [[ -x "${pkgs.defaultbrowser}/bin/defaultbrowser" ]]; then
+        current=$(${pkgs.defaultbrowser}/bin/defaultbrowser 2>/dev/null | ${pkgs.gawk}/bin/awk '/^\* / {print $2}')
+        if [[ "$current" != "firefox" ]]; then
+          $DRY_RUN_CMD ${pkgs.defaultbrowser}/bin/defaultbrowser firefox 2>/dev/null || true
+        fi
+      fi
+    '';
 
     # Applied at activation time alongside all other home config.
     # First run from a bare Ghostty window triggers a one-time TCC prompt;
