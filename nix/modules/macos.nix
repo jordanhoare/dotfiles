@@ -72,6 +72,39 @@
     };
 
     spaces.spans-displays = false;
+
+    # Siri + Apple Intelligence + dictation + Spotlight suggestions + diagnostics.
+    # Re-asserted on every activation in case a macOS upgrade flips defaults back.
+    CustomUserPreferences = {
+      "com.apple.assistant.support" = {
+        "Assistant Enabled" = false;
+        "Dictation Enabled" = false;
+        "Search Queries Data Sharing Status" = 2;
+      };
+      "com.apple.Siri" = {
+        StatusMenuVisible = false;
+        UserHasDeclinedEnable = true;
+      };
+      "com.apple.controlcenter" = {
+        "NSStatusItem Visible Siri" = false;
+      };
+      "com.apple.CloudSubscriptionFeatures.optIn" = {
+        device_OnTopic = false;
+      };
+      "com.apple.HIToolbox" = {
+        AppleDictationAutoEnable = 0;
+      };
+      "com.apple.lookup.shared" = {
+        LookupSuggestionsDisabled = true;
+      };
+      "com.apple.suggestions" = {
+        SuggestionsAppLibraryEnabled = false;
+      };
+      "com.apple.SubmitDiagInfo" = {
+        AutoSubmit = false;
+        AutoSubmitVersion = 4;
+      };
+    };
   };
 
   system.stateVersion = 5;
