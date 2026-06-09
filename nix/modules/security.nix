@@ -29,6 +29,11 @@ in
       };
 
       ExtensionSettings = {
+        "newtaboverride@agenedia.com" = {
+          installation_mode = "force_installed";
+          install_url = amoUrl "newtaboverride@agenedia.com";
+        };
+
         "uBlock0@raymondhill.net" = {
           installation_mode = "force_installed";
           install_url = amoUrl "uBlock0@raymondhill.net";

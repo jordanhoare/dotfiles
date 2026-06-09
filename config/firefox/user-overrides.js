@@ -37,7 +37,6 @@ user_pref("browser.genai.summarize.enabled", false);
 // PREF: fresh launch each time, blank home, blank new tab
 user_pref("browser.startup.page", 1);
 user_pref("browser.startup.homepage", "file://__HOME__/.config/firefox/newtab.html");
-user_pref("browser.newtabpage.enabled", false);
 
 // PREF: strip activity-stream content from new tab even when shown
 user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
