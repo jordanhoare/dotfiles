@@ -43,6 +43,7 @@ in
         "leechblockng@proginosko.com"            = { installation_mode = "force_installed"; install_url = amoUrl "leechblockng@proginosko.com"; };
         "@news-feed-eradicator"                  = { installation_mode = "force_installed"; install_url = amoUrl "@news-feed-eradicator"; };
         "vpn@proton.ch"                          = { installation_mode = "force_installed"; install_url = amoUrl "vpn@proton.ch"; };
+        "clipper@obsidian.md"                    = { installation_mode = "force_installed"; install_url = amoUrl "clipper@obsidian.md"; };
         "{ad81280b-0506-473b-815b-9fbbdd754448}" = { installation_mode = "force_installed"; install_url = amoUrl "{ad81280b-0506-473b-815b-9fbbdd754448}"; };
       };
     };
