@@ -16,12 +16,12 @@ Edit `nix/modules/base.nix` (or the relevant platform module) and run `make swit
 
 ## Secrets
 
-SSH keys live in Bitwarden as SSH Key items. The private git profile is sops-encrypted at `config/git/private.enc` against `~/.ssh/personal`.
+Each account's SSH Key item in Bitwarden carries two things: the SSH private key, and a hidden custom field named `pat` holding a classic GitHub PAT (scopes `repo`, `read:org`, `gist`, `workflow`). `make secrets` restores the keys, logs `gh` in to both accounts from those PATs (no browser), and decrypts the private git profile.
 
 ```bash
-make secrets      # restore SSH keys + decrypt private profile to ~/.config/git/private
+make secrets      # restore SSH keys + gh PATs + decrypt private profile
 make encrypt      # re-encrypt after editing ~/.config/git/private
-make decrypt      # decrypt without the full Bitwarden flow
+make decrypt      # decrypt the private profile without the full Bitwarden flow
 ```
 
-The decrypted private profile lives at `~/.config/git/private` (outside the repo). `config/git/config` picks it up via `[includeIf]` and silently no-ops when missing.
+The private git profile is sops-encrypted at `config/git/private.enc` against `~/.ssh/personal` and decrypts to `~/.config/git/private` (outside the repo). `config/git/config` picks it up via `[includeIf]` and silently no-ops when missing.

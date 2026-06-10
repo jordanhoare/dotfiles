@@ -27,8 +27,12 @@ export SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/personal
 
 export HOMEBREW_NO_ENV_HINTS=1
 
-# allow mise to fetch tool versions without hitting github rate limits
-export GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+# GH_TOKEN/GITHUB_TOKEN in the environment make gh ignore stored credentials,
+# breaking `gh auth login` / `gh auth switch`. Unset any inherited value, then
+# give mise its own var (MISE_GITHUB_TOKEN) sourced from gh's stored creds.
+unset GH_TOKEN GITHUB_TOKEN
+MISE_GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+export MISE_GITHUB_TOKEN
 
 export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 export PATH="$HOME/.aftman/bin:$HOME/.cargo/bin:$PATH"
