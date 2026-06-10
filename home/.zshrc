@@ -12,7 +12,7 @@ eval "$(mise activate zsh)"
 eval "$(zoxide init zsh)"
 
 _update_git_identity() {
-  export STARSHIP_GIT_USER=$(git config user.name 2>/dev/null)
+  export STARSHIP_GIT_USER=$(git config github.user 2>/dev/null)
 }
 add-zsh-hook precmd _update_git_identity
 
@@ -43,7 +43,7 @@ alias cat='bat --paging=never'
 alias less='bat'
 alias reload='source ~/.zshrc'
 
-gclone() { gh repo clone "$1" }
+gclone() { gh repo clone "$1"; }
 
 alias gst='git status'
 alias gcm='git commit -m'
