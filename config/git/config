@@ -41,8 +41,8 @@
   autoSetupRemote = true
 
 [alias]
-  personal = "!git config user.name \"$(git config --file ~/.config/git/personal user.name)\" && git config user.email \"$(git config --file ~/.config/git/personal user.email)\" && gh auth switch --user \"$(git config --file ~/.config/git/personal github.user)\""
-  private = "!git config user.name \"$(git config --file ~/.config/git/private user.name)\" && git config user.email \"$(git config --file ~/.config/git/private user.email)\" && gh auth switch --user \"$(git config --file ~/.config/git/private github.user)\""
+  personal = "!git config user.name \"$(git config --file ~/.config/git/personal user.name)\" && git config user.email \"$(git config --file ~/.config/git/personal user.email)\" && { gh auth switch --user \"$(git config --file ~/.config/git/personal github.user)\" 2>/dev/null || echo 'warn: gh not authenticated; run `gh auth login`'; }"
+  private = "!git config user.name \"$(git config --file ~/.config/git/private user.name)\" && git config user.email \"$(git config --file ~/.config/git/private user.email)\" && { gh auth switch --user \"$(git config --file ~/.config/git/private github.user)\" 2>/dev/null || echo 'warn: gh not authenticated; run `gh auth login`'; }"
   whoami = "!echo \"$(git config user.name) <$(git config user.email)>\""
 
 [safe]

@@ -19,7 +19,6 @@ Keep all Zed config files as read-only symlinks. The repo at `config/zed/` is th
 
 - Editing config requires editing files in `config/zed/` directly, not the Zed UI
 - Every machine has byte-identical Zed config after `make switch` - no drift
-- `make verify` can assert symlink targets exactly, not content equality
 - `ls -la ~/.config/zed/` reveals the source path, making the wiring discoverable
 - UI tweaks made during a session vanish on next Zed launch - accepted
 - Extensions added by clicking "install" in Zed's UI do not persist; they must be added to `auto_install_extensions` in `config/zed/settings.json`

@@ -14,9 +14,6 @@ endif
 # `\#` is the literal `#` escape - bare `#` starts a Make comment.
 FLAKE_REF := $(NIX_FLAKE)\#$(PLATFORM)
 
-# Stable attribute path for make verify / make doctor - same key for all platforms.
-HM_FILES_ATTR := homeManagerFiles.$(PLATFORM)
-
 # macOS activation builds the system derivation first so that darwin-rebuild
 # comes from the flake-pinned nix-darwin, not whatever `nix run nix-darwin`
 # resolves from the registry. This also handles fresh machines where
@@ -27,35 +24,27 @@ DARWIN_REBUILD := $(DARWIN_RESULT)/sw/bin/darwin-rebuild
 
 .DEFAULT_GOAL := help
 
-.PHONY: help switch secrets verify doctor hooks decrypt encrypt
+.PHONY: help switch secrets hooks decrypt encrypt
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-# --impure is required because hasPrivateProfile in flake.nix uses
-# builtins.pathExists on a gitignored file (config/git/private).
 switch: ## activate nix profile for the detected platform
 ifeq ($(PLATFORM),macos)
-	nix build --impure '$(DARWIN_SYSTEM)' --out-link $(DARWIN_RESULT)
-	sudo $(DARWIN_REBUILD) switch --flake $(FLAKE_REF) --impure
+	nix build '$(DARWIN_SYSTEM)' --out-link $(DARWIN_RESULT)
+	sudo $(DARWIN_REBUILD) switch --flake $(FLAKE_REF)
 else
-	nix run '$(NIX_FLAKE)#home-manager' -- switch --flake $(FLAKE_REF) --impure
+	nix run '$(NIX_FLAKE)#home-manager' -- switch --flake $(FLAKE_REF)
 endif
 
 secrets: ## restore SSH keys from bitwarden and decrypt sops
 	$(DOTFILES)/bin/secrets
 
-decrypt: ## unpack any encrypted sops secrets into local repo
-	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(DOTFILES)/config/git/private $(DOTFILES)/config/git/private.enc
+decrypt: ## unpack any encrypted sops secrets to ~/.config/git/private
+	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --decrypt --output $(HOME)/.config/git/private $(DOTFILES)/config/git/private.enc
 
-encrypt: ## re-encrypt local plaintext secrets back into sops files
-	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --encrypt --output $(DOTFILES)/config/git/private.enc $(DOTFILES)/config/git/private
-
-verify: ## strict check - every declared Symlink is in place (CI gate)
-	@$(DOTFILES)/bin/verify '$(HM_FILES_ATTR)'
-
-doctor: ## verbose local diagnostic - symlinks, tools, git/ssh identity
-	@$(DOTFILES)/bin/doctor '$(HM_FILES_ATTR)'
+encrypt: ## re-encrypt ~/.config/git/private back into sops file
+	SOPS_AGE_SSH_PRIVATE_KEY_FILE=$(HOME)/.ssh/personal sops --encrypt --output $(DOTFILES)/config/git/private.enc $(HOME)/.config/git/private
 
 hooks: ## install pre-commit hooks
 	pre-commit install

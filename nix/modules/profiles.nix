@@ -1,19 +1,11 @@
-{ lib, hasPrivateProfile, ... }:
+{ ... }:
 
-# A Profile is a git identity context (see glossary). Two Profiles exist:
-#   - personal: committed plaintext at config/git/personal, always linked.
-#   - private:  sops-encrypted at config/git/private.enc, linked only when
-#               hasPrivateProfile is true (set by flake.nix after `make secrets`
-#               has decrypted it to config/git/private).
-# Both files share the same shape - a git-config fragment with [user] and
-# [github] sections - consumed by config/git/config via [include] / [includeIf]
-# and by the `git personal` / `git private` aliases.
+# Git identity Profiles (see glossary).
+#   personal: committed plaintext at config/git/personal, linked into ~/.config/git.
+#   private:  sops-encrypted at config/git/private.enc, decrypted by `make secrets`
+#             directly into ~/.config/git/private (not managed by Nix). The
+#             [includeIf] in config/git/config silently no-ops when missing.
 
 {
-  home.file = {
-    ".config/git/personal".source = ../../config/git/personal;
-
-    ".config/git/private" = lib.mkIf hasPrivateProfile
-      { source = ../../config/git/private; };
-  };
+  home.file.".config/git/personal".source = ../../config/git/personal;
 }

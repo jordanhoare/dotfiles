@@ -15,6 +15,11 @@ config/git/private
 # macOS
 .DS_Store
 
+# Editor swap / backup files
+*.swp
+*.swo
+*~
+
 # AWS
 home/.aws/credentials
 

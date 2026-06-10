@@ -62,22 +62,14 @@
     ".claude/settings.json".source = ../../home/.claude/settings.json;
     ".claude/skills".source        = ../../home/.claude/skills;
 
-    "bin/mkcd".source = ../../bin/mkcd;
-    "bin/secrets".source = ../../bin/secrets;
-    "bin/sync".source = ../../bin/sync;
-    "bin/up".source = ../../bin/up;
-    "bin/work".source = ../../bin/work;
-    "bin/wallpaper".source = ../../bin/wallpaper;
+    "bin" = {
+      source = ../../bin;
+      recursive = true;
+    };
 
     ".config/wallpapers/source.jpg".source = ../../config/wallpapers/source.jpg;
     ".config/wallpapers/wallpaper.jpg".source = ../../config/wallpapers/wallpaper.jpg;
   };
 
   home.sessionPath = [ "$HOME/bin" ];
-
-  home.activation.miseInstall = ''
-    if [ -x "${pkgs.mise}/bin/mise" ]; then
-      ${pkgs.mise}/bin/mise install --yes 2>&1 || true
-    fi
-  '';
 }

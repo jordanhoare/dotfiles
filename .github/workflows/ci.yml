@@ -51,8 +51,8 @@ jobs:
       # references without requiring a matching user environment.
       - name: build linux + wsl activation packages
         run: |
-          nix build --impure ./nix#homeConfigurations."linux".activationPackage
-          nix build --impure ./nix#homeConfigurations."wsl".activationPackage
+          nix build ./nix#homeConfigurations."linux".activationPackage
+          nix build ./nix#homeConfigurations."wsl".activationPackage
 
       - name: nvim config validity (no plugin bootstrap)
         run: nix run nixpkgs#stylua -- --check config/nvim/
@@ -83,4 +83,4 @@ jobs:
         run: nix flake check ./nix
 
       - name: build macos system
-        run: nix build --impure ./nix#darwinConfigurations."macos".system
+        run: nix build ./nix#darwinConfigurations."macos".system

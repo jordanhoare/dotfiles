@@ -1,4 +1,11 @@
 autoload -Uz compinit && compinit
+
+# Prefix any one-off secret-bearing command with a leading space to skip history.
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_DUPS
+setopt HIST_REDUCE_BLANKS
+HISTORY_IGNORE='(bw *|sops *|age *|export *TOKEN*|export *SECRET*|export *KEY*|*PASSWORD*)'
+
 eval "$(starship init zsh)"
 eval "$(sheldon source)"
 eval "$(mise activate zsh)"

@@ -15,13 +15,13 @@ Personal dotfiles for Jordan Hoare. Managed via Nix and Home Manager across thre
 | `bin/` | `~/bin` | Personal executable scripts |
 | `etc/` | `/etc` | `timezone`, `locale.conf` - Linux/WSL only, applied manually |
 
-Only files declared in `nix/modules/common.nix` (or a platform module) are linked. Everything else in `~/.config/` is untouched.
+Only files declared in `nix/modules/base.nix` (or a platform module) are linked. Everything else in `~/.config/` is untouched.
 
 ### Nix modules
 
 | File | Purpose |
 |---|---|
-| `nix/flake.nix` | Entry point - defines `jordan@macos`, `jordan@linux`, `jordan@wsl` |
+| `nix/flake.nix` | Entry point - defines `darwinConfigurations.macos`, `homeConfigurations.linux`, `homeConfigurations.wsl` |
 | `nix/flake.lock` | Committed - pins all package versions |
 | `nix/modules/base.nix` | Packages and dotfile links shared across all platforms |
 | `nix/modules/linux.nix` | Native Linux: shared Linux bits plus GUI apps (Obsidian, Bitwarden) |
@@ -59,28 +59,27 @@ Only files declared in `nix/modules/common.nix` (or a platform module) are linke
 
 ```bash
 make switch       # activate Nix config for detected platform
-make secrets      # restore SSH keys from Bitwarden, decrypt git identity
-make verify       # check symlinks, tools, and git identity
+make secrets      # restore SSH keys from Bitwarden, decrypt git identity to ~/.config/git/private
 make hooks        # install pre-commit hooks
-make decrypt      # decrypt SOPS-encrypted git identity only
+make decrypt      # decrypt SOPS-encrypted git identity to ~/.config/git/private
 up                # update flake.lock + switch + upgrade all tools
 ```
 
 ## New machine setup
 
 ```bash
-make switch       # pass 1: installs bw and sops via Nix
-make secrets      # restores SSH keys, decrypts git identity
+make switch       # installs bw, sops, and all tooling via Nix
+make secrets      # restores SSH keys, decrypts git identity to ~/.config/git/private
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
-make switch       # pass 2: links the decrypted git identity
-make verify
 ```
+
+The private git identity is decrypted directly to `~/.config/git/private` (not into the repo), and `config/git/config` picks it up via `[includeIf]` - silently no-ops when missing, so no second `make switch` pass is needed.
 
 On WSL, clone to `/mnt/d/repositories/dotfiles` not `~/repositories/`. See ADR 0006.
 
 ## Adding tools
 
-Edit `nix/modules/common.nix` (or the appropriate platform module) and run `make switch`. Never install tools manually.
+Edit `nix/modules/base.nix` (or the appropriate platform module) and run `make switch`. Never install tools manually.
 
 ## SSH and secrets
 
@@ -88,7 +87,7 @@ Edit `nix/modules/common.nix` (or the appropriate platform module) and run `make
 
 ## What NOT to do
 
-- Never commit `config/git/private` - gitignored plaintext secrets
+- Never commit plaintext git identity - `~/.config/git/private` lives outside the repo by design
 - Never hardcode the private GitHub username in any public file
 - Never run `brew install` directly - declare casks in `nix/modules/macos.nix`
 - Never use `/mnt/d` paths in shared zsh config - WSL-only
