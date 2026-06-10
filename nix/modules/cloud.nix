@@ -9,8 +9,6 @@
   ];
 
   home.file = {
-    ".config/gh/config.yml".source = ../../config/gh/config.yml;
-    ".config/glab-cli/config.yml".source = ../../config/glab-cli/config.yml;
     ".aws/config".source = ../../home/.aws/config;
     ".azure/config".source = ../../home/.azure/config;
     ".config/k9s/config.yaml".source = ../../config/k9s/config.yaml;
@@ -25,6 +23,16 @@
       gcloud config set core/disable_usage_reporting True --quiet 2>/dev/null || true
       gcloud config set compute/region australia-southeast1 --quiet 2>/dev/null || true
       gcloud config set compute/zone australia-southeast1-b --quiet 2>/dev/null || true
+    fi
+  '';
+
+  # gh rewrites config.yml on login/alias/migration, so it cannot be a read-only
+  # store symlink. Same setter pattern as gcloud above. git_protocol is omitted
+  # here on purpose - bin/secrets sets it per-host via `gh auth login`.
+  home.activation.ghConfig = ''
+    if command -v gh >/dev/null 2>&1; then
+      [ -L "$HOME/.config/gh/config.yml" ] && rm -f "$HOME/.config/gh/config.yml"
+      gh alias set co 'pr checkout' --clobber 2>/dev/null || true
     fi
   '';
 }

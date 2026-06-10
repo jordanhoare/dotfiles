@@ -6,7 +6,7 @@ The hardening preset applied to all Firefox browser profiles via `user.js`. The 
 
 ## Bootstrap
 
-The process of provisioning a new machine. Run `make switch` twice - once to install tools, once after `make secrets` to link the decrypted git identity. On Windows: run winutil, import `win/winget.json`, install WSL, then bootstrap inside WSL.
+The process of provisioning a new machine. Run `make switch` to install tools and link dotfiles, then `make secrets` to restore SSH keys, log `gh` in to each account from the PATs in Bitwarden, and decrypt the private git identity. A single `make switch` suffices - the private identity is decrypted outside the repo to `~/.config/git/private` and picked up at runtime via `[includeIf]`. On Windows: run winutil, import `win/winget.json`, install WSL, then bootstrap inside WSL.
 
 ## Browser Profile
 
@@ -48,7 +48,7 @@ The VPN client installed on all platforms. Runs as an OS-level daemon covering a
 
 A git identity context - either **personal** (`jordanhoare`) or **private** (anon). Controls `user.name`, `user.email`, and the active `gh` CLI account.
 
-Each Profile's identity lives in a single file at `~/.config/git/<profile>`, a git-config fragment with `[user]` and `[github]` sections. `config/git/config` loads the personal identity by default via `[include]`, and overrides to private inside the private-repos path via `[includeIf]`. The `git personal` and `git private` aliases switch the active identity by reading from these files. The Nix wiring lives in `nix/modules/profiles.nix`: the personal Profile is always linked (committed plaintext, not sensitive); the private Profile is linked only after `make secrets` has decrypted `config/git/private.enc`. Adding or replacing a Profile is one file change.
+Each Profile's identity lives in a single file at `~/.config/git/<profile>`, a git-config fragment with `[user]` and `[github]` sections. `config/git/config` loads the personal identity by default via `[include]`, and overrides to private inside the private-repos path via `[includeIf]`. The `git personal` and `git private` aliases switch the active identity by reading from these files and switching the active `gh` account; the `gh` step warns rather than fails if `gh` is not yet authenticated. The personal Profile is committed plaintext and linked by Nix (`nix/modules/profiles.nix`); it is not sensitive. The private Profile is sops-encrypted at `config/git/private.enc` and decrypted by `make secrets` directly to `~/.config/git/private`, outside the repo and outside the world-readable Nix store - so the private username never lands anywhere tracked or shared.
 
 ## Symlink
 
