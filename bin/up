@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOTFILES="$(cd "$(dirname "$0")/.." && pwd)"
+: "${DOTFILES:?DOTFILES is not set - check ~/.zshenv}"
+cd "$DOTFILES"
 
 echo "==> nix"
-nix flake update --flake "$DOTFILES/nix"
-make -C "$DOTFILES" switch
+nix flake update --flake ./nix
+make switch
 
 if command -v sheldon &>/dev/null; then
   echo "==> sheldon"
