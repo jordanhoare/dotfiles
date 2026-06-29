@@ -1,4 +1,22 @@
 {
+  "wsl_connections": [
+    {
+      "distro_name": "Ubuntu-24.04",
+      "user": null,
+      "projects": [
+        {
+          "paths": [
+            "/home/jordanhoare"
+          ]
+        },
+        {
+          "paths": [
+            "/mnt/d/repositories/dotfiles"
+          ]
+        }
+      ]
+    }
+  ],
   "theme": "Catppuccin Mocha (Blur)",
   "icon_theme": "Catppuccin Mocha",
   "window_background_appearance": "blurred",
@@ -19,8 +37,8 @@
       "emphasis.strong": { "color": "#f9e2af", "font_weight": 700 },
       "link_text": { "color": "#89b4fa", "font_style": "italic" },
       "link_uri": { "color": "#94e2d5" },
-      "text.literal": { "color": "#a6e3a1" }
-    }
+      "text.literal": { "color": "#a6e3a1" },
+    },
   },
   "base_keymap": "VSCode",
   "buffer_font_family": "IosevkaTerm Nerd Font",
@@ -28,51 +46,51 @@
   "ui_font_size": 13,
   "vim_mode": false,
   "session": {
-    "trust_all_worktrees": true
+    "trust_all_worktrees": true,
   },
   "disable_ai": true,
   "project_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "git_panel": {
     "dock": "left",
     "default_width": 320,
     "status_style": "label_color",
     "sort_by_path": false,
-    "collapse_untracked_diff": true
+    "collapse_untracked_diff": true,
   },
   "tab_size": 2,
   "format_on_save": "on",
   "soft_wrap": "none",
   "show_whitespaces": "selection",
   "minimap": {
-    "show": "never"
+    "show": "never",
   },
   "scrollbar": {
-    "show": "auto"
+    "show": "auto",
   },
   "inline_completions": {
-    "disabled_globs": ["**"]
+    "disabled_globs": ["**"],
   },
   "features": {
-    "edit_prediction_provider": "none"
+    "edit_prediction_provider": "none",
   },
   "git": {
     "inline_blame": {
       "enabled": true,
       "delay_ms": 600,
       "show_commit_summary": true,
-      "min_column": 80
+      "min_column": 80,
     },
-    "git_gutter": "tracked_files"
+    "git_gutter": "tracked_files",
   },
   "diagnostics": {
     "inline": {
       "enabled": true,
       "max_severity": "warning",
-      "update_debounce_ms": 200
+      "update_debounce_ms": 200,
     },
-    "include_warnings": true
+    "include_warnings": true,
   },
   "hover_popover_enabled": true,
   "hover_popover_delay": 250,
@@ -81,7 +99,7 @@
   "auto_signature_help": true,
   "telemetry": {
     "diagnostics": false,
-    "metrics": false
+    "metrics": false,
   },
   "auto_update": false,
   "auto_install_extensions": {
@@ -98,24 +116,21 @@
     "git-firefly": true,
     "marksman": true,
     "terraform": true,
-    "html": false
+    "html": false,
   },
   "load_direnv": "shell_hook",
   "terminal": {
-    "shell": {
-      "program": "zsh"
-    },
     "font_family": "IosevkaTerm Nerd Font",
-    "font_size": 13
+    "font_size": 13,
   },
   "languages": {
     "Nix": {
       "language_servers": ["nil"],
       "formatter": {
         "external": {
-          "command": "nixfmt"
-        }
-      }
+          "command": "nixfmt",
+        },
+      },
     },
     "Python": {
       "language_servers": ["ruff", "ty", "!pyright", "!pylsp"],
@@ -124,42 +139,42 @@
         {
           "code_actions": {
             "source.organizeImports.ruff": true,
-            "source.fixAll.ruff": true
-          }
+            "source.fixAll.ruff": true,
+          },
         },
-        { "language_server": { "name": "ruff" } }
-      ]
+        { "language_server": { "name": "ruff" } },
+      ],
     },
     "Go": {
       "language_servers": ["gopls"],
       "format_on_save": "on",
       "tab_size": 4,
-      "hard_tabs": true
+      "hard_tabs": true,
     },
     "Lua": {
       "language_servers": ["lua-language-server"],
-      "format_on_save": "on"
+      "format_on_save": "on",
     },
     "TOML": {
       "language_servers": ["taplo"],
-      "format_on_save": "on"
+      "format_on_save": "on",
     },
     "TypeScript": {
       "language_servers": ["vtsls", "!typescript-language-server"],
-      "format_on_save": "on"
+      "format_on_save": "on",
     },
     "TSX": {
       "language_servers": ["vtsls", "!typescript-language-server"],
-      "format_on_save": "on"
+      "format_on_save": "on",
     },
     "JavaScript": {
       "language_servers": ["vtsls", "!typescript-language-server"],
-      "format_on_save": "on"
+      "format_on_save": "on",
     },
     "Shell Script": {
       "language_servers": ["bash-language-server"],
       "format_on_save": "on",
-      "tab_size": 2
+      "tab_size": 2,
     },
     "Markdown": {
       "language_servers": ["marksman", "!markdown-oxide"],
@@ -171,35 +186,40 @@
             "--bun",
             "prettier",
             "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
+            "{buffer_path}",
+          ],
+        },
       },
-      "soft_wrap": "editor_width"
+      "soft_wrap": "editor_width",
     },
     "JSON": {
       "format_on_save": "on",
-      "formatter": "prettier"
+      "formatter": "prettier",
     },
     "JSONC": {
       "format_on_save": "on",
-      "formatter": "prettier"
+      "formatter": "prettier",
     },
     "YAML": {
       "format_on_save": "on",
-      "formatter": "prettier"
-    }
+      "formatter": "prettier",
+    },
   },
   "file_types": {
     "YAML": [
       ".pre-commit-config.yaml",
       ".pre-commit-hooks.yaml",
       ".markdownlint.yaml",
-      ".secrets.baseline"
+      ".secrets.baseline",
     ],
     "Shell Script": [".zshrc", ".zshenv", ".zprofile", ".zlogin", ".bashrc"],
-    "HyprLang": ["hyprland.conf", "hyprpaper.conf", "hypridle.conf", "hyprlock.conf"],
-    "JavaScript": ["mozilla.cfg"]
+    "HyprLang": [
+      "hyprland.conf",
+      "hyprpaper.conf",
+      "hypridle.conf",
+      "hyprlock.conf",
+    ],
+    "JavaScript": ["mozilla.cfg"],
   },
   "lsp": {
     "yaml-language-server": {
@@ -208,34 +228,34 @@
           "schemas": {
             "https://json.schemastore.org/pre-commit-config.json": [
               ".pre-commit-config.yaml",
-              ".pre-commit-config.yml"
+              ".pre-commit-config.yml",
             ],
             "https://json.schemastore.org/pre-commit-hooks.json": [
-              ".pre-commit-hooks.yaml"
+              ".pre-commit-hooks.yaml",
             ],
             "https://json.schemastore.org/markdownlint.json": [
               ".markdownlint.yaml",
-              ".markdownlint.yml"
+              ".markdownlint.yml",
             ],
             "https://json.schemastore.org/github-workflow.json": [
               ".github/workflows/*.yml",
-              ".github/workflows/*.yaml"
+              ".github/workflows/*.yaml",
             ],
             "https://json.schemastore.org/github-action.json": [
               ".github/actions/*/action.yml",
-              "action.yml"
-            ]
+              "action.yml",
+            ],
           },
-          "keyOrdering": false
-        }
-      }
+          "keyOrdering": false,
+        },
+      },
     },
     "ruff": {
       "initialization_options": {
         "settings": {
-          "lineLength": 100
-        }
-      }
+          "lineLength": 100,
+        },
+      },
     },
     "gopls": {
       "initialization_options": {
@@ -248,9 +268,9 @@
           "constantValues": true,
           "functionTypeParameters": true,
           "parameterNames": true,
-          "rangeVariableTypes": true
-        }
-      }
-    }
-  }
+          "rangeVariableTypes": true,
+        },
+      },
+    },
+  },
 }

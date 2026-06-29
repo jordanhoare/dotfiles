@@ -1,5 +1,14 @@
 [
   {
+    "label": "WSL Shell",
+    "command": "wsl.exe",
+    "args": ["-d", "Ubuntu-24.04"],
+    "use_new_terminal": true,
+    "allow_concurrent_runs": true,
+    "reveal": "always",
+    "reveal_target": "dock"
+  },
+  {
     "label": "Dev Session",
     "command": "work",
     "use_new_terminal": false,
