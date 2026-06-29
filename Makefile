@@ -24,18 +24,22 @@ DARWIN_REBUILD := $(DARWIN_RESULT)/sw/bin/darwin-rebuild
 
 .DEFAULT_GOAL := help
 
-.PHONY: help switch secrets hooks decrypt encrypt
+.PHONY: help switch tools secrets hooks decrypt encrypt
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-switch: ## activate nix profile for the detected platform
+switch: ## activate nix profile and install mise-managed runtimes
 ifeq ($(PLATFORM),macos)
 	nix build '$(DARWIN_SYSTEM)' --out-link $(DARWIN_RESULT)
 	sudo $(DARWIN_REBUILD) switch --flake $(FLAKE_REF)
 else
 	nix run '$(NIX_FLAKE)#home-manager' -- switch --flake $(FLAKE_REF)
 endif
+	$(MAKE) tools
+
+tools: ## install mise-managed runtimes from config/mise/config.toml
+	PATH="$(HOME)/.nix-profile/bin:$$PATH" mise install
 
 secrets: ## restore SSH keys from bitwarden and decrypt sops
 	$(DOTFILES)/bin/secrets
