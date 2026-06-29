@@ -48,22 +48,6 @@ cd /mnt/d/repositories/dotfiles
 make switch
 ```
 
-## Step 5 - Windows → WSL symlinks
+## Step 5 - Windows -> WSL symlinks
 
-Several CLI tools are configured in WSL via nix but are also used on the Windows side. Rather than maintaining two separate config files, create Windows symlinks that read from the WSL filesystem.
-
-Run the following in an **elevated PowerShell** (requires Developer Mode or Administrator):
-
-```powershell
-# Azure CLI - shares credentials and config between Windows and WSL
-Remove-Item "$env:USERPROFILE\.azure" -Recurse -Force -ErrorAction SilentlyContinue
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.azure" -Target "\\wsl.localhost\Ubuntu-24.04\home\jordanhoare\.azure"
-
-# AWS CLI - shares credentials and config between Windows and WSL
-Remove-Item "$env:USERPROFILE\.aws" -Recurse -Force -ErrorAction SilentlyContinue
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.aws" -Target "\\wsl.localhost\Ubuntu-24.04\home\jordanhoare\.aws"
-
-# Zed editor - shares settings, keymap, and extensions between Windows and WSL
-Remove-Item "$env:APPDATA\Zed" -Recurse -Force -ErrorAction SilentlyContinue
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\Zed" -Target "\\wsl.localhost\Ubuntu-24.04\home\jordanhoare\.config\zed"
-```
+> TODO: replace the current ad-hoc PowerShell snippets (.azure, .aws, Zed) with a single declarative bootstrap. Options to consider: a `win/bootstrap.ps1` driven from a manifest, or a managed solution that mirrors the way `make switch` handles the WSL side. The current instructions are brittle (hardcoded distro name, hardcoded username, no idempotency guard beyond `Remove-Item -ErrorAction SilentlyContinue`) and do not belong in a setup guide as raw shell.
