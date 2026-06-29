@@ -17,7 +17,7 @@ Both were marked TODO in earlier commits pending a deliberate design.
 The Windows side is **intentionally nix-agnostic**. Bootstrap runs through a single script, `win/bootstrap.ps1`, invoked from elevated PowerShell on Windows. Nix is not installed, not invoked, and not referenced anywhere in the Windows bootstrap. The script does two things:
 
 1. `winget import --import-file win/winget.json --accept-package-agreements --accept-source-agreements`
-2. Creates per-file **repo-rooted** symlinks for the editor configs managed cross-platform:
+2. Creates per-file **repo-rooted** symlinks for managed Windows-side dotfiles:
 
    | Target | Source |
    |---|---|
@@ -25,8 +25,9 @@ The Windows side is **intentionally nix-agnostic**. Bootstrap runs through a sin
    | `%APPDATA%\Zed\keymap.json` | `<repo>\config\zed\keymap.json` |
    | `%APPDATA%\Zed\tasks.json` | `<repo>\config\zed\tasks.json` |
    | `%APPDATA%\Zed\snippets` | `<repo>\config\zed\snippets` |
+   | `%USERPROFILE%\.wslconfig` | `<repo>\win\wslconfig` |
 
-   The repo path is derived from `$PSScriptRoot`, not hardcoded. The link manifest is a top-of-file PowerShell array, parallel to (but independent of) `nix/modules/zed.nix`.
+   The repo path is derived from `$PSScriptRoot`, not hardcoded. The Zed entries are parallel to (but independent of) `nix/modules/zed.nix`. `.wslconfig` lives on the Windows side (it is the WSL2 host-level config, read by the WSL hypervisor process before any distro starts) and has no Linux/WSL counterpart - the WSL distro-level config (`/etc/wsl.conf`) is managed separately by `nix/modules/wsl.nix` via a Home Manager activation.
 
 Ghostty is intentionally out of the Windows-side surface. As of mid-2026 there is no official Ghostty Windows release, and the upstream team has asked community ports not to use "Ghostty for Windows" branding. Windows-side terminal use is the Microsoft-shipped Windows Terminal (declared in `win/winget.json`); the actual Ghostty runs inside WSL and is opened either directly under WSL or via Windsurf/VSCode-fork's integrated terminal. Revisit if an official Ghostty Windows package ships.
 
