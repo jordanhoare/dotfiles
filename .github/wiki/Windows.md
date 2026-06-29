@@ -16,7 +16,7 @@ irm "https://christitus.com/win" | iex
 winget import --import-file D:\repositories\dotfiles\win\winget.json --accept-package-agreements --accept-source-agreements
 ```
 
-Installs WSL, VSCode, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, the GitHub CLI (`gh`), and Ghostty.
+Installs WSL, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, the GitHub CLI (`gh`), Ghostty, and Zed.
 
 Re-run after editing `win/winget.json` - never install Windows apps manually.
 
@@ -74,7 +74,7 @@ Done. See [Home](Home) for updating, identity switching, and other daily ops.
 
 ## App symlinks
 
-Ghostty and VSCode store config in `%APPDATA%`. Symlink to the repo so edits stay in sync.
+Ghostty and Zed store config in `%APPDATA%`. Symlink to the WSL-managed config so edits stay in sync. Run PowerShell as Administrator, or enable Developer Mode in Windows Settings to create symlinks without elevation.
 
 ### Ghostty
 
@@ -87,13 +87,9 @@ New-Item -ItemType SymbolicLink -Path "$target\config" -Target "$repo\config\gho
 
 Restart Ghostty after creating the symlink.
 
-### VSCode
+### Zed
 
 ```powershell
-$repo = "D:\repositories\dotfiles"
-$target = "$env:APPDATA\Code\User"
-New-Item -ItemType SymbolicLink -Path "$target\settings.json" -Target "$repo\config\Code\User\settings.json"
-New-Item -ItemType SymbolicLink -Path "$target\keybindings.json" -Target "$repo\config\Code\User\keybindings.json"
+Remove-Item "$env:APPDATA\Zed" -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -ItemType SymbolicLink -Path "$env:APPDATA\Zed" -Target "\\wsl.localhost\Ubuntu-24.04\home\jordanhoare\.config\zed"
 ```
-
-Run PowerShell as Administrator, or enable Developer Mode in Windows Settings to create symlinks without elevation.
