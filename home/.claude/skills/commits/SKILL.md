@@ -81,48 +81,81 @@ BREAKING CHANGE: `Rule` class removed, use `Transform` instead
 
 ### Commit Frequency
 
-- Commit after EACH logical change unit
-- DO NOT wait until task completion to commit
-- Break work into digestible commits
+- Commit after each **verified logical unit**, not after each file edit.
+- A logical unit is the smallest set of changes that makes sense on its own and has been proven to work (built, tested, validated by the user, or otherwise exercised end-to-end).
+- Do NOT commit halfway through a feature. Do NOT commit individual files that are part of one larger change.
+- Do NOT batch *unrelated* work into one commit either - one concern per commit still holds.
 
-### One Concern Per Commit
+### One Concern Per Commit (a concern can span multiple files)
 
-Good sequence:
+A "concern" is the thing the user asked for, not a single file change. Most concerns naturally span multiple files: a feature touches code + tests + docs; a refactor touches code + the ADR documenting it; a config change touches the source file + the consumer + the docs.
 
-```bash
-test(compiler): add test for nested calls
-feat(compiler): implement nested call support
-docs(api): document nested call syntax
-refactor(compiler): extract call resolution
+**Stage and commit all of them together as one commit.**
+
+Single-file commits are a smell. If you find yourself writing five commits in a row that each touch one file in the same feature area, that is one commit, not five.
+
+Good (one feature, four files, one commit):
+
+```text
+feat(win): add windows bootstrap script
+
+introduces win/bootstrap.ps1 with winget import + per-file symlinks
+for managed editor config. updates win/readme and the wiki to point
+at the new entry point. records adr 0011 with the design rationale.
 ```
 
-Bad sequence:
+Files in that commit: `win/bootstrap.ps1`, `win/README.md`, `.github/wiki/Windows.md`, `.claude/docs/adr/0011-windows-bootstrap.md`.
 
-```bash
-feat: add feature  # Too vague
-wip                # Not descriptive
-fix everything     # Too broad
+Bad (same work fragmented across five commits):
+
+```text
+feat(win): add windows bootstrap script         # win/bootstrap.ps1
+docs(adr): record windows bootstrap design      # adr/0011
+docs(win): rewrite readme around bootstrap      # win/README.md
+docs(wiki): rebuild windows page                # .github/wiki/Windows.md
+docs(glossary): split bootstrap entry           # glossary.md
 ```
+
+This is over-committing. Reviewers and changelog readers want one entry per concern, not five for the same thing.
+
+### Batching Rules
+
+When a request triggers changes across multiple files, batch them as **one commit per logical concern**, not one commit per file. Common batches:
+
+- **Feature introduction**: source + tests + docs + glossary/ADR updates -> ONE commit.
+- **Refactor**: all touched files + the doc explaining why -> ONE commit.
+- **Cross-cutting docs sync**: README + wiki + glossary entries for the same concept -> ONE commit titled by the concern, not three commits titled by file.
+- **Iterative fixes during the same session**: if a fresh commit immediately needs a follow-up fix you discovered while verifying, prefer `git commit --amend` over a "X, then fix(X)" pair in the log.
+
+Only split into multiple commits when concerns are genuinely independent (different features, unrelated bug fixes, an opportunistic style cleanup discovered in passing).
+
+### Verify Before Committing
+
+Do not commit code that has not been validated. "Validated" means: it compiles, passes lints/tests, runs without throwing, or - for changes the agent cannot exercise locally - the user has confirmed the behaviour works.
+
+A user saying "yes do it" is permission to start, not confirmation it worked. Wait for the verification signal before committing. For multi-file concerns, hold all of them in the working tree until the whole unit is verified, then commit them together.
+
+Premature commits force ugly follow-ups when verification reveals a bug.
 
 ### When to Commit
 
-✅ Commit after:
+Commit after:
 
-- Adding a new test (red phase)
-- Making test pass (green phase)
-- Completing a refactor
-- Adding/updating docs for specific change
-- Fixing a specific bug/lint issue
+- A verified feature is complete across all its touched files (source + tests + docs)
+- A bug fix is verified to fix the bug
+- A refactor is complete and existing tests still pass
+- A standalone style/formatting cleanup that is genuinely independent of the surrounding work
 
-❌ Don't commit:
+Do not commit:
 
-- Half-written code that doesn't compile
-- Code breaking existing tests (except documented red phase)
-- Multiple unrelated changes together
+- Half-written code that does not compile
+- Individual files that are part of a larger unverified change
+- Multiple unrelated concerns together
+- Same-session fixes for a buggy commit you just made - amend instead
 
 ### Never Push
 
-Agents should commit locally but NEVER push to remote unless specifically request to by the user.
+Agents should commit locally but NEVER push to remote unless specifically requested by the user.
 
 ## Examples
 
