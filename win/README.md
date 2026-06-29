@@ -10,44 +10,43 @@ irm "https://christitus.com/win" | iex
 
 Use winutil to apply tweaks and debloat settings. This is interactive and has no config file - run it once on a fresh Windows install.
 
-## Step 2 - winget
-
-Install all Windows apps from the declarative list:
+## Step 2 - clone the repo
 
 ```powershell
-winget import --import-file winget.json --accept-package-agreements --accept-source-agreements
+git clone https://github.com/jordanhoare/dotfiles.git D:\repositories\dotfiles
 ```
 
-This installs WSL, VSCode, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, Ghostty, and Zed.
+## Step 3 - bootstrap
 
-To export the current state back to the file (if you have added apps and want to capture them):
+From an elevated PowerShell (or any PowerShell if Developer Mode is enabled in Settings > For developers):
+
+```powershell
+D:\repositories\dotfiles\win\bootstrap.ps1
+```
+
+The script runs `winget import` against `win/winget.json` (installs WSL, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, the GitHub CLI, Windows Terminal, and Zed) and creates per-file symlinks under `%APPDATA%` so Windows-side Zed reads config straight from the repo. Idempotent: safe to re-run after adding apps to `winget.json` or files to `config/zed/`. See ADR 0011.
+
+Ghostty has no official Windows release as of mid-2026 and community ports do not meet the bar for inclusion. Windows-side terminal use defaults to Windows Terminal (preinstalled on Windows 11, declared in `winget.json` for explicitness); the actual Ghostty runs inside WSL via `make switch`.
+
+To export the current installed-app state back into `winget.json` (after manually adding apps and wanting to capture them):
 
 ```powershell
 winget export --output winget.json
 ```
 
-## Step 3 - WSL
+## Step 4 - WSL (optional)
 
-WSL is installed by winget above. Complete setup:
+If you also want the Linux side of the dotfiles active, install WSL:
 
 ```powershell
 wsl --install -d Ubuntu-24.04
 ```
 
-Restart when prompted, then complete the Ubuntu user setup.
-
-## Step 4 - Nix inside WSL
-
-Once inside the WSL shell, install nix following the Linux instructions at https://nixos.org/download/#nix-install-linux
-
-Then clone the dotfiles and activate the WSL configuration:
+Restart when prompted, then complete the Ubuntu user setup. Inside the WSL shell, install Nix following the Linux instructions at https://nixos.org/download/#nix-install-linux, then activate the WSL configuration:
 
 ```bash
-git clone git@personal:jordanhoare/dotfiles.git /mnt/d/repositories/dotfiles
 cd /mnt/d/repositories/dotfiles
 make switch
 ```
 
-## Step 5 - Windows -> WSL symlinks
-
-> TODO: replace the current ad-hoc PowerShell snippets (.azure, .aws, Zed) with a single declarative bootstrap. Options to consider: a `win/bootstrap.ps1` driven from a manifest, or a managed solution that mirrors the way `make switch` handles the WSL side. The current instructions are brittle (hardcoded distro name, hardcoded username, no idempotency guard beyond `Remove-Item -ErrorAction SilentlyContinue`) and do not belong in a setup guide as raw shell.
+The repo at `D:\repositories\dotfiles` is reachable from inside WSL as `/mnt/d/repositories/dotfiles` (see ADR 0006), so the same clone serves both sides.

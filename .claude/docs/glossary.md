@@ -6,7 +6,7 @@ The hardening preset applied to all Firefox browser profiles via `user.js`. The 
 
 ## Bootstrap
 
-The process of provisioning a new machine. Run `make switch` to install tools and link dotfiles, then `make secrets` to restore SSH keys, log `gh` in to each account from the PATs in Bitwarden, and decrypt the private git identity. A single `make switch` suffices - the private identity is decrypted outside the repo to `~/.config/git/private` and picked up at runtime via `[includeIf]`. On Windows: run winutil, import `win/winget.json`, install WSL, then bootstrap inside WSL.
+The process of provisioning a new machine. Linux, WSL, and macOS run `make switch` to install tools and link dotfiles, then `make secrets` to restore SSH keys, log `gh` in to each account from the PATs in Bitwarden, and decrypt the private git identity. A single `make switch` suffices - the private identity is decrypted outside the repo to `~/.config/git/private` and picked up at runtime via `[includeIf]`. Windows runs `winutil` interactively for one-time debloat, then `.\win\bootstrap.ps1` from elevated PowerShell to import apps via `winget` and link the Windows-side editor configs (see [Windows bootstrap](#windows-bootstrap)).
 
 ## Browser Profile
 
@@ -52,4 +52,8 @@ Each Profile's identity lives in a single file at `~/.config/git/<profile>`, a g
 
 ## Symlink
 
-A filesystem pointer from a target path (e.g. `~/.zshrc`) to the corresponding file in the dotfiles repo. Managed by Home Manager `home.file`. Editing the repo file is immediately reflected in the live shell.
+A filesystem pointer from a target path (e.g. `~/.zshrc`) to the corresponding file in the dotfiles repo. On Linux/WSL/macOS, managed by Home Manager `home.file`. On Windows, managed by `win/bootstrap.ps1` using per-file repo-rooted symlinks (e.g. `%APPDATA%\Zed\settings.json -> D:\repositories\dotfiles\config\zed\settings.json`). In both cases, editing the repo file is immediately reflected in the live application. See also [Windows bootstrap](#windows-bootstrap).
+
+## Windows bootstrap
+
+The Windows-side activation script at `win/bootstrap.ps1`. Counterpart to `make switch` on Linux/WSL/macOS, but intentionally nix-agnostic - it runs without Nix, WSL, or any of the Linux toolchain installed. Does two things: (1) imports declared apps via `winget import --import-file win/winget.json`, (2) creates per-file repo-rooted symlinks for the four managed Zed files (`settings.json`, `keymap.json`, `tasks.json`, `snippets/`). Idempotent: re-running is safe; pre-existing real files at a target path are moved to `<name>.bak.<timestamp>` rather than clobbered. Requires elevated PowerShell or Windows Developer Mode for symlink creation; the script checks this precondition and exits cleanly with a hint if neither is set. See ADR 0011.
