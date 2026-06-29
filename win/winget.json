@@ -12,7 +12,11 @@
         { "PackageIdentifier": "Anthropic.ClaudeCode" },
         { "PackageIdentifier": "GitHub.cli" },
         { "PackageIdentifier": "Microsoft.WindowsTerminal" },
-        { "PackageIdentifier": "ZedIndustries.Zed" }
+        { "PackageIdentifier": "ZedIndustries.Zed" },
+        { "PackageIdentifier": "Kitware.CMake" },
+        { "PackageIdentifier": "Microsoft.VisualStudio.2022.BuildTools" },
+        { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
+        { "PackageIdentifier": "ezwinports.make" }
       ],
       "SourceDetails": {
         "Argument": "https://cdn.winget.microsoft.com/cache",
