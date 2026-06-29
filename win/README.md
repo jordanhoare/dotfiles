@@ -67,12 +67,3 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.aws" -Target "\\wsl.loc
 Remove-Item "$env:APPDATA\Zed" -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType SymbolicLink -Path "$env:APPDATA\Zed" -Target "\\wsl.localhost\Ubuntu-24.04\home\jordanhoare\.config\zed"
 ```
-
-## VSCode extensions
-
-Extensions are not managed by winget. Install them from the extensions list in `../config/Code/User/` or run:
-
-```powershell
-code --install-extension jnoortheen.nix-ide
-# ... add others as needed
-```
