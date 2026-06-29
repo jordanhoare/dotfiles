@@ -31,7 +31,7 @@
   # here on purpose - bin/secrets sets it per-host via `gh auth login`.
   home.activation.ghConfig = ''
     if command -v gh >/dev/null 2>&1; then
-      [ -L "$HOME/.config/gh/config.yml" ] && rm -f "$HOME/.config/gh/config.yml"
+      mkdir -p "$HOME/.config/gh"
       gh alias set co 'pr checkout' --clobber 2>/dev/null || true
     fi
   '';
