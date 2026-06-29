@@ -6,7 +6,6 @@
     ./git.nix
     ./cloud.nix
     ./dev.nix
-    ./vscode.nix
     ./zed.nix
     ./security.nix
   ];
