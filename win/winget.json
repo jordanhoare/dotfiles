@@ -5,7 +5,6 @@
     {
       "Packages": [
         { "PackageIdentifier": "Microsoft.WSL" },
-        { "PackageIdentifier": "Microsoft.VisualStudioCode" },
         { "PackageIdentifier": "Obsidian.Obsidian" },
         { "PackageIdentifier": "Bitwarden.Bitwarden" },
         { "PackageIdentifier": "Docker.DockerDesktop" },
