@@ -74,22 +74,4 @@ Done. See [Home](Home) for updating, identity switching, and other daily ops.
 
 ## App symlinks
 
-Ghostty and Zed store config in `%APPDATA%`. Symlink to the WSL-managed config so edits stay in sync. Run PowerShell as Administrator, or enable Developer Mode in Windows Settings to create symlinks without elevation.
-
-### Ghostty
-
-```powershell
-$repo = "D:\repositories\dotfiles"
-$target = "$env:APPDATA\ghostty"
-New-Item -ItemType Directory -Force -Path $target
-New-Item -ItemType SymbolicLink -Path "$target\config" -Target "$repo\config\ghostty\config"
-```
-
-Restart Ghostty after creating the symlink.
-
-### Zed
-
-```powershell
-Remove-Item "$env:APPDATA\Zed" -Recurse -Force -ErrorAction SilentlyContinue
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\Zed" -Target "\\wsl.localhost\Ubuntu-24.04\home\jordanhoare\.config\zed"
-```
+> TODO: replace the per-app PowerShell snippets (Ghostty, Zed, plus the .azure/.aws pair documented in `win/README.md`) with a single declarative bootstrap. Candidates: a `win/bootstrap.ps1` driven from a manifest, or a managed solution that mirrors the way `make switch` handles the WSL side. The current instructions are brittle (hardcoded repo path, hardcoded distro name, hardcoded username, mixed `D:\` vs `\\wsl.localhost\` targets, no idempotency guard) and do not belong in a setup guide as raw shell.
