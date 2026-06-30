@@ -45,6 +45,24 @@ alias reload='source ~/.zshrc'
 
 gclone() { gh repo clone "$1"; }
 
+# Mirror git's identity includeIf rules for gh: switch the active gh account
+# based on cwd so authenticated gh operations match the git identity that
+# would commit in this path. Reads the expected gh user from the same git
+# config files the includeIf already references; never names a handle inline.
+gh() {
+  local target lower="${(L)PWD}"
+  case "$lower" in
+    /mnt/d/repositories/private/*|/mnt/e/poe/*)
+      target=$(command git config --file ~/.config/git/private github.user 2>/dev/null)
+      ;;
+    *)
+      target=$(command git config --file ~/.config/git/personal github.user 2>/dev/null)
+      ;;
+  esac
+  [ -n "$target" ] && command gh auth switch --user "$target" >/dev/null 2>&1
+  command gh "$@"
+}
+
 alias gst='git status'
 alias gcm='git commit -m'
 alias gcam='git commit -am'
