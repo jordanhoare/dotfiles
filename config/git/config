@@ -80,3 +80,5 @@
 	helper = !gh auth git-credential
 [includeIf "gitdir:/mnt/d/repositories/private/"]
   path = ~/.config/git/private
+[includeIf "gitdir/i:/mnt/e/poe/"]
+  path = ~/.config/git/private
