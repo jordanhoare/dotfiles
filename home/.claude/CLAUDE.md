@@ -61,6 +61,7 @@ Load a skill when the task matches its domain. Skills live in `.claude/skills/<n
 | `ruff` | Python linting or formatting |
 | `ty` | Python type checking |
 | `mkdocs` | Documentation site generation |
+| `dotnet` | General .NET / C# tooling - `dotnet` CLI, analyzers, formatting, central package management |
 
 ## Code style
 
