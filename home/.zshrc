@@ -10,6 +10,7 @@ eval "$(starship init zsh)"
 eval "$(sheldon source)"
 eval "$(mise activate zsh)"
 eval "$(zoxide init zsh)"
+command -v direnv &>/dev/null && { export DIRENV_LOG_FORMAT=""; eval "$(direnv hook zsh)"; }
 
 _update_git_identity() {
   export STARSHIP_GIT_USER=$(git config github.user 2>/dev/null)

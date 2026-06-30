@@ -7,6 +7,11 @@
     tmux
   ];
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   home.file = {
     ".zshrc".source = ../../home/.zshrc;
     ".zshenv".source = ../../home/.zshenv;
