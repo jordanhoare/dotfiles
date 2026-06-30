@@ -59,7 +59,10 @@
 
     ".claude/CLAUDE.md".source     = ../../home/.claude/CLAUDE.md;
     ".claude/settings.json".source = ../../home/.claude/settings.json;
-    ".claude/skills".source        = ../../home/.claude/skills;
+    ".claude/skills" = {
+      source    = ../../home/.claude/skills;
+      recursive = true;
+    };
 
     "bin" = {
       source = ../../bin;
