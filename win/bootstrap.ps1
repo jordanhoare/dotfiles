@@ -6,10 +6,13 @@ Windows-side activation for this dotfiles repo. Counterpart to 'make switch'
 on Linux/WSL/macOS. Intentionally nix-agnostic. See ADR 0011.
 
 .DESCRIPTION
-Runs 'winget import' against win/winget.json and creates per-file repo-rooted
-symlinks for the editor configs managed cross-platform (Ghostty, Zed).
-Idempotent: re-running is safe. Real files at a target path are moved to
-'<name>.bak.<timestamp>' before being replaced with a symlink.
+Runs 'winget import' against win/winget.json and installs the editor configs
+managed cross-platform (Ghostty, Zed). Files Zed mutates at runtime (e.g.
+settings.json, which it rewrites with wsl_connections recent-project paths)
+are copied so local writes never bleed back into the repo. Static files are
+symlinked. Idempotent: re-running is safe. Real files at a symlink target are
+moved to '<name>.bak.<timestamp>' before being replaced with a symlink; copy
+targets are overwritten unconditionally so the repo is the source of truth.
 
 Requires either Administrator elevation or Windows Developer Mode for
 symlink creation. Both preconditions are checked before any work runs.
@@ -41,22 +44,26 @@ $wingetManifest = Join-Path $PSScriptRoot 'winget.json'
 Write-Host "Importing winget packages from $wingetManifest" -ForegroundColor Cyan
 winget import --import-file $wingetManifest --accept-package-agreements --accept-source-agreements
 
-# --- symlink manifest ---
+# --- install manifest ---
 # parallel to nix/modules/zed.nix - keep both in sync when adding entries.
+# Mode = 'Symlink' for files the app treats as read-only config; 'Copy' for
+# files the app mutates at runtime (one-way push from repo, local writes lost
+# on next bootstrap).
 
 $links = @(
-    @{ Source = Join-Path $repo 'config\zed\settings.json'; Target = Join-Path $env:APPDATA 'Zed\settings.json' }
-    @{ Source = Join-Path $repo 'config\zed\keymap.json';   Target = Join-Path $env:APPDATA 'Zed\keymap.json' }
-    @{ Source = Join-Path $repo 'config\zed\tasks.json';    Target = Join-Path $env:APPDATA 'Zed\tasks.json' }
-    @{ Source = Join-Path $repo 'config\zed\snippets';      Target = Join-Path $env:APPDATA 'Zed\snippets' }
-    @{ Source = Join-Path $repo 'win\wslconfig';            Target = Join-Path $env:USERPROFILE '.wslconfig' }
+    @{ Source = Join-Path $repo 'config\zed\settings.json'; Target = Join-Path $env:APPDATA 'Zed\settings.json'; Mode = 'Copy' }
+    @{ Source = Join-Path $repo 'config\zed\keymap.json';   Target = Join-Path $env:APPDATA 'Zed\keymap.json';   Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'config\zed\tasks.json';    Target = Join-Path $env:APPDATA 'Zed\tasks.json';    Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'config\zed\snippets';      Target = Join-Path $env:APPDATA 'Zed\snippets';      Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'win\wslconfig';            Target = Join-Path $env:USERPROFILE '.wslconfig';    Mode = 'Symlink' }
 )
 
-# --- link or relink each entry with backup-on-clobber semantics ---
+# --- install each entry per its Mode ---
 
 foreach ($link in $links) {
     $source = $link.Source
     $target = $link.Target
+    $mode = $link.Mode
 
     if (-not (Test-Path -LiteralPath $source)) {
         Write-Host "skip   $target (source missing: $source)" -ForegroundColor Yellow
@@ -69,6 +76,15 @@ foreach ($link in $links) {
     }
 
     $existing = Get-Item -LiteralPath $target -Force -ErrorAction SilentlyContinue
+
+    if ($mode -eq 'Copy') {
+        if ($existing -and $existing.LinkType -eq 'SymbolicLink') {
+            Remove-Item -LiteralPath $target -Force
+        }
+        Copy-Item -LiteralPath $source -Destination $target -Force
+        Write-Host "copy   $target <- $source" -ForegroundColor Green
+        continue
+    }
 
     if ($null -eq $existing) {
         New-Item -ItemType SymbolicLink -Path $target -Target $source | Out-Null

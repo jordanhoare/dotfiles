@@ -4,16 +4,9 @@
       "distro_name": "Ubuntu-24.04",
       "user": null,
       "projects": [
-        {
-          "paths": [
-            "/home/jordanhoare"
-          ]
-        },
-        {
-          "paths": [
-            "/mnt/d/repositories/dotfiles"
-          ]
-        }
+        { "paths": ["/home/jordanhoare"] },
+        { "paths": ["/mnt/d/repositories/dotfiles"] },
+        { "paths": ["/mnt/e/poe"] }
       ]
     }
   ],
