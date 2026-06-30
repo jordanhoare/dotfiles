@@ -8,5 +8,6 @@
 
   home.file = {
     ".config/git/config".source = ../../config/git/config;
+    ".config/git/attributes".source = ../../config/git/attributes;
   };
 }

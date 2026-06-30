@@ -6,7 +6,7 @@
       "projects": [
         { "paths": ["/home/jordanhoare"] },
         { "paths": ["/mnt/d/repositories/dotfiles"] },
-        { "paths": ["/mnt/e/poe"] }
+        { "paths": ["/mnt/e/PoE/Dev/Repositories"] }
       ]
     }
   ],
@@ -62,11 +62,9 @@
   "scrollbar": {
     "show": "auto",
   },
-  "inline_completions": {
+  "show_edit_predictions": false,
+  "edit_predictions": {
     "disabled_globs": ["**"],
-  },
-  "features": {
-    "edit_prediction_provider": "none",
   },
   "git": {
     "inline_blame": {
@@ -110,6 +108,8 @@
     "marksman": true,
     "terraform": true,
     "html": false,
+    "csharp": true,
+    "xml": true,
   },
   "load_direnv": "shell_hook",
   "terminal": {
@@ -128,15 +128,11 @@
     "Python": {
       "language_servers": ["ruff", "ty", "!pyright", "!pylsp"],
       "format_on_save": "on",
-      "formatter": [
-        {
-          "code_actions": {
-            "source.organizeImports.ruff": true,
-            "source.fixAll.ruff": true,
-          },
-        },
-        { "language_server": { "name": "ruff" } },
-      ],
+      "formatter": { "language_server": { "name": "ruff" } },
+      "code_actions_on_format": {
+        "source.organizeImports.ruff": true,
+        "source.fixAll.ruff": true,
+      },
     },
     "Go": {
       "language_servers": ["gopls"],
@@ -149,7 +145,6 @@
       "format_on_save": "on",
     },
     "TOML": {
-      "language_servers": ["taplo"],
       "format_on_save": "on",
     },
     "TypeScript": {
@@ -163,6 +158,11 @@
     "JavaScript": {
       "language_servers": ["vtsls", "!typescript-language-server"],
       "format_on_save": "on",
+    },
+    "CSharp": {
+      "language_servers": ["roslyn", "!omnisharp", "!csharp-ls"],
+      "format_on_save": "on",
+      "tab_size": 4,
     },
     "Shell Script": {
       "language_servers": ["bash-language-server"],
@@ -197,6 +197,9 @@
       "format_on_save": "on",
       "formatter": "prettier",
     },
+    "XML": {
+      "tab_size": 2,
+    },
   },
   "file_types": {
     "YAML": [
@@ -213,6 +216,20 @@
       "hyprlock.conf",
     ],
     "JavaScript": ["mozilla.cfg"],
+    "XML": [
+      "*.xml",
+      "*.fsproj",
+      "*.vbproj",
+      "*.nuspec",
+      "*.config",
+      "*.xaml",
+      "*.svg",
+      "*.xsd",
+      "*.xsl",
+      "*.xslt",
+      "*.plist",
+      "*.resx",
+    ],
   },
   "lsp": {
     "yaml-language-server": {
