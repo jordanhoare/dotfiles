@@ -21,8 +21,8 @@ Switching:
 
 SSH clone syntax:
 
-- `git clone git@personal:jordanhoare/repo.git`
-- `git clone git@private:<user>/repo.git`
+- `git clone git@personal:<user>/<repository>.git`
+- `git clone git@private:<user>/<repository>.git`
 
 Never hardcode the private GitHub username in any public file.
 
@@ -39,6 +39,7 @@ Never hardcode the private GitHub username in any public file.
 
 ## Before starting any task
 
+- Read `.claude/CONTEXT.md` for the project's prose framing if it exists
 - Read `docs/internal/glossary.md` for domain terms if it exists
 - Check relevant `docs/internal/adr/` entries for the area being changed
 - Load appropriate skills from `.claude/skills/` for specialised workflows
@@ -49,13 +50,21 @@ Load a skill when the task matches its domain. Skills live in `.claude/skills/<n
 
 | Skill | When to load |
 |---|---|
-| `commits` | Any commit authoring — follow conventional commits format |
+| `commits` | Any commit authoring - follow conventional commits format |
 | `tdd` | Writing or refactoring tests |
-| `architecture` | Architectural review or refactor proposals |
-| `issue` | Breaking work into GitHub/Gitlab issues |
-| `triage` | Triaging or labelling issues on the tracker |
+| `design` | Deep-module vocabulary: interfaces, seams, depth, adapters |
+| `architecture` | Architectural review or refactor proposals (HTML report) |
+| `domain` | Building the glossary or recording an ADR |
+| `grill` | Relentless interview that also writes the domain docs |
+| `grilling` | Relentless interview on its own, no doc side effects |
+| `wayfinder` | Planning work too big for one session as decision tickets |
 | `prd` | Writing a product requirements document |
-| `grill` | Deep codebase exploration with domain awareness |
+| `issue` | Breaking work into GitHub/GitLab issues with blocking edges |
+| `triage` | Triaging or labelling issues and external PRs |
+| `prototype` | Throwaway prototype to answer a design question |
+| `debug` | Diagnosing hard bugs or performance regressions |
+| `review` | Reviewing a branch against repo standards and its spec |
+| `research` | Investigating a question against primary sources |
 | `setup` | Scaffolding per-repo engineering config |
 | `uv` | Python dependency or virtualenv management |
 | `ruff` | Python linting or formatting |
