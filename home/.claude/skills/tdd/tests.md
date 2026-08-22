@@ -2,71 +2,76 @@
 
 ## Good Tests
 
-**Integration-style**: tests through real interfaces, not mocks of internal parts.
+**Integration-style**: Test through real interfaces, not mocks of internal parts.
 
-```python
-# GOOD: tests observable behaviour
-def test_user_can_checkout_with_valid_cart():
-    cart = create_cart()
-    cart.add(product)
-    result = checkout(cart, payment_method)
-    assert result.status == "confirmed"
+```typescript
+// GOOD: Tests observable behavior
+test("user can checkout with valid cart", async () => {
+  const cart = createCart();
+  cart.add(product);
+  const result = await checkout(cart, paymentMethod);
+  expect(result.status).toBe("confirmed");
+});
 ```
 
 Characteristics:
 
-- Tests behaviour users / callers care about
+- Tests behavior users/callers care about
 - Uses public API only
 - Survives internal refactors
 - Describes WHAT, not HOW
-- One logical assertion per test (multiple `assert` lines are fine when
-  they describe one outcome from different angles)
+- One logical assertion per test
 
 ## Bad Tests
 
-**Implementation-detail tests**: coupled to internal structure.
+**Implementation-detail tests**: Coupled to internal structure.
 
-```python
-# BAD: tests implementation details (mocks an internal collaborator
-# and asserts on call shape rather than behaviour)
-def test_checkout_calls_payment_service_process(mocker):
-    mock_payment = mocker.patch("myapp.payment_service.process")
-    checkout(cart, payment)
-    mock_payment.assert_called_with(cart.total)
+```typescript
+// BAD: Tests implementation details
+test("checkout calls paymentService.process", async () => {
+  const mockPayment = jest.mock(paymentService);
+  await checkout(cart, payment);
+  expect(mockPayment.process).toHaveBeenCalledWith(cart.total);
+});
 ```
 
 Red flags:
 
-- Mocking internal collaborators (mock the boundary, not your own code)
-- Testing private methods (test through the public interface)
-- Asserting on call counts / order rather than observable outcome
-- Test breaks when refactoring without behaviour change
+- Mocking internal collaborators
+- Testing private methods
+- Asserting on call counts/order
+- Test breaks when refactoring without behavior change
 - Test name describes HOW not WHAT
-- Verifying through external means rather than the interface
+- Verifying through external means instead of interface
 
-```python
-# BAD: bypasses the public interface to verify a side effect directly
-def test_create_user_saves_to_database(db):
-    create_user(name="Alice")
-    row = db.execute("SELECT * FROM users WHERE name = :n", {"n": "Alice"}).fetchone()
-    assert row is not None
+```typescript
+// BAD: Bypasses interface to verify
+test("createUser saves to database", async () => {
+  await createUser({ name: "Alice" });
+  const row = await db.query("SELECT * FROM users WHERE name = ?", ["Alice"]);
+  expect(row).toBeDefined();
+});
 
-
-# GOOD: verifies through the interface the application actually uses
-def test_create_user_makes_user_retrievable():
-    user = create_user(name="Alice")
-    retrieved = get_user(user.id)
-    assert retrieved.name == "Alice"
+// GOOD: Verifies through interface
+test("createUser makes user retrievable", async () => {
+  const user = await createUser({ name: "Alice" });
+  const retrieved = await getUser(user.id);
+  expect(retrieved.name).toBe("Alice");
+});
 ```
 
-## Pytest conventions
+**Tautological tests**: Expected value restates the implementation, so the test passes by construction.
 
-- Use plain `assert` statements - pytest rewrites them with rich
-  introspection. Avoid `unittest.TestCase.assertEqual` etc.
-- Prefer `@pytest.fixture` for shared setup; prefer
-  `@pytest.mark.parametrize` over repeated test functions when one logical
-  test exercises many cases.
-- Name tests `test_<unit>_<scenario>_<expected>` so the failure line in CI
-  reads as a sentence: `test_compile_source_raises_compile_error_on_syntax_failure`.
-- Always include a docstring stating the behaviour under test - it doubles
-  as the specification when reviewing failures.
+```typescript
+// BAD: Expected value is recomputed the way the code computes it
+test("calculateTotal sums line items", () => {
+  const items = [{ price: 10 }, { price: 5 }];
+  const expected = items.reduce((sum, i) => sum + i.price, 0);
+  expect(calculateTotal(items)).toBe(expected);
+});
+
+// GOOD: Expected value is an independent, known literal
+test("calculateTotal sums line items", () => {
+  expect(calculateTotal([{ price: 10 }, { price: 5 }])).toBe(15);
+});
+```
