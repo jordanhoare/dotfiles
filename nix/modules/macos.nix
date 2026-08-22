@@ -12,7 +12,11 @@
   homebrew = {
     enable = true;
     onActivation = {
-      autoUpdate = false;
+      # Cask definitions come from the live JSON API on every activation, so
+      # pinning brew itself does not pin what gets installed - it just lets the
+      # binary drift behind the metadata until a cask uses a DSL method the old
+      # brew lacks, and bundle dies.
+      autoUpdate = true;
       cleanup = "zap";
     };
     casks = [
