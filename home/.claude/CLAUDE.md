@@ -44,68 +44,33 @@ Never hardcode the private GitHub username in any public file.
 - **Runtimes:** mise, which reads `.nvmrc` automatically
 - **JS packages:** bun and bunx
 
-Never add language runtimes (node, python, go) to Nix. Runtimes come from mise; JS packages execute through bun/bunx.
+Runtimes (node, python, go) come from mise, never Nix. JS packages execute through bun/bunx.
 
 ## Before starting any task
 
 - Read `.claude/CONTEXT.md` for the project's prose framing if it exists
 - Read `docs/internal/glossary.md` for domain terms if it exists
 - Check relevant `docs/internal/adr/` entries for the area being changed
-- Load appropriate skills from `.claude/skills/` for specialised workflows
-
-## Available skills
-
-Load a skill when the task matches its domain. Skills live in `.claude/skills/<name>/SKILL.md`.
-
-| Skill | When to load |
-|---|---|
-| `commits` | Any commit authoring - follow conventional commits format |
-| `tdd` | Writing or refactoring tests |
-| `design` | Deep-module vocabulary: interfaces, seams, depth, adapters |
-| `architecture` | Architectural review or refactor proposals (HTML report) |
-| `domain` | Building the glossary or recording an ADR |
-| `grill` | Relentless interview that also writes the domain docs |
-| `grilling` | Relentless interview on its own, no doc side effects |
-| `wayfinder` | Planning work too big for one session as decision tickets |
-| `prd` | Writing a product requirements document |
-| `issue` | Breaking work into GitHub/GitLab issues with blocking edges |
-| `triage` | Triaging or labelling issues and external PRs |
-| `prototype` | Throwaway prototype to answer a design question |
-| `debug` | Diagnosing hard bugs or performance regressions |
-| `review` | Reviewing a branch against repo standards and its spec |
-| `research` | Investigating a question against primary sources |
-| `setup` | Scaffolding per-repo engineering config |
-| `uv` | Python dependency or virtualenv management |
-| `ruff` | Python linting or formatting |
-| `ty` | Python type checking |
-| `mkdocs` | Documentation site generation |
-| `dotnet` | General .NET / C# tooling - `dotnet` CLI, analyzers, formatting, central package management |
+- Skills live in `.claude/skills/<name>/SKILL.md`; their descriptions are already in context. Run `/ask` for how they chain into flows
 
 ## Code style
 
-- No comments unless the WHY is non-obvious (hidden constraint, subtle invariant, workaround for a specific bug)
-- No multi-line comment blocks or documentation stubs
-- Prefer editing existing files over creating new ones
-- No features, refactoring, or abstractions beyond what the task requires
-- No backwards-compatibility shims for removed code
-- Explicit code over clever one-liners
-- Always catch specific exceptions, no bare or catch-all error handlers
-- Never reference ADRs or design docs from code comments; write a short inline why instead
+- Comment only to record a WHY the code cannot show: a hidden constraint, a subtle invariant, a workaround for a specific bug. One line, inline, at the thing it explains
+- Build exactly what the task requires; leave removed code removed, with no compatibility shim
+- Catch the specific exception you expect
 
 ## Writing style
 
-- No em-dashes (`—`) or en-dashes (`–`). Use `-` (hyphen with spaces) or commas
-- Active voice, succinct prose
-- Self-documenting names, full words, no abbreviations (`user_age` not `age`)
+- Punctuate with `-` (hyphen with spaces), commas, or colons. Never em-dashes (`—`) or en-dashes (`–`)
+- Name things in full words: `user_age`, not `age`
 
 ## Testing
 
 The `tdd` skill covers what a good test is, where seams go, and the red-green loop. Project conventions on top of it:
 
-- Use the project's canonical test runner (check `CLAUDE.md` or `CONTRIBUTING.md`)
 - Mirror the source tree structure in tests
-- Descriptive test names: `test_<subject>_<scenario>_<expected>`
-- Always add a test for changed behaviour
+- Name tests `test_<subject>_<scenario>_<expected>`
+- Every behaviour change ships with a test
 
 ## Commits
 
@@ -115,9 +80,11 @@ Load the `commits` skill before authoring commits; it carries the format, types,
 - Never commit without explicit approval. A past "commit" instruction does not authorise follow-up commits; wait for confirmation that a fix actually works before committing iterations
 - Never push to remote unless explicitly asked
 
-## What NOT to do
+## Guardrails
 
-- Never use `/mnt/d` paths in shared zsh config; those are WSL-only
-- Never commit nix module changes without running `nix build` first. Speculative fixes pollute history when they fail
+Run `nix build` and confirm it succeeds before committing any nix module change; a speculative fix pollutes history when it fails. Keep shared zsh config portable, using `/mnt/d` paths only in WSL-only files.
+
+These are absolute:
+
 - Never commit private keys, plaintext secrets, or `config/git/private`
 - Never hardcode the private GitHub username anywhere in public files
