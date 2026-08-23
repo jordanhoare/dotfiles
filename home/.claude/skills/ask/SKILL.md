@@ -57,7 +57,10 @@ Model-invoked references that run *beneath* the other skills, each the single so
 
 - **`/setup`** scaffolds a repo's engineering config: issue tracker, triage labels, domain doc layout. Run once, before first use of `/issue`, `/prd`, `/triage`, `/architecture` or `/wayfinder` in a new repo.
 - **`/research`** investigates a question against primary sources and writes the findings to a Markdown file.
+- **`/merge-conflicts`** resolves an in-progress merge or rebase, finding the intent behind each side before picking. It always resolves, never aborts.
+- **`/wizard`** generates an interactive bash script that walks a **human** through steps only they can perform: provisioning, credentials, CI secrets, an unfamiliar dashboard, a one-off cutover. Reach for it the moment you hit a step the agent cannot do, instead of dumping numbered instructions into the chat.
 - **`/writing-for-agents`** is the reference for writing any document an agent consumes: this file, a `SKILL.md`, a `CLAUDE.md`. Model-invoked, so it fires when you edit one.
+- **`/wait-what`** is the one to type the moment a message doesn't land. It re-pitches with context, in Simplified Technical English, using the project's own vocabulary.
 
 ## Language-specific
 
@@ -65,4 +68,5 @@ These fire on their own when you touch the relevant files; they aren't part of a
 
 - **Python**: `/uv` (packages, virtualenvs), `/ruff` (lint, format), `/ty` (type check)
 - **.NET**: `/dotnet` (CLI, analyzers, central package management)
+- **Nix**: `/nix` (flake layout, adding tools, linking dotfiles, why a switch failed)
 - **Docs**: `/mkdocs` (MkDocs Material + mkdocstrings)
