@@ -4,6 +4,7 @@ home/.claude/*
 !home/.claude/settings.json
 !home/.claude/CLAUDE.md
 !home/.claude/skills/
+!home/.claude/hooks/
 
 # SSH
 home/.ssh/*

@@ -63,6 +63,10 @@
       source    = ../../home/.claude/skills;
       recursive = true;
     };
+    ".claude/hooks" = {
+      source    = ../../home/.claude/hooks;
+      recursive = true;
+    };
 
     "bin" = {
       source = ../../bin;

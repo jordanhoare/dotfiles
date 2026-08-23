@@ -13,8 +13,20 @@
       "Bash(git restore:*)",
       "Bash(git remote:*)",
       "Bash(git check-ignore:*)",
-      "Bash(git filter-branch:*)",
       "Bash(git whoami:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-dangerous-git.sh"
+          }
+        ]
+      }
     ]
   },
   "model": "opus",
