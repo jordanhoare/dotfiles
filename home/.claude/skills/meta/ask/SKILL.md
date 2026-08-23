@@ -60,7 +60,10 @@ Model-invoked references that run *beneath* the other skills, each the single so
 - **`/merge-conflicts`** resolves an in-progress merge or rebase, finding the intent behind each side before picking. It always resolves, never aborts.
 - **`/wizard`** generates an interactive bash script that walks a **human** through steps only they can perform: provisioning, credentials, CI secrets, an unfamiliar dashboard, a one-off cutover. Reach for it the moment you hit a step the agent cannot do, instead of dumping numbered instructions into the chat.
 - **`/writing-for-agents`** is the reference for writing any document an agent consumes: this file, a `SKILL.md`, a `CLAUDE.md`. Model-invoked, so it fires when you edit one.
+- **`/technical-writing`** is the sentence-level standard for `docs/`, docstrings, and comments. Model-invoked, so it fires when you edit one. Three surfaces cover the same shared method borrowed from ASD-STE100.
 - **`/wait-what`** is the one to type the moment a message doesn't land. It re-pitches with context, in Simplified Technical English, using the project's own vocabulary.
+
+Those three split by layer: `/writing-for-agents` shapes the document, `/technical-writing` shapes the sentence, `/wait-what` repairs a message that already missed. The `plain` output style sits under all of them, in the system prompt, banning filler everywhere.
 
 ## Language-specific
 

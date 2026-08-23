@@ -30,8 +30,8 @@
     ]
   },
   "model": "opus",
-  "effortLevel": "low",
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true
-  }
+  },
+  "outputStyle": "plain"
 }

@@ -53,16 +53,9 @@ Runtimes (node, python, go) come from mise, never Nix. JS packages execute throu
 - Check relevant `docs/internal/adr/` entries for the area being changed
 - Skills are already described in context. Run `/ask` for how they chain into flows
 
-## Code style
+## Prose and code style
 
-- Comment only to record a WHY the code cannot show: a hidden constraint, a subtle invariant, a workaround for a specific bug. One line, inline, at the thing it explains
-- Build exactly what the task requires; leave removed code removed, with no compatibility shim
-- Catch the specific exception you expect
-
-## Writing style
-
-- Punctuate with `-` (hyphen with spaces), commas, or colons. Never em-dashes (`—`) or en-dashes (`–`)
-- Name things in full words: `user_age`, not `age`
+The `plain` output style carries these; it is active in `settings.json` and sits in the system prompt. The `technical-writing` skill extends them to `docs/`, docstrings, and comments.
 
 ## Testing
 

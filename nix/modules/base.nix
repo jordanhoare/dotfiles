@@ -88,6 +88,10 @@ in
       source    = ../../home/.claude/hooks;
       recursive = true;
     };
+    ".claude/output-styles" = {
+      source    = ../../home/.claude/output-styles;
+      recursive = true;
+    };
 
     "bin" = {
       source = ../../bin;

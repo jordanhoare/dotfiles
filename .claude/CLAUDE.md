@@ -27,7 +27,7 @@ Only files declared in `nix/modules/base.nix` (or a platform module) are linked.
 | `build/` | implement, tdd, deep-modules, review, debug, merge-conflicts |
 | `health/` | architecture, triage, setup |
 | `lang/` | uv, ruff, ty, dotnet, nix, mkdocs |
-| `meta/` | ask, commits, domain, wait-what, wizard, writing-for-agents |
+| `meta/` | ask, commits, domain, technical-writing, wait-what, wizard, writing-for-agents |
 
 Claude Code only globs `skills/*/SKILL.md`, one level deep, so `base.nix` reads the
 bucket tree and links every skill **flat** into `~/.claude/skills`. The buckets never
