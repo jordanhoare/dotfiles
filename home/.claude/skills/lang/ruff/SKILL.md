@@ -1,13 +1,13 @@
 ---
 name: ruff
 description:
-  Guide for using ruff, the extremely fast Python linter and formatter. Use this
+  Guide for using ruff, the Rust-based Python linter and formatter. Use this
   when linting, formatting, or fixing Python code.
 ---
 
 # ruff
 
-Ruff is an extremely fast Python linter and code formatter. It replaces Flake8,
+Ruff is a Rust-based Python linter and code formatter. It replaces Flake8,
 isort, Black, pyupgrade, autoflake, and dozens of other tools.
 
 ## When to use ruff

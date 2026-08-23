@@ -1,4 +1,4 @@
-# Dotfiles — Claude Code Context
+# Dotfiles - Claude Code Context
 
 ## What this repo is
 

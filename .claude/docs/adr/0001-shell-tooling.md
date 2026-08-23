@@ -1,4 +1,4 @@
-# ADR 0001 — Shell tooling: prompt and plugin manager
+# ADR 0001 - Shell tooling: prompt and plugin manager
 
 ## Context
 

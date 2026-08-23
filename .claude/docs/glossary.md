@@ -42,7 +42,7 @@ The OS context in which the shell runs. Three supported platforms: **WSL** (prim
 
 ## ProtonVPN
 
-The VPN client installed on all platforms. Runs as an OS-level daemon covering all machine traffic. Configured with a standard kill switch (blocks internet if the tunnel drops, but permits LAN traffic). Installed declaratively via nix. See ADR 0010.
+The VPN client installed on all platforms. Runs as an OS-level daemon covering all machine traffic. Configured with a standard kill switch (blocks internet if the tunnel drops, but permits LAN traffic). Installed declaratively via nix. See ADR 0009.
 
 ## Profile
 

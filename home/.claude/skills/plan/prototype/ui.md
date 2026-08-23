@@ -27,7 +27,7 @@ Only use this when the thing being prototyped genuinely has no existing page to 
 
 Create a **throwaway route** following whatever routing convention the project already uses. Don't invent a new top-level structure. Name it so it's obviously a prototype (e.g. include the word `prototype` in the path or filename). Same `?variant=` pattern.
 
-Before committing to sub-shape B, sanity-check: is there really no existing page this could be embedded in? An empty route hides design problems that a populated one would expose.
+Before committing to sub-shape B, sanity-check: is there no existing page this could be embedded in? An empty route hides design problems that a populated one would expose.
 
 In both sub-shapes the floating bottom bar is identical.
 

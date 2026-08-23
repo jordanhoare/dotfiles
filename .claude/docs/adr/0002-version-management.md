@@ -1,4 +1,4 @@
-# ADR 0002 — Runtime version management
+# ADR 0002 - Runtime version management
 
 ## Context
 

@@ -48,7 +48,7 @@
 [safe]
 	directory = *
 
-# Optimize git for all Windows mounts (/mnt/*) - these are extremely slow
+# Optimize git for all Windows mounts (/mnt/*) - 9p filesystem stat calls are slow
 # This applies to all repos on Windows filesystems accessed from WSL
 [includeIf "gitdir:/mnt/"]
   [core]

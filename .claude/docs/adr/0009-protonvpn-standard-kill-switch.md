@@ -1,4 +1,4 @@
-# ADR 0010 - ProtonVPN with standard kill switch
+# ADR 0009 - ProtonVPN with standard kill switch
 
 ## Status
 

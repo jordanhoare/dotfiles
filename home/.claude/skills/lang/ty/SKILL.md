@@ -1,14 +1,14 @@
 ---
 name: ty
 description:
-  Guide for using ty, the extremely fast Python type checker and language
+  Guide for using ty, the Rust-based Python type checker and language
   server. Use this when type checking Python code or setting up type checking in
   Python projects.
 ---
 
 # ty
 
-ty is an extremely fast Python type checker and language server. It replaces
+ty is a Rust-based Python type checker and language server. It replaces
 mypy, Pyright, and other type checkers.
 
 ## When to use ty

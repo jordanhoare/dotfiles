@@ -1,4 +1,4 @@
-# ADR 0005 — Package management and dotfile linking
+# ADR 0005 - Package management and dotfile linking
 
 ## Context
 

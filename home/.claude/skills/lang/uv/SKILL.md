@@ -7,7 +7,7 @@ description:
 
 # uv
 
-uv is an extremely fast Python package and project manager. It replaces pip,
+uv is a Rust-based Python package and project manager. It replaces pip,
 pip-tools, pipx, pyenv, virtualenv, poetry, etc.
 
 ## When to use uv

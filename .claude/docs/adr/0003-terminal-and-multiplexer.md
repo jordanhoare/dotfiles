@@ -1,4 +1,4 @@
-# ADR 0003 — Terminal emulator and multiplexer
+# ADR 0003 - Terminal emulator and multiplexer
 
 ## Context
 

@@ -1,4 +1,4 @@
-# ADR 0004 — Internal docs layout
+# ADR 0004 - Internal docs layout
 
 ## Context
 

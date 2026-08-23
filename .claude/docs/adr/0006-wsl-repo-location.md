@@ -1,4 +1,4 @@
-# ADR 0006 — WSL repository location
+# ADR 0006 - WSL repository location
 
 ## Context
 
