@@ -5,7 +5,7 @@ description: Guide for creating conventional commit messages. Use when making gi
 
 # Conventional Commits
 
-This project uses [Conventional Commits](https://www.conventionalcommits.org/) for automated semantic versioning and changelog generation via `python-semantic-release`.
+[Conventional Commits](https://www.conventionalcommits.org/). Where a project automates semantic versioning or changelog generation from commit history, the type is what drives the version bump, so the message is a released artifact.
 
 ## Format
 
@@ -31,7 +31,7 @@ Only two exceptions:
 ```text
 feat(nix): expose home-manager files output to drop username from makefile
 fix(cli): grid view not refreshing after task actions
-refactor(executor): extract bytecode interpreter, reducing coupling per `ADR-0006`
+refactor(git): extract profile switching into an alias, reducing duplication per `ADR-0004`
 ```
 
 ❌ Bad:
@@ -39,7 +39,7 @@ refactor(executor): extract bytecode interpreter, reducing coupling per `ADR-000
 ```text
 feat(Nix): Expose home-manager files output to drop USERNAME from Makefile
 fix(CLI): Grid view not refreshing after task actions
-refactor(executor): Extract bytecode interpreter, reducing coupling per ADR-0006
+refactor(Git): Extract profile switching into an ALIAS, reducing duplication per ADR-0004
 ```
 
 ## Types
@@ -58,21 +58,16 @@ refactor(executor): Extract bytecode interpreter, reducing coupling per ADR-0006
 
 ## Scopes
 
-Common scopes for this project (use the module/area affected):
+The scope is the module or area affected. Take it from the repo's own vocabulary: a package name, a module path, or a term from the project glossary. Keep the set small and reuse it, so the changelog groups sensibly.
 
-- `compiler` - DSL compilation logic
-- `reconcile` - Schema reconciliation layer
-- `executor` - Execution backends (local, Spark)
-- `diagnostics` - Error handling system
-- `api` - Public API changes
-- Or use specific file/module names
+Examples from this dotfiles repo: `nix`, `git`, `zsh`, `secrets`, `skills`, `claude`.
 
 ## Breaking Changes
 
 Add `BREAKING CHANGE:` footer or `!` after type/scope:
 
 ```
-feat(compiler)!: change dsl syntax to method chains
+feat(api)!: change query syntax to method chains
 
 BREAKING CHANGE: `Rule` class removed, use `Transform` instead
 ```
@@ -161,13 +156,13 @@ Agents should commit locally but NEVER push to remote unless specifically reques
 
 ```bash
 # feature with scope
-feat(compiler): add support for nested function calls
+feat(parser): add support for nested function calls
 
 allows expressions like max(min(a, b), c). parser now handles
 recursive call structures with proper precedence.
 
 # bug fix
-fix(reconcile): prevent null-materialization for update targets
+fix(sync): prevent null-materialization for update targets
 
 previously tolerant mode would null-materialize missing fields
 for both add and update. now only add targets get this behavior,
@@ -177,16 +172,16 @@ preserving the hard rule that update requires existing fields.
 docs(api): update `Transform` api examples with new syntax
 
 # refactoring
-refactor(executor): extract bytecode interpreter into runtime pillar
+refactor(runtime): extract the interpreter into its own module
 
-moves interpretation logic from `executor/local.py` to new `runtime/`
+moves interpretation logic from `engine/local.py` to a new `runtime/`
 module, reducing coupling per `ADR-0006`.
 
 # test addition
-test(compiler): add parametrized test for builtin validation
+test(parser): add parametrized test for builtin validation
 
 # breaking change
-feat(compiler)!: replace `Rule` with `Transform`
+feat(api)!: replace `Rule` with `Transform`
 
 BREAKING CHANGE: `Rule` class has been removed. all dsl code must
 use `Transform` instead. see migration guide in `docs/api/migration.md`
@@ -199,16 +194,16 @@ Focus on **user impact**, not implementation details:
 ✅ Good: `fix(cli): grid view not refreshing after task actions`
 ❌ Bad: `fix(cli): initialize dag bundles in get_dag function`
 
-✅ Good: `feat(compiler): support nested function calls in expressions`
+✅ Good: `feat(parser): support nested function calls in expressions`
 ❌ Bad: `feat: add recursive parser`
 
-## Integration with Semantic Release
+## Semantic versioning
 
-Commit types affect version bumping:
+Where release tooling reads the history, the type drives the bump:
 
-- `feat` → 1.x.0 (minor)
-- `fix` → 1.0.x (patch)
-- `BREAKING CHANGE` → x.0.0 (major)
-- Other types → no version bump (but appear in changelog)
+- `feat` → minor
+- `fix` → patch
+- `BREAKING CHANGE` → major
+- Other types → no bump, but they still appear in the changelog
 
-Assume the changelog is auto-generated from commit messages via cicd, so clarity matters for users reviewing release notes.
+Write as though the changelog is generated and published, because it usually is.
