@@ -44,13 +44,13 @@ A starting situation that generates work, then merges onto the main flow.
 
 Not feature work, just upkeep.
 
-- **`/architecture`** surveys the codebase for **deepening opportunities** and presents them as an HTML report. Picking one generates an idea you take into the main flow at `/grill`. It's the survey that finds candidates; `/design` is the bench you design the chosen one on.
+- **`/architecture`** surveys the codebase for **deepening opportunities** and presents them as an HTML report. Picking one generates an idea you take into the main flow at `/grill`. It's the survey that finds candidates; `/deep-modules` is the bench you design the chosen one on.
 
 ## Vocabulary underneath
 
 Model-invoked references that run *beneath* the other skills, each the single source of truth for its vocabulary. Reach for them directly when the **words**, not the process, are the problem; or let the skills above pull them in.
 
-- **`/design`**: the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module's shape. `/tdd` and `/architecture` both speak it. Its design-it-twice pattern spins up parallel sub-agents to design one interface several radically different ways.
+- **`/deep-modules`**: the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module's shape. `/tdd` and `/architecture` both speak it. Its design-it-twice pattern spins up parallel sub-agents to design one interface several radically different ways.
 - **`/domain`**: sharpen the project's *domain* language. Challenge a fuzzy term, resolve an overloaded word, record a hard-to-reverse decision as an ADR. The active discipline `/grill` drives.
 
 ## Standalone
