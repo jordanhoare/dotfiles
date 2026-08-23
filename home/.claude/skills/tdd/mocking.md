@@ -21,35 +21,31 @@ At system boundaries, design interfaces that are easy to mock:
 
 Pass external dependencies in rather than creating them internally:
 
-```typescript
-// Easy to mock
-function processPayment(order, paymentClient) {
-  return paymentClient.charge(order.total);
-}
+```python
+# Easy to mock
+def process_payment(order, payment_client):
+    return payment_client.charge(order.total)
 
-// Hard to mock
-function processPayment(order) {
-  const client = new StripeClient(process.env.STRIPE_KEY);
-  return client.charge(order.total);
-}
+# Hard to mock
+def process_payment(order):
+    client = StripeClient(os.environ["STRIPE_KEY"])
+    return client.charge(order.total)
 ```
 
 **2. Prefer SDK-style interfaces over generic fetchers**
 
 Create specific functions for each external operation instead of one generic function with conditional logic:
 
-```typescript
-// GOOD: Each function is independently mockable
-const api = {
-  getUser: (id) => fetch(`/users/${id}`),
-  getOrders: (userId) => fetch(`/users/${userId}/orders`),
-  createOrder: (data) => fetch('/orders', { method: 'POST', body: data }),
-};
+```python
+# GOOD: each method is independently mockable
+class OrdersApi(Protocol):
+    def get_user(self, user_id: UserId) -> User: ...
+    def get_orders(self, user_id: UserId) -> list[Order]: ...
+    def create_order(self, order: NewOrder) -> Order: ...
 
-// BAD: Mocking requires conditional logic inside the mock
-const api = {
-  fetch: (endpoint, options) => fetch(endpoint, options),
-};
+# BAD: mocking requires conditional logic inside the mock
+class OrdersApi(Protocol):
+    def request(self, endpoint: str, **options: Any) -> Response: ...
 ```
 
 The SDK approach means:

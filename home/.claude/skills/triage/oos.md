@@ -38,12 +38,12 @@ This is a significant architectural change that doesn't align with the
 project's focus on content authoring. Theming is a concern for downstream
 consumers who embed or redistribute the output.
 
-```ts
-// The current ThemeConfig interface is not designed for runtime switching:
-interface ThemeConfig {
-  colors: ColorPalette; // single palette, resolved at build time
-  fonts: FontStack;
-}
+```python
+# The current ThemeConfig interface is not designed for runtime switching:
+@dataclass(frozen=True)
+class ThemeConfig:
+    colors: ColorPalette  # single palette, resolved at build time
+    fonts: FontStack
 ```
 
 ## Prior requests

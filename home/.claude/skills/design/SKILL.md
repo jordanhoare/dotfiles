@@ -70,26 +70,24 @@ Good interfaces make testing natural:
 
 1. **Accept dependencies, don't create them.**
 
-   ```typescript
-   // Testable
-   function processOrder(order, paymentGateway) {}
+   ```python
+   # Testable
+   def process_order(order: Order, payment_gateway: PaymentGateway) -> Receipt: ...
 
-   // Hard to test
-   function processOrder(order) {
-     const gateway = new StripeGateway();
-   }
+   # Hard to test
+   def process_order(order: Order) -> Receipt:
+       gateway = StripeGateway()
    ```
 
 2. **Return results, don't produce side effects.**
 
-   ```typescript
-   // Testable
-   function calculateDiscount(cart): Discount {}
+   ```python
+   # Testable
+   def calculate_discount(cart: Cart) -> Discount: ...
 
-   // Hard to test
-   function applyDiscount(cart): void {
-     cart.total -= discount;
-   }
+   # Hard to test
+   def apply_discount(cart: Cart) -> None:
+       cart.total -= discount
    ```
 
 3. **Small surface area.** Fewer methods = fewer tests needed. Fewer params = simpler test setup.
