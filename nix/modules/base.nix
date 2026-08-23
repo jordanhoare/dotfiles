@@ -1,4 +1,29 @@
-{ pkgs, username, homeDirectory, ... }:
+{ pkgs, lib, username, homeDirectory, ... }:
+
+let
+  # Skills are bucketed by lifecycle (plan/build/health/lang/meta) in the repo so
+  # the tree is navigable. Claude Code only globs skills/*/SKILL.md, one level
+  # deep, so each skill is linked flat into ~/.claude/skills and the buckets stay
+  # a repo-side concern. Discovery is automatic: a new skill or a whole new
+  # bucket needs no change here.
+  skillsRoot = ../../home/.claude/skills;
+
+  subdirsOf = path:
+    lib.attrNames (lib.filterAttrs (_: type: type == "directory") (builtins.readDir path));
+
+  skillLinks = lib.listToAttrs (
+    lib.concatMap
+      (bucket:
+        map
+          (skill:
+            lib.nameValuePair ".claude/skills/${skill}" {
+              source = skillsRoot + "/${bucket}/${skill}";
+              recursive = true;
+            })
+          (subdirsOf (skillsRoot + "/${bucket}")))
+      (subdirsOf skillsRoot)
+  );
+in
 
 {
   imports = [
@@ -50,7 +75,7 @@
     llvm
   ];
 
-  home.file = {
+  home.file = skillLinks // {
     ".ssh/config".source = ../../home/.ssh/config;
 
     ".config/mise/config.toml".source = ../../config/mise/config.toml;
@@ -59,10 +84,6 @@
 
     ".claude/CLAUDE.md".source     = ../../home/.claude/CLAUDE.md;
     ".claude/settings.json".source = ../../home/.claude/settings.json;
-    ".claude/skills" = {
-      source    = ../../home/.claude/skills;
-      recursive = true;
-    };
     ".claude/hooks" = {
       source    = ../../home/.claude/hooks;
       recursive = true;

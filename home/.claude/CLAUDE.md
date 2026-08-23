@@ -51,7 +51,7 @@ Runtimes (node, python, go) come from mise, never Nix. JS packages execute throu
 - Read `.claude/CONTEXT.md` for the project's prose framing if it exists
 - Read `docs/internal/glossary.md` for domain terms if it exists
 - Check relevant `docs/internal/adr/` entries for the area being changed
-- Skills live in `.claude/skills/<name>/SKILL.md`; their descriptions are already in context. Run `/ask` for how they chain into flows
+- Skills are already described in context. Run `/ask` for how they chain into flows
 
 ## Code style
 

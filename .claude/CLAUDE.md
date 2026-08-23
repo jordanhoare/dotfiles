@@ -17,6 +17,22 @@ Personal dotfiles for Jordan Hoare. Managed via Nix and Home Manager across thre
 
 Only files declared in `nix/modules/base.nix` (or a platform module) are linked. Everything else in `~/.config/` is untouched.
 
+### Claude skills
+
+`home/.claude/skills/` is bucketed by lifecycle for navigation:
+
+| Bucket | Holds |
+|---|---|
+| `plan/` | grill, grilling, prd, issue, wayfinder, prototype, research |
+| `build/` | implement, tdd, deep-modules, review, debug, merge-conflicts |
+| `health/` | architecture, triage, setup |
+| `lang/` | uv, ruff, ty, dotnet, nix, mkdocs |
+| `meta/` | ask, commits, domain, wait-what, wizard, writing-for-agents |
+
+Claude Code only globs `skills/*/SKILL.md`, one level deep, so `base.nix` reads the
+bucket tree and links every skill **flat** into `~/.claude/skills`. The buckets never
+reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
+
 ### Nix modules
 
 | File | Purpose |
