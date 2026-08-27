@@ -26,6 +26,7 @@ Only files declared in `nix/modules/base.nix` (or a platform module) are linked.
 | `plan/` | grill, grilling, prd, issue, wayfinder, prototype, research |
 | `build/` | implement, tdd, deep-modules, review, debug, merge-conflicts |
 | `health/` | architecture, triage, setup |
+| `learn/` | teach |
 | `lang/` | uv, ruff, ty, dotnet, nix, mkdocs |
 | `meta/` | ask, commits, domain, technical-writing, wait-what, wizard, writing-for-agents |
 
