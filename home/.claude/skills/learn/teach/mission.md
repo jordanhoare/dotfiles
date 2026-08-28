@@ -4,9 +4,14 @@
 this topic. Every teaching decision traces back to it: what to teach next, which sources to
 surface, which practice to design.
 
-## Interview first
+## Interview on the second session
 
-An unwritten mission is written by interview, not by guessing. Ask why they want this until you
+A mission is earned, not assumed. The first session on a topic is a **drill** and writes no
+`MISSION.md`; the interview happens when they come back, which is the first real evidence the
+topic is going somewhere. By then there is a session of history to ground it, and the interview
+is better for it.
+
+A mission is written by interview, not by guessing. Ask why they want this until you
 have a concrete outcome. "Get fitter" is not a mission; "run a half marathon in October" is.
 "Learn Rust" is not a mission; "ship a Rust CLI to my team" is. Push until the answer names
 something that changes in their life or work.
@@ -17,8 +22,6 @@ A wrong mission is worse than no mission, because it steers every session after 
 
 ```md
 # Mission: {Topic}
-
-Seeded by [[05 - Fleeting/{the note that started this}]]
 
 ## Why
 {One to three sentences. The concrete outcome they are chasing.}
@@ -41,5 +44,6 @@ Seeded by [[05 - Fleeting/{the note that started this}]]
 - **Keep it to a screen.** Past that it has stopped being a compass and become a plan.
 - **Revise when reality shifts.** Confirm the change with them, rewrite this file in place, and
   note what moved in `NOTES.md`.
-- **Link the seed.** The fleeting note that started the hunt stays linked, so the trail from
-  scrappy question to real topic survives.
+- **Link a seed when one exists.** Where a `05 - Fleeting/` note from `/garden` started this,
+  put `Seeded by [[05 - Fleeting/{note}]]` under the title, so the trail from scrappy question to
+  real topic survives. Teach writes no fleeting notes of its own, so most missions have no seed.

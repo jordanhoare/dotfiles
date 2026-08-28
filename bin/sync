@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-GARDEN="${SECONDBRAIN:-$HOME/repositories/garden}"
+# .zshenv exports GARDEN per platform; SECONDBRAIN, the old name, is set nowhere
+# and its $HOME fallback resolved to a path that does not exist on WSL.
+GARDEN="${GARDEN:?GARDEN is unset - is .zshenv sourced?}"
 
 if [[ ! -d "$GARDEN" ]]; then
   echo "error: garden not found at $GARDEN" >&2

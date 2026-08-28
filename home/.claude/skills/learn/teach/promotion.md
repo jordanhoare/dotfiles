@@ -49,6 +49,13 @@ the reference.
 - [[03 - Resources/{Topic}/{The source it came from}]]
 ```
 
+**They place the anchors, not you.** Before writing the note, ask where this concept attaches
+to what they already hold, and have them name the sibling notes. New knowledge sticks by binding
+to existing structure, and their graph is that structure written down - so the act of finding the
+link is the learning, and doing it for them spends it. Where they name a link you would not have,
+ask why: the answer is either a connection you missed or a misconception surfacing. Where they
+find none, the concept is isolated, and that is worth knowing before it is filed.
+
 - **Wikilinks carry the full vault path**, as the existing notes do.
 - **Inline `#tags`** where the vault already uses one for the area.
 - **One concept per file.** If the note needs "and", it is two notes.
@@ -89,9 +96,14 @@ misconception they talked themselves out of, prior experience cited.}
 **Implications:** {What this unlocks or rules out for the next lesson. Write it only when
 non-obvious.}
 
+**Review:** {date, one week out from a first promotion}
+
 **Note:** [[04 - Permanent/{Topic}/{Concept}]]
 ```
 
+- **Review is the spacing schedule.** It is the only field a later session reads to decide what
+  is due. Update it in place on the entry each time the concept is recalled, following the
+  interval table in [`session.md`](session.md).
 - **Evidence is required.** It is the thing that distinguishes the log from a session diary, and
   the thing a later session needs when deciding whether to re-teach.
 - **Implications are optional.** Write one when the consequence for the next lesson is not
