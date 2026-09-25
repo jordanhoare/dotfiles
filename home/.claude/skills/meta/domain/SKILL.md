@@ -11,10 +11,9 @@ Actively build and sharpen the project's domain model as you design. This is the
 
 ```
 /
-├── .claude/
-│   └── CONTEXT.md                     ← prose domain framing
 ├── docs/
 │   └── internal/
+│       ├── context.md                 ← prose domain framing
 │       ├── glossary.md                ← canonical term list
 │       └── adr/
 │           ├── 0001-event-sourced-orders.md
@@ -46,7 +45,7 @@ When the user states how something works, check whether the code agrees. If you 
 
 When a term is resolved, update `docs/internal/glossary.md` right there. Don't batch these up: capture them as they happen. Use the format in [format.md](./format.md).
 
-The glossary should be totally devoid of implementation details. Do not treat it as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else. Prose framing about the project itself belongs in `.claude/CONTEXT.md`, not in the glossary.
+The glossary should be totally devoid of implementation details. Do not treat it as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else. Prose framing about the project itself belongs in `docs/internal/context.md`, not in the glossary.
 
 ### Offer ADRs sparingly
 

@@ -4,7 +4,7 @@ How the engineering skills should consume this repo's domain documentation when 
 
 ## Before exploring, read these
 
-- **`.claude/CONTEXT.md`**: prose domain framing (what the project is, its domain, users, scope). Read this first to orient.
+- **`docs/internal/context.md`**: prose domain framing (what the project is, its domain, users, scope). Read this first to orient.
 - **`docs/internal/glossary.md`**: the canonical term list.
 - **`docs/internal/adr/`**: ADRs that touch the area you're about to work in.
 
@@ -14,10 +14,9 @@ If any of these files don't exist, **proceed silently**. Don't flag their absenc
 
 ```
 /
-├── .claude/
-│   └── CONTEXT.md
 ├── docs/
 │   └── internal/
+│       ├── context.md
 │       ├── glossary.md
 │       └── adr/
 │           ├── 0001-event-sourced-orders.md

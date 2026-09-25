@@ -2,12 +2,12 @@
 
 Two files carry the domain model, and they have different jobs.
 
-- **`.claude/CONTEXT.md`** - prose framing. What this project is, its domain, its users, what is in and out of scope. A few paragraphs, no term list.
+- **`docs/internal/context.md`** - prose framing. What this project is, its domain, its users, what is in and out of scope. A few paragraphs, no term list.
 - **`docs/internal/glossary.md`** - the canonical term list. Nothing else.
 
 Create both lazily: only when you have something to write.
 
-## `.claude/CONTEXT.md` structure
+## `docs/internal/context.md` structure
 
 ```md
 # {Project Name}

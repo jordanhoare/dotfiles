@@ -22,7 +22,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 
 - `git remote -v` and `.git/config`: is this a GitHub repo? Which one?
 - `AGENTS.md` and `CLAUDE.md` at the repo root: does either exist? Is there already an `## Agent skills` section in either?
-- `.claude/CONTEXT.md` and `docs/internal/glossary.md`
+- `docs/internal/context.md` and `docs/internal/glossary.md`
 - `docs/internal/adr/`
 - `docs/agents/`: does this skill's prior output already exist?
 - `.scratch/`: a sign that a local-markdown issue tracker convention is already in use
@@ -55,7 +55,7 @@ If it is installed, ask exactly one question:
 
 The defaults are the five canonical roles, each label string equal to its name: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. On **yes**, write them as-is. Only if the user says no, usually because their tracker already uses other names (e.g. `bug:triage` for `needs-triage`), collect the overrides so `triage` applies existing labels instead of creating duplicates.
 
-**Section C: Domain docs.** These repos are single-context: prose framing at `.claude/CONTEXT.md`, the canonical glossary at `docs/internal/glossary.md`, and ADRs under `docs/internal/adr/`. Write this layout without asking.
+**Section C: Domain docs.** These repos are single-context: prose framing at `docs/internal/context.md`, the canonical glossary at `docs/internal/glossary.md`, and ADRs under `docs/internal/adr/`. Write this layout without asking.
 
 ### 3. Confirm and edit
 

@@ -14,7 +14,7 @@ A **flow** is a path through the skills. Most work runs along one **main flow**,
 
 The route most work travels. You have an idea and want it built.
 
-1. **`/grill`** sharpens the idea by interview, a round of questions at a time. It's stateful: what it learns lands in `.claude/CONTEXT.md`, the glossary at `docs/internal/glossary.md`, and ADRs in `docs/internal/adr/`. Start here whenever you're in a working directory. For an interview with no paper trail (no repo, or you don't want the docs touched), use **`/grilling`** instead: same primitive, no side effects.
+1. **`/grill`** sharpens the idea by interview, a round of questions at a time. It's stateful: what it learns lands in `docs/internal/context.md`, the glossary at `docs/internal/glossary.md`, and ADRs in `docs/internal/adr/`. Start here whenever you're in a working directory. For an interview with no paper trail (no repo, or you don't want the docs touched), use **`/grilling`** instead: same primitive, no side effects.
 
 2. **Branch: can you settle every question in conversation?** If a question needs a runnable answer (a state model, business logic, a UI you have to see), detour through **`/prototype`** to answer it with throwaway code, then come back.
 

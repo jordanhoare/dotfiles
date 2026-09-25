@@ -48,7 +48,7 @@ Runtimes (node, python, go) come from mise, never Nix. JS packages execute throu
 
 ## Before starting any task
 
-- Read `.claude/CONTEXT.md` for the project's prose framing if it exists
+- Read `docs/internal/context.md` for the project's prose framing if it exists
 - Read `docs/internal/glossary.md` for domain terms if it exists
 - Check relevant `docs/internal/adr/` entries for the area being changed
 - Skills are already described in context. Run `/ask` for how they chain into flows
