@@ -70,8 +70,8 @@ The `tdd` skill covers what a good test is, where seams go, and the red-green lo
 Load the `commits` skill before authoring commits; it carries the format, types, casing, and cadence rules.
 
 - MUST never append co-author trailers or attribution of any kind. No `Co-Authored-By: Claude`, no "Generated with" lines, no AI or tool attribution in the message or footer, ever
-- Never commit without explicit approval. A past "commit" instruction does not authorise follow-up commits; wait for confirmation that a fix actually works before committing iterations
-- Never push to remote unless explicitly asked
+- On a feature branch, commit and push without asking
+- On `main` or `master`, commit only, then tell the user to push. The `block-dangerous-git.sh` hook rejects agent pushes to main
 
 ## Guardrails
 

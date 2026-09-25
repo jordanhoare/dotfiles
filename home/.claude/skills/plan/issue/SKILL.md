@@ -1,6 +1,6 @@
 ---
 name: issue
-description: Break a plan, PRD, or the current conversation into a set of tracer-bullet issues, each declaring its blocking edges, published to the project issue tracker (edges as text in one file per issue locally, or native blocking links on GitHub/GitLab). Use when the user wants to convert a plan into issues or break work down into issues.
+description: Break a plan, PRD, or the current conversation into a set of tracer-bullet issues, each declaring its blocking edges, published to the project issue tracker (edges as text in one file per issue locally, or native blocking links on GitHub/GitLab). Use when the user wants to convert a plan into issues or break work down into issues. Upstream name: to-tickets.
 disable-model-invocation: true
 ---
 

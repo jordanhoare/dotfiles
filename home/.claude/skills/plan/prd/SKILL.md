@@ -1,6 +1,6 @@
 ---
 name: prd
-description: Turn the current conversation context into a PRD and publish it to the project issue tracker. No interview, just synthesis of what you have already discussed.
+description: Turn the current conversation context into a PRD and publish it to the project issue tracker. No interview, just synthesis of what you have already discussed. Upstream name: to-spec.
 disable-model-invocation: true
 ---
 

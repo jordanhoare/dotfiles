@@ -148,9 +148,9 @@ Do not commit:
 - Multiple unrelated concerns together
 - Same-session fixes for a buggy commit you just made - amend instead
 
-### Never Push
+### Pushing
 
-Agents should commit locally but NEVER push to remote unless specifically requested by the user.
+On a feature branch, push without asking. On `main` or `master`, commit only and tell the user to push; the `block-dangerous-git.sh` hook rejects agent pushes there.
 
 ## Examples
 

@@ -19,10 +19,10 @@ The route most work travels. You have an idea and want it built.
 2. **Branch: can you settle every question in conversation?** If a question needs a runnable answer (a state model, business logic, a UI you have to see), detour through **`/prototype`** to answer it with throwaway code, then come back.
 
 3. **Branch: is this a multi-session build?**
-   - **Yes** → **`/prd`** turns the thread into a PRD, then **`/issue`** splits it into tracer-bullet issues, each declaring its **blocking edges**. Work the **frontier**: any issue whose blockers are done. Kick off **`/implement`** per issue, clearing context between each one.
+   - **Yes** → **`/prd`** turns the thread into a PRD, then **`/issue`** splits it into tracer-bullet issues, each declaring its **blocking edges**. (Upstream these are `to-spec` and `to-tickets`.) Work the **frontier**: any issue whose blockers are done. Kick off **`/implement`** per issue, clearing context between each one.
    - **No** → **`/implement`** right here, in the same window.
 
-   Either way **`/implement`** drives **`/tdd`** internally at pre-agreed seams, one red-green slice at a time, then closes by running **`/review`** over the diff before committing. Reach for **`/tdd`** alone to build one concrete behaviour test-first without a full PRD, and **`/review`** alone to review a branch against a fixed point.
+   Either way **`/implement`** drives **`/tdd`** internally at pre-agreed seams, one red-green slice at a time, runs **`/review`** over the diff, then ships: feature branch, commits, pushed PR, CI watched to green, PR link back to you. On main it commits only and hands the push to you. Reach for **`/tdd`** alone to build one concrete behaviour test-first without a full PRD, and **`/review`** alone to review a branch against a fixed point.
 
 4. **`/commits`** carries the conventional-commit format and casing. It's model-invoked, so it fires on its own when you commit.
 
