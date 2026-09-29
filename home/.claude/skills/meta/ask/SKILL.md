@@ -56,7 +56,7 @@ Model-invoked references that run *beneath* the other skills, each the single so
 ## Standalone
 
 - **`/setup`** scaffolds a repo's engineering config: issue tracker, triage labels, domain doc layout. Run once, before first use of `/issue`, `/prd`, `/triage`, `/architecture` or `/wayfinder` in a new repo.
-- **`/research`** investigates a question against primary sources and writes the findings to a Markdown file.
+- **`/research`** investigates a question against primary sources and posts the findings on the ticket that asked it, or writes a Markdown file when no ticket exists.
 - **`/teach`** teaches you a topic across many sessions, grounded in a **mission** you write together. It splits its output: working state and HTML lessons stay in a private lane of the garden, and a concept only earns a permanent note in `04 - Permanent/` once you've shown you can use it. Nothing to do with the codebase; run it from anywhere.
 - **`/garden`** is the end-of-session bookend to `/teach`. It reconstructs what the session actually did - commands, sources, the assumptions that broke - and that recall is the point even when nothing follows it, which is the usual outcome. When you do have something, it takes **dictation**: the note is your sentences, not its own. A question you can't answer gets written down as a question, and that is where `/teach` starts.
 - **`/merge-conflicts`** resolves an in-progress merge or rebase, finding the intent behind each side before picking. It always resolves, never aborts.
