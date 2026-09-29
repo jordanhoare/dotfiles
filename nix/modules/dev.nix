@@ -7,6 +7,8 @@
     lazygit
     neovim
     protobuf
+    pkg-config
+    ninja
     gnupg
     lua-language-server
     luajit
