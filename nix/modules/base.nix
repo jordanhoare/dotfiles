@@ -6,6 +6,12 @@ let
   # deep, so each skill is linked flat into ~/.claude/skills and the buckets stay
   # a repo-side concern. Discovery is automatic: a new skill or a whole new
   # bucket needs no change here.
+  #
+  # Codex reads ~/.agents/skills and skips symlinked files, so each skill also
+  # lands there as one directory link. Both links resolve to the same store
+  # path, which is how Cursor, reading both roots, lists each skill once.
+  # ~/.claude/skills stays per-file: switching an existing directory of links
+  # to a single link would collide on activation.
   skillsRoot = ../../home/.claude/skills;
 
   subdirsOf = path:
@@ -14,12 +20,15 @@ let
   skillLinks = lib.listToAttrs (
     lib.concatMap
       (bucket:
-        map
+        lib.concatMap
           (skill:
-            lib.nameValuePair ".claude/skills/${skill}" {
-              source = skillsRoot + "/${bucket}/${skill}";
-              recursive = true;
-            })
+            let source = skillsRoot + "/${bucket}/${skill}"; in [
+              (lib.nameValuePair ".claude/skills/${skill}" {
+                inherit source;
+                recursive = true;
+              })
+              (lib.nameValuePair ".agents/skills/${skill}" { inherit source; })
+            ])
           (subdirsOf (skillsRoot + "/${bucket}")))
       (subdirsOf skillsRoot)
   );
