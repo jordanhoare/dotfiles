@@ -1,14 +1,31 @@
 #!/usr/bin/env bash
-# PreToolUse hook: refuse destructive git commands and pushes to main before Claude
-# Code runs them. Exit 2 tells the harness the call is blocked and feeds stderr back
-# to the model.
+# PreToolUse hook: refuse destructive git commands and pushes to main before an agent
+# runs them. Claude Code and Codex register it directly, and Cursor imports it from
+# ~/.claude/settings.json. All three block on exit 2 and pass stderr to the model.
 
 set -uo pipefail
 
+# A hook launched from a GUI app, such as Cursor, may not inherit the Nix profile PATH.
+PATH="/etc/profiles/per-user/${USER:-$(id -un)}/bin:$HOME/.nix-profile/bin:$PATH"
+if ! command -v jq >/dev/null; then
+  echo "block-dangerous-git: jq not found, so the git guard did not run." >&2
+  exit 1
+fi
+
 payload=$(cat)
-command=$(jq -r '.tool_input.command // empty' <<<"$payload")
+# tool_input.command in Claude Code, Codex and Cursor's preToolUse; top-level
+# command in Cursor's native beforeShellExecution.
+command=$(jq -r '.tool_input.command // .command // empty' <<<"$payload")
 [[ -z $command ]] && exit 0
 cwd=$(jq -r '.cwd // empty' <<<"$payload")
+
+# Cursor documents the JSON reason, not stderr, as the message for a block.
+block() {
+  jq -cn --arg reason "$1" \
+    '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: $reason}}'
+  echo "$1" >&2
+  exit 2
+}
 
 # Heredoc bodies are data (commit messages, file contents), so prose mentioning a
 # blocked command must not trip the patterns.
@@ -36,8 +53,7 @@ dangerous_patterns=(
 
 for pattern in "${dangerous_patterns[@]}"; do
   if grep -qE "$pattern" <<<"$command"; then
-    echo "BLOCKED: '$command' matches '$pattern'. The user has withheld this command; ask them to run it themselves with the '! ' prefix." >&2
-    exit 2
+    block "BLOCKED: '$command' matches '$pattern'. The user has withheld this command; ask them to run it themselves with the '! ' prefix."
   fi
 done
 
@@ -54,5 +70,4 @@ else
   exit 0
 fi
 
-echo "BLOCKED: '$command' pushes $target. Commit only, then tell the user to push with '! git push'." >&2
-exit 2
+block "BLOCKED: '$command' pushes $target. Commit only, then tell the user to push with '! git push'."
