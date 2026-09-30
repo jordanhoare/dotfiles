@@ -35,7 +35,7 @@ Run `nix build '.#darwinConfigurations.macos.system'` (or the matching `homeConf
 
 **`home.file` preserves the source's mode.** A script needs mode `100755` in git to land executable in the store; there is no `executable` attribute to set. Check with `git ls-files -s <path>`, and verify the result with `ls -l` on the store path, which should read `r-xr-xr-x`. A file committed `100644` lands read-only and any hook or script pointing at it fails silently.
 
-**Skills are bucketed in the repo but flat in the harness.** `home/.claude/skills/` groups skills under `plan/`, `build/`, `health/`, `lang/` and `meta/`, but Claude Code only globs `skills/*/SKILL.md`, one level deep. `base.nix` reads the bucket tree with `builtins.readDir` and emits one flat `home.file` entry per skill, so the buckets never reach `~/.claude/skills`. Moving a skill between buckets is therefore invisible to the harness; adding one needs no module change.
+**Skills are bucketed in the repo but flat in the harness.** `home/.claude/skills/` groups skills under `plan/`, `build/`, `health/`, `lang/` and `meta/`, but Claude Code only globs `skills/*/SKILL.md`, one level deep. `base.nix` reads the bucket tree with `builtins.readDir` and emits flat `home.file` entries per skill, per file into `~/.claude/skills` and as one directory link into `~/.agents/skills` for Codex, so the buckets never reach either root. Moving a skill between buckets is therefore invisible to the harness; adding one needs no module change.
 
 **Link a directory with `recursive = true`.** That makes each file its own symlink into the store, so new files appear without touching the module. Without it the whole directory becomes one symlink and the target must exist exactly as-is.
 

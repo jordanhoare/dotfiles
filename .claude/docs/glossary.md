@@ -50,6 +50,10 @@ A git identity context - either **personal** (`jordanhoare`) or **private** (ano
 
 Each Profile's identity lives in a single file at `~/.config/git/<profile>`, a git-config fragment with `[user]` and `[github]` sections. `config/git/config` loads the personal identity by default via `[include]`, and overrides to private inside the private-repos path via `[includeIf]`. The `git personal` and `git private` aliases switch the active identity by reading from these files and switching the active `gh` account; the `gh` step warns rather than fails if `gh` is not yet authenticated. The personal Profile is committed plaintext and linked by Nix (`nix/modules/profiles.nix`); it is not sensitive. The private Profile is sops-encrypted at `config/git/private.enc` and decrypted by `make secrets` directly to `~/.config/git/private`, outside the repo and outside the world-readable Nix store - so the private username never lands anywhere tracked or shared.
 
+## Skill
+
+A folder holding a `SKILL.md` that Claude Code, Cursor and Codex load as on-demand instructions. Sources live under `home/.claude/skills/<bucket>/<skill>/`. Home Manager links each skill into `~/.claude/skills` and `~/.agents/skills`, both resolving to one store path. A **manual-only** skill loads only when the user names it (`/name`, or `$name` in Codex); it sets `disable-model-invocation: true` and ships an `agents/openai.yaml` sidecar. Distinct from a hook, which the harness runs on an event without the model choosing it. See ADR 0012.
+
 ## Symlink
 
 A filesystem pointer from a target path (e.g. `~/.zshrc`) to the corresponding file in the dotfiles repo. On Linux/WSL/macOS, managed by Home Manager `home.file`. On Windows, managed by `win/bootstrap.ps1` using per-file repo-rooted symlinks (e.g. `%APPDATA%\Zed\settings.json -> D:\repositories\dotfiles\config\zed\settings.json`). In both cases, editing the repo file is immediately reflected in the live application. See also [Windows bootstrap](#windows-bootstrap).
