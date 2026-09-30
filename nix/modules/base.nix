@@ -82,6 +82,10 @@ in
     ".config/uv/uv.toml".source = ../../config/uv/uv.toml;
     ".bunfig.toml".source = ../../home/.bunfig.toml;
 
+    # AGENTS.md is the tool-neutral instruction file. Codex reads it from
+    # ~/.codex; Claude Code reaches it through the @ import in CLAUDE.md.
+    ".claude/AGENTS.md".source     = ../../home/.claude/AGENTS.md;
+    ".codex/AGENTS.md".source      = ../../home/.claude/AGENTS.md;
     ".claude/CLAUDE.md".source     = ../../home/.claude/CLAUDE.md;
     ".claude/settings.json".source = ../../home/.claude/settings.json;
     ".claude/hooks" = {

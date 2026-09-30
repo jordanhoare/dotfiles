@@ -70,11 +70,11 @@ Let them edit before writing.
 
 **Pick the file to edit:**
 
-- If `CLAUDE.md` exists, edit it.
-- Else if `AGENTS.md` exists, edit it.
-- If neither exists, ask the user which one to create; don't pick for them.
+`AGENTS.md` is the target, because Claude Code, Cursor and Codex all read it.
 
-Never create `AGENTS.md` when `CLAUDE.md` already exists (or vice versa); always edit the one that's already there.
+- If `AGENTS.md` exists, edit it.
+- Else if only `CLAUDE.md` exists, edit it, and tell the user that Cursor and Codex read `AGENTS.md`.
+- If neither exists, create `AGENTS.md`, plus a `CLAUDE.md` that holds only `@AGENTS.md` so Claude Code loads it.
 
 If an `## Agent skills` block already exists in the chosen file, update its contents in-place rather than appending a duplicate. Don't overwrite user edits to the surrounding sections.
 
