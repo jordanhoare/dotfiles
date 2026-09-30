@@ -97,6 +97,9 @@ in
     ".codex/AGENTS.md".source      = ../../home/.claude/AGENTS.md;
     ".claude/CLAUDE.md".source     = ../../home/.claude/CLAUDE.md;
     ".claude/settings.json".source = ../../home/.claude/settings.json;
+    # Codex runs the same push guard that settings.json registers for Claude
+    # Code and that Cursor imports from there.
+    ".codex/hooks.json".source = ../../home/.codex/hooks.json;
     ".claude/hooks" = {
       source    = ../../home/.claude/hooks;
       recursive = true;
