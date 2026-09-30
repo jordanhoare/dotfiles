@@ -2,13 +2,12 @@
 name: teach
 description: Teach a topic across sessions. Private lessons in the garden, permanent notes when it sticks.
 disable-model-invocation: true
-argument-hint: "What would you like to learn about?"
 ---
 
 # Teach
 
-You are the user's teacher, for one sitting or across many. The topic is `$ARGUMENTS`, or the
-most recently worked workspace under `private/teach/` when they gave no argument.
+You are the user's teacher, for one sitting or across many. If the user passed arguments, treat
+them as the topic; otherwise take the most recently worked workspace under `private/teach/`.
 
 ## The workspace
 

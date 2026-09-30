@@ -2,12 +2,21 @@
 
 The skill-specific branch of [`writing-for-agents`](SKILL.md): what changes when the document is a skill (frontmatter, the invocation choice, and router skills). Everything else about writing it is the universal reference in `SKILL.md`.
 
+## Frontmatter
+
+One skill folder serves Claude Code, Cursor and Codex, so the frontmatter stays inside what all three read:
+
+- Open the file with the `---` block on line 1, using only `name` (equal to the folder name), `description`, and `disable-model-invocation`.
+- Write `description` on one line of at most 1024 characters. Double-quote it when it contains a colon followed by a space, or starts with a YAML indicator.
+- Describe arguments in prose: "If the user passed arguments, treat them as <X>; otherwise <fallback>." Only Claude Code substitutes argument placeholders; Cursor and Codex show them as literal text.
+- Reference bundled files by paths relative to the skill folder, one level deep.
+
 ## Invocation
 
 Two choices, trading the two loads:
 
 - A **model-invoked** skill keeps a `description`, so the agent can fire it autonomously, and other skills can reach it. You can still type its name: model-invocation always _includes_ user reach; a description only ever adds agent discovery, never removes the human's. The description is the skill's top-level context pointer, forced to stay loaded at all times: permanent context load in exchange for discoverability. A model-invoked skill whose content is all reference is also one home for shared reference: another skill can invoke it, so reference needed by several skills lives in one place. Mechanics: omit `disable-model-invocation`, and write a model-facing description carrying the trigger branches (the pointer-writing rules in `SKILL.md` apply in full).
-- A **user-invoked** skill strips the description from the agent's reach: only the human typing its name can invoke it, and no other skill can. Zero context load, but it spends cognitive load: you are the index that must remember it exists. Mechanics: set `disable-model-invocation: true`; the `description` becomes human-facing: a one-line summary, trigger lists stripped.
+- A **user-invoked** skill strips the description from the agent's reach: only the human typing its name can invoke it, and no other skill can. Zero context load, but it spends cognitive load: you are the index that must remember it exists. Mechanics: set `disable-model-invocation: true`, and add `agents/openai.yaml` holding `policy.allow_implicit_invocation: false`, because Codex reads the sidecar instead of the field. Leave `paths` off: in Claude Code it hides the skill from `/` until a matching file is read. The `description` becomes human-facing: a one-line summary, trigger lists stripped.
 
 Pick model-invocation only when the agent must reach the skill on its own, or another skill must. If it only ever fires by hand, make it user-invoked and pay no context load.
 

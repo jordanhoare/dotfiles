@@ -1,10 +1,6 @@
 ---
 name: dotnet
-description:
-  Guide for working with .NET and C# using the dotnet CLI - building, testing,
-  formatting, managing packages, and configuring analyzers. Use this when
-  editing .csproj/.sln files, running dotnet commands, or setting up build,
-  lint, and dependency conventions in a C# project.
+description: Guide for working with .NET and C# using the dotnet CLI - building, testing, formatting, managing packages, and configuring analyzers. Use this when editing .csproj/.sln files, running dotnet commands, or setting up build, lint, and dependency conventions in a C# project.
 ---
 
 # dotnet
