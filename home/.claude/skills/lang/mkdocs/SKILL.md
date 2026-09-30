@@ -10,7 +10,7 @@ This project uses [MkDocs Material](https://squidfunk.github.io/mkdocs-material/
 ## When to use
 
 This skill is the docs side of the documentation-discipline loop defined in
-the project's [AGENTS.md](../../../AGENTS.md). Code changes are not complete
+the project's `AGENTS.md`. Code changes are not complete
 until the docs change in the same commit. Load this skill when any of these
 trigger:
 

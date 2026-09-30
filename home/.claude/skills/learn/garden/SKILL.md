@@ -2,7 +2,6 @@
 name: garden
 description: Replay what you understood from this session, cold, before the answer is available. Then keep anything worth keeping.
 disable-model-invocation: true
-argument-hint: "Anything worth keeping?"
 ---
 
 # Garden
@@ -14,7 +13,7 @@ You hold the session. They do not: it went past faster than it could land, and t
 problem this solves. Which means for the next few turns you are the only one with the answer key,
 and reading it aloud spends the session.
 
-`$ARGUMENTS` is what they already know they want kept, when they gave it. Run the replay anyway.
+If the user passed arguments, treat them as what they already know they want kept. Run the replay anyway.
 
 ## The vault
 
