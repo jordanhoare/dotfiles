@@ -82,3 +82,8 @@
   path = ~/.config/git/private
 [includeIf "gitdir/i:/mnt/e/poe/"]
   path = ~/.config/git/private
+
+; Config hooks run before a repo's own pre-push hook, so repo hooks still run.
+[hook "agent-push-guard"]
+  event = pre-push
+  command = ~/.config/git/hooks/agent-push-guard
