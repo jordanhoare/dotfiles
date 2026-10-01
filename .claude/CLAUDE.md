@@ -10,7 +10,7 @@ Personal dotfiles for Jordan Hoare. Managed via Nix and Home Manager across thre
 
 | Package | Target | Contents |
 |---|---|---|
-| `home/` | `~` | `.zshrc`, `.zlogin`, `.zprofile`, `.zshenv`, `.ssh/config` |
+| `home/` | `~` | `.zshrc`, `.zlogin`, `.zprofile`, `.zshenv`, `.ssh/config`, `.claude/`, `.codex/` |
 | `config/` | `~/.config` | `git/`, `gh/`, `ghostty/`, `mise/`, `uv/`, `sheldon/`, etc. |
 | `bin/` | `~/bin` | Personal executable scripts |
 | `etc/` | `/etc` | `timezone`, `locale.conf` - Linux/WSL only, applied manually |

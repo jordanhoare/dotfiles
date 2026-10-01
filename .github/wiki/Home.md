@@ -10,6 +10,13 @@ Fresh machine? Bootstrap from [macOS](MacOS), [Linux](Linux), or [Windows](Windo
 up # updates flake.lock, switches, and upgrades all other tools
 ```
 
+## Coding agents
+
+`make switch` links the agent layer for Claude Code, Cursor and Codex ([ADR 0012](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0012-agent-layer-for-claude-cursor-codex.md)). Two steps stay manual on each machine:
+
+1. **Cursor:** paste `~/.claude/AGENTS.md` into Settings → Rules → User Rules, and again after it changes. Keep the third-party toggle on so Cursor imports the git guard.
+2. **Codex:** trust `block-dangerous-git.sh` in `/hooks`.
+
 ## Adding tools
 
 Edit `nix/modules/base.nix` (or the relevant platform module) and run `make switch`. Never install tools manually.

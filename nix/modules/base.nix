@@ -6,6 +6,9 @@ let
   # deep, so each skill is linked flat into ~/.claude/skills and the buckets stay
   # a repo-side concern. Discovery is automatic: a new skill or a whole new
   # bucket needs no change here.
+  # Codex skips symlinked files, so ~/.agents/skills gets one directory link per
+  # skill. ~/.claude/skills stays per-file: a directory link there would collide
+  # with the existing links on activation.
   skillsRoot = ../../home/.claude/skills;
 
   subdirsOf = path:
@@ -14,12 +17,15 @@ let
   skillLinks = lib.listToAttrs (
     lib.concatMap
       (bucket:
-        map
+        lib.concatMap
           (skill:
-            lib.nameValuePair ".claude/skills/${skill}" {
-              source = skillsRoot + "/${bucket}/${skill}";
-              recursive = true;
-            })
+            let source = skillsRoot + "/${bucket}/${skill}"; in [
+              (lib.nameValuePair ".claude/skills/${skill}" {
+                inherit source;
+                recursive = true;
+              })
+              (lib.nameValuePair ".agents/skills/${skill}" { inherit source; })
+            ])
           (subdirsOf (skillsRoot + "/${bucket}")))
       (subdirsOf skillsRoot)
   );
@@ -82,8 +88,11 @@ in
     ".config/uv/uv.toml".source = ../../config/uv/uv.toml;
     ".bunfig.toml".source = ../../home/.bunfig.toml;
 
+    ".claude/AGENTS.md".source     = ../../home/.claude/AGENTS.md;
+    ".codex/AGENTS.md".source      = ../../home/.claude/AGENTS.md;
     ".claude/CLAUDE.md".source     = ../../home/.claude/CLAUDE.md;
     ".claude/settings.json".source = ../../home/.claude/settings.json;
+    ".codex/hooks.json".source = ../../home/.codex/hooks.json;
     ".claude/hooks" = {
       source    = ../../home/.claude/hooks;
       recursive = true;
