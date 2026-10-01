@@ -9,5 +9,6 @@
   home.file = {
     ".config/git/config".source = ../../config/git/config;
     ".config/git/attributes".source = ../../config/git/attributes;
+    ".config/git/hooks/agent-push-guard".source = ../../config/git/hooks/agent-push-guard;
   };
 }

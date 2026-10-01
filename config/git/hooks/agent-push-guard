@@ -1,0 +1,12 @@
+#!/bin/sh
+# Refuses a push to main or master that an agent started; a human push goes through.
+# CLAUDECODE is not checked: IDE terminals set it for humans too.
+[ -n "${CLAUDE_CODE_CHILD_SESSION-}${CURSOR_AGENT-}${CODEX_THREAD_ID-}" ] || exit 0
+while read -r _ _ remote_ref _; do
+  case $remote_ref in
+    refs/heads/main | refs/heads/master)
+      echo "agents don't push ${remote_ref#refs/heads/}: push a branch and open a PR" >&2
+      exit 1
+      ;;
+  esac
+done
