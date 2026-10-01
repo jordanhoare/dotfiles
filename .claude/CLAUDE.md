@@ -17,15 +17,7 @@ Personal dotfiles for Jordan Hoare. Managed via Nix and Home Manager across thre
 
 Only files declared in `nix/modules/base.nix` (or a platform module) are linked. Everything else in `~/.config/` is untouched.
 
-### Agent layer
-
-`home/.claude/` holds the personal layer for Claude Code, Cursor and Codex (ADR 0012):
-
-- `AGENTS.md` is the tool-neutral instruction file, linked to `~/.codex/AGENTS.md` and `~/.claude/AGENTS.md`. `CLAUDE.md` imports it and adds only Claude Code lines.
-- `hooks/block-dangerous-git.sh` is the git guard. `settings.json` registers it for Claude Code and Cursor, and `home/.codex/hooks.json` for Codex.
-- Skills follow the frontmatter rule in `skills/meta/writing-for-agents/mechanics.md`.
-
-### Skills
+### Claude skills
 
 `home/.claude/skills/` is bucketed by lifecycle for navigation:
 
@@ -39,8 +31,7 @@ Only files declared in `nix/modules/base.nix` (or a platform module) are linked.
 | `meta/` | ask, commits, domain, technical-writing, wait-what, wizard, writing-for-agents |
 
 Claude Code only globs `skills/*/SKILL.md`, one level deep, so `base.nix` reads the
-bucket tree and links every skill **flat** into `~/.claude/skills`, and again into
-`~/.agents/skills` as one directory link for Codex and Cursor. The buckets never
+bucket tree and links every skill **flat** into `~/.claude/skills`. The buckets never
 reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 
 ### Nix modules

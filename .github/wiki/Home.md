@@ -12,12 +12,10 @@ up # updates flake.lock, switches, and upgrades all other tools
 
 ## Coding agents
 
-`make switch` links the personal agent layer for Claude Code, Cursor and Codex: `~/.claude/AGENTS.md` and `~/.codex/AGENTS.md`, skills in `~/.claude/skills` and `~/.agents/skills`, and the git guard hook. Two steps stay manual on each machine:
+`make switch` links the agent layer for Claude Code, Cursor and Codex ([ADR 0012](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0012-agent-layer-for-claude-cursor-codex.md)). Two steps stay manual on each machine:
 
-1. **Cursor:** paste the contents of `~/.claude/AGENTS.md` into Cursor Settings → Rules → User Rules. Cursor keeps User Rules in its settings, not in a file, so re-paste after `AGENTS.md` changes. Leave "Include Third-Party Plugins, Skills, and Other Configs" on, so Cursor imports the git guard from `~/.claude/settings.json`.
-2. **Codex:** run `/hooks` and trust the `block-dangerous-git.sh` hook. Codex skips a new or changed hook until it is trusted.
-
-See [ADR 0012](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0012-agent-layer-for-claude-cursor-codex.md).
+1. **Cursor:** paste `~/.claude/AGENTS.md` into Settings → Rules → User Rules, and again after it changes. Keep the third-party toggle on so Cursor imports the git guard.
+2. **Codex:** trust `block-dangerous-git.sh` in `/hooks`.
 
 ## Adding tools
 
