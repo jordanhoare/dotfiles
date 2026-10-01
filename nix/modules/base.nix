@@ -6,12 +6,9 @@ let
   # deep, so each skill is linked flat into ~/.claude/skills and the buckets stay
   # a repo-side concern. Discovery is automatic: a new skill or a whole new
   # bucket needs no change here.
-  #
-  # Codex reads ~/.agents/skills and skips symlinked files, so each skill also
-  # lands there as one directory link. Both links resolve to the same store
-  # path, which is how Cursor, reading both roots, lists each skill once.
-  # ~/.claude/skills stays per-file: switching an existing directory of links
-  # to a single link would collide on activation.
+  # Codex skips symlinked files, so ~/.agents/skills gets one directory link per
+  # skill. ~/.claude/skills stays per-file: a directory link there would collide
+  # with the existing links on activation.
   skillsRoot = ../../home/.claude/skills;
 
   subdirsOf = path:
@@ -91,14 +88,10 @@ in
     ".config/uv/uv.toml".source = ../../config/uv/uv.toml;
     ".bunfig.toml".source = ../../home/.bunfig.toml;
 
-    # AGENTS.md is the tool-neutral instruction file. Codex reads it from
-    # ~/.codex; Claude Code reaches it through the @ import in CLAUDE.md.
     ".claude/AGENTS.md".source     = ../../home/.claude/AGENTS.md;
     ".codex/AGENTS.md".source      = ../../home/.claude/AGENTS.md;
     ".claude/CLAUDE.md".source     = ../../home/.claude/CLAUDE.md;
     ".claude/settings.json".source = ../../home/.claude/settings.json;
-    # Codex runs the same push guard that settings.json registers for Claude
-    # Code and that Cursor imports from there.
     ".codex/hooks.json".source = ../../home/.codex/hooks.json;
     ".claude/hooks" = {
       source    = ../../home/.claude/hooks;

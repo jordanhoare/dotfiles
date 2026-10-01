@@ -1,21 +1,11 @@
 #!/usr/bin/env bash
 # PreToolUse hook: refuse destructive git commands and pushes to main before an agent
-# runs them. Claude Code and Codex register it directly, and Cursor imports it from
-# ~/.claude/settings.json. All three block on exit 2 and pass stderr to the model.
+# runs them. Exit 2 blocks the call and feeds stderr back to the model.
 
 set -uo pipefail
 
-# A hook launched from a GUI app, such as Cursor, may not inherit the Nix profile PATH.
-PATH="/etc/profiles/per-user/${USER:-$(id -un)}/bin:$HOME/.nix-profile/bin:$PATH"
-if ! command -v jq >/dev/null; then
-  echo "block-dangerous-git: jq not found, so the git guard did not run." >&2
-  exit 1
-fi
-
 payload=$(cat)
-# tool_input.command in Claude Code, Codex and Cursor's preToolUse; top-level
-# command in Cursor's native beforeShellExecution.
-command=$(jq -r '.tool_input.command // .command // empty' <<<"$payload")
+command=$(jq -r '.tool_input.command // empty' <<<"$payload")
 [[ -z $command ]] && exit 0
 cwd=$(jq -r '.cwd // empty' <<<"$payload")
 
