@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 You don't remember every skill, so ask.
 
+Before stating what a skill does or recommending a step be skipped, read that skill's SKILL.md: the summaries here are for orientation only.
+
 A **flow** is a path through the skills. Most work runs along one **main flow**, and three **on-ramps** merge onto it. Everything else is standalone, or a vocabulary layer that runs underneath.
 
 ## The main flow: idea to ship
@@ -19,16 +21,22 @@ The route most work travels. You have an idea and want it built.
 2. **Branch: can you settle every question in conversation?** If a question needs a runnable answer (a state model, business logic, a UI you have to see), detour through **`/prototype`** to answer it with throwaway code, then come back.
 
 3. **Branch: is this a multi-session build?**
-   - **Yes** → **`/prd`** turns the thread into a PRD, then **`/issue`** splits it into tracer-bullet issues, each declaring its **blocking edges**. (Upstream these are `to-spec` and `to-tickets`.) Work the **frontier**: any issue whose blockers are done. Kick off **`/implement`** per issue, clearing context between each one.
+   - **Yes** → **`/prd`** turns the thread into a PRD, then **`/issue`** splits it into tracer-bullet issues, each declaring its **blocking edges**. (Upstream these are `to-spec` and `to-tickets`.) Then work the issues one of two ways:
+     - **`/implement`** per issue, clearing context between each one. Work the **frontier**: any issue whose blockers are done.
+     - **`/implement-spec`** for the whole PRD in one run. It reads the issues as a **task graph**, runs implementer subagents across the ready frontier in parallel, lands everything on one **integration branch**, and ships that as a single PR. Reach for it when you'd rather orchestrate the build than drive each issue yourself.
    - **No** → **`/implement`** right here, in the same window.
 
-   Either way **`/implement`** drives **`/tdd`** internally at pre-agreed seams, one red-green slice at a time, runs **`/review`** over the diff, then ships: feature branch, commits, pushed PR, CI watched to green, PR link back to you. On main it commits only and hands the push to you. Reach for **`/tdd`** alone to build one concrete behaviour test-first without a full PRD, and **`/review`** alone to review a branch against a fixed point.
+   Either way **`/implement`** drives **`/tdd`** internally at pre-agreed seams, one red-green slice at a time, then ships: feature branch, commits, pushed PR, CI watched to green, **`/review`** over the PR (accepted findings pushed, declined ones posted with reasons as one PR comment), CI green again, PR link back to you. It never merges. On main it reviews locally, commits only, and hands the push to you. Reach for **`/tdd`** alone to build one concrete behaviour test-first without a full PRD, and **`/review`** alone to review a branch against a fixed point.
+
+   **`/pr`** shapes every PR body: the smallest visual that shows the change, before/after evidence, and a one-way or two-way door call. It's model-invoked, so it fires whenever a PR gets written.
 
 4. **`/commits`** carries the conventional-commit format and casing. It's model-invoked, so it fires on its own when you commit.
 
+5. **`/retro`** closes the loop. After a build, especially one that went sideways, it looks back over the session and suggests changes to the agent's **environment**, not the code: navigation pointers, automated checks, the coding standards `/review` enforces, steering files, tooling. Mechanical mistakes become deterministic checks; judgement calls become coding standards.
+
 ### Context hygiene
 
-Keep steps 1 to 3 in **one unbroken context window** so the grilling, PRD, and issues all build on the same thinking. Each `/implement` then starts fresh from its issue, which is self-contained by construction, so the previous one's context is disposable.
+Keep steps 1 to 3 in **one unbroken context window** so the grilling, PRD, and issues all build on the same thinking. Each `/implement` then starts fresh from its issue, which is self-contained by construction, so the previous one's context is disposable. Run `/retro` in the session it's looking back on, before you clear; after clearing, point it at that session's log instead.
 
 ## On-ramps
 
@@ -36,7 +44,7 @@ A starting situation that generates work, then merges onto the main flow.
 
 - **Bugs and requests piling up** → **`/triage`**. Moves issues and external PRs through triage roles and produces agent-ready briefs, which `/implement` later picks up. Triage is only for issues **you didn't create**; what `/issue` produced is already agent-ready, so don't triage it.
 
-- **Something's broken** → **`/debug`**. For the hard ones: the bug that resists a first glance, the intermittent flake, the regression between two known-good states. It refuses to theorise until it has a tight feedback loop that already goes red on *this* bug, then fixes with a regression test. When the real finding is that there's no good seam to lock the bug down, it hands off to `/architecture`.
+- **Something's broken** → **`/debug`**. For the hard ones: the bug that resists a first glance, the intermittent flake, the regression between two known-good states. It refuses to theorise until it has a tight feedback loop that already goes red on *this* bug, then fixes with a regression test. Once the fix is in, run **`/retro`** in the same session to ask what would have prevented the bug; where the real finding is that there's no good seam to lock it down, that's a job for `/architecture`.
 
 - **A huge, foggy effort, too big for one session** → **`/wayfinder`**. When the way to the destination isn't visible yet, it charts a **shared map** of **decision tickets** on the tracker and resolves them one at a time, producing decisions rather than deliverables. Where `/grill` sharpens an idea you can hold in one session, wayfinder is for the one you can't. When the map clears it hands off rather than building: merge onto the main flow at `/prd`.
 

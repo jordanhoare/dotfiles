@@ -56,7 +56,8 @@ A lesson that only re-presents material builds fluency strength and stops there.
 
 **Quiz answers are uniform.** Every option in a question gets the same word count, and the same
 character count where the wording allows. Formatting, length, and specificity all leak the
-answer, so hold them constant across options.
+answer, so hold them constant across options. Vary which position holds the correct answer
+across questions, so order leaks nothing either.
 
 ## Reference sheets
 

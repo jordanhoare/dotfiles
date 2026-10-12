@@ -60,7 +60,7 @@ Iterate until the user approves the breakdown.
 Publish the approved issues. **How** depends on the tracker `/setup` configured; the issues are the same either way, only the shape of the blocking edges changes:
 
 - **Local files** → write one file per issue under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-issue file template below: one issue per file, never a single combined file.
-- **A real issue tracker (GitHub, Linear, …)** → publish one issue per slice in dependency order (blockers first) so each issue's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each issue's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise; the issues are agent-grabbable by construction.
+- **A real issue tracker (GitHub, Linear, …)** → publish one issue per slice in dependency order (blockers first) so each issue's blocking edges can reference real identifiers. Use the platform's native blocking relationship where it has one; otherwise set each issue's "Blocked by" to the blocking issues. If the source was an existing issue, make each issue its sub-issue (tracker doc's operation). Apply the `ready-for-agent` triage label unless instructed otherwise; the issues are agent-grabbable by construction.
 
 Work the **frontier**: any issue whose blockers are all done. For a purely linear chain that means top to bottom.
 
@@ -98,7 +98,7 @@ The end-to-end behaviour this issue makes work, from the user's perspective, not
 
 ## Blocked by
 
-- A reference to each blocking issue, or "None (can start immediately)".
+- A reference to each blocking issue, or "None (can start immediately)". Omit this section when blockers were set as native edges.
 
 </issue-template>
 
