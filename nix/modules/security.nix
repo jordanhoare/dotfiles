@@ -22,6 +22,10 @@ in
 {
   programs.firefox = {
     enable = true;
+    # home-manager 26.05 moved the default to $XDG_CONFIG_HOME/mozilla/firefox.
+    # Pin the legacy location so the pre-existing profile at ~/.mozilla/firefox
+    # keeps working without a filesystem migration.
+    configPath = ".mozilla/firefox";
     package = pkgs.firefox.override {
       extraPrefs = mozillaCfg;
     };
@@ -199,7 +203,7 @@ in
   };
 
   # ProtonVPN: macOS uses a Homebrew cask (declared in macos.nix).
-  home.packages = lib.optionals (!pkgs.stdenv.isDarwin) [
-    pkgs.protonvpn-gui
+  home.packages = lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
+    pkgs.proton-vpn
   ];
 }
