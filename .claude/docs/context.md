@@ -18,7 +18,7 @@ The **macOS** path activates as root via sudo (nix-darwin requires it). sudo's `
 
 A user without the maintainer's SSH keys does not get the private git identity linked (gated by `builtins.pathExists` on the decrypted secret); nothing else is affected.
 
-On WSL all repositories including dotfiles live at `/mnt/d/repositories/`. Project repos are cross-compiled or Windows-targeted, requiring native Windows filesystem access. The git performance cost of the 9P layer is an accepted tradeoff. See ADR 0006.
+On WSL all repositories including dotfiles live at `/mnt/d/repositories/`. Project repos are cross-compiled or Windows-targeted, requiring native Windows filesystem access. The git performance cost of the 9P layer is an accepted tradeoff. See ADR 0006. Git worktrees are throwaway and live at `~/worktrees/` on the WSL filesystem instead. See ADR 0013.
 
 ## In scope
 

@@ -29,6 +29,11 @@ Switching:
 - `git private` switches to the anon profile
 - Auto-switches for repos under `/mnt/d/repositories/private/` via `includeIf` (WSL only; other platforms switch explicitly)
 
+Worktrees:
+
+- Create git worktrees at `~/worktrees/<repo>/<name>` (e.g. `~/worktrees/reliquia/wt-545`); `git worktree add` creates the parent directories
+- The rule holds on every platform. On WSL it keeps worktrees on ext4, which writes many small files far faster than `/mnt/d` (ADR 0013)
+
 SSH clone syntax:
 
 - `git clone git@personal:<user>/<repository>.git`

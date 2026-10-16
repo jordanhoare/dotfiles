@@ -18,6 +18,12 @@
   ignorecase = false
   pager = delta
 
+; Each file write to /mnt/d (drvfs/9p) on WSL is slow, and checkout writes files one at a
+; time without workers; a 17.7k-file worktree checkout took several minutes.
+[checkout]
+  workers = 8
+  thresholdForParallelism = 100
+
 [interactive]
   diffFilter = delta --color-only
 
