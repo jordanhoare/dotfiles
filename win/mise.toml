@@ -1,0 +1,19 @@
+# Windows global mise config, linked to %USERPROFILE%\.config\mise\config.toml by
+# bootstrap.ps1. Slimmer than config/mise/config.toml: most tools there are Linux or
+# infrastructure tools that only run in WSL. See ADR 0014.
+
+[settings]
+trusted_config_paths = ['D:\repositories']
+auto_install = true
+jobs = 4
+python.compile = false
+# A global rust entry sets RUSTUP_TOOLCHAIN, which outranks a repo's
+# rust-toolchain.toml; reading the file lets the repo pin win.
+idiomatic_version_file_enable_tools = ["rust"]
+
+[tools]
+rust = "1.96"
+uv = "0.11"
+python = "3.14"
+node = "24.16"
+bun = "1.3"

@@ -26,7 +26,13 @@ From an elevated PowerShell (or any PowerShell if Developer Mode is enabled in *
 D:\repositories\dotfiles\win\bootstrap.ps1
 ```
 
-Imports every app declared in `win/winget.json` (WSL, Obsidian, Bitwarden, Docker Desktop, Firefox, Claude Code, the GitHub CLI (`gh`), Windows Terminal, and Zed) and creates per-file symlinks under `%APPDATA%` so Windows-side Zed reads config straight from the repo. Idempotent - safe to re-run after editing `win/winget.json` or adding files under `config/zed/`.
+Imports every app declared in `win/winget.json`, then links the Zed, mise, uv, git, SSH and Claude Code configs from the repo and puts mise's shims on the user `Path`. Idempotent - safe to re-run after editing `win/winget.json`, adding a skill, or adding files under `config/zed/`. See [ADR 0014](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0014-native-windows-development.md) for native Windows development.
+
+Then restore the personal SSH key and gh login from Bitwarden:
+
+```powershell
+D:\repositories\dotfiles\win\secrets.ps1
+```
 
 Ghostty has no official Windows release as of mid-2026 and community ports do not meet the bar for inclusion. Windows-side terminal use defaults to Windows Terminal (preinstalled on Windows 11, declared in `winget.json` for explicitness); the actual Ghostty runs inside WSL via `make switch`.
 

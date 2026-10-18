@@ -50,6 +50,9 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 | File | Purpose |
 |---|---|
 | `win/winget.json` | Declarative Windows app list |
+| `win/bootstrap.ps1` | Windows counterpart to `make switch`: winget import plus config links (ADR 0011, 0014) |
+| `win/mise.toml` | Windows global mise config, smaller than `config/mise/config.toml` |
+| `win/secrets.ps1` | Restores the personal SSH key and gh login from Bitwarden |
 | `win/README.md` | Windows bootstrap steps |
 
 ### Non-managed directories

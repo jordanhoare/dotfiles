@@ -16,7 +16,11 @@
         { "PackageIdentifier": "Kitware.CMake" },
         { "PackageIdentifier": "Microsoft.VisualStudio.2022.BuildTools" },
         { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
-        { "PackageIdentifier": "ezwinports.make" }
+        { "PackageIdentifier": "ezwinports.make" },
+        { "PackageIdentifier": "jdx.mise" },
+        { "PackageIdentifier": "Bitwarden.CLI" },
+        { "PackageIdentifier": "jqlang.jq" },
+        { "PackageIdentifier": "dandavison.delta" }
       ],
       "SourceDetails": {
         "Argument": "https://cdn.winget.microsoft.com/cache",

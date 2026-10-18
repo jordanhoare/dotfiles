@@ -48,4 +48,5 @@ Stateful credential directories (`.azure`, `.aws`) are **out of scope** for the 
 - Windows-side editor UI edits land directly in the repo working tree, visible to `git status`. This contradicts ADR 0007's "intentionally ephemeral" stance, which is preserved only on the WSL side via Home Manager's read-only symlinks. The Windows side accepts a different policy: edits are real and either committed or discarded.
 - The link manifest is duplicated between `nix/modules/zed.nix` and `win/bootstrap.ps1`. At the current size (5 entries) the cost of keeping them in sync by hand is lower than the cost of building a shared manifest abstraction. Worth revisiting only if the managed-editor file count grows materially.
 - `winget import` is naturally idempotent; re-running the script is safe.
+- ADR 0014 extends the manifest with the mise, uv, git, ssh and Claude Code agent layer for native Windows development.
 - If the editor decision is ever revisited (see ADR 0010), `bootstrap.ps1`'s symlink manifest is the only Windows-side surface that needs editing, alongside the corresponding Nix module.

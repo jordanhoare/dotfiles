@@ -3,17 +3,18 @@
 ## Identity
 
 - GitHub: `jordanhoare`
-- Primary platform: WSL (Ubuntu on Windows), also native Linux and macOS
-- Repositories live at `/mnt/d/repositories/` on WSL, `~/repositories/` on macOS and native Linux (ADR 0006)
+- Platforms: WSL (Ubuntu on Windows), native Windows, native Linux, and macOS. Projects that build Windows binaries are developed on native Windows (ADR 0014)
+- Repositories live at `D:\repositories\` on Windows, seen from WSL as `/mnt/d/repositories/` (ADR 0006), and at `~/repositories/` on macOS and native Linux
 
 ## Dotfiles
 
-Everything below is managed by the dotfiles repo, cloned to `/mnt/d/repositories/dotfiles` on WSL and `~/repositories/dotfiles` on macOS and native Linux.
+Everything below is managed by the dotfiles repo, cloned to `D:\repositories\dotfiles` on Windows and WSL and `~/repositories/dotfiles` on macOS and native Linux.
 
 - Nix + Home Manager own package installs and dotfile symlinks; nix-darwin adds macOS system config
 - `make switch` activates the config for the detected platform
 - `make secrets` restores SSH keys from Bitwarden and decrypts the private git identity
 - To add a tool, declare it in `nix/modules/base.nix` or the platform module and run `make switch`. Never install manually
+- Native Windows has no Nix: `win/bootstrap.ps1` imports `win/winget.json` and links the same configs, and `win/secrets.ps1` restores the personal SSH key. Declare a Windows tool in `win/winget.json`, or in `win/mise.toml` for a runtime
 - The repo carries its own `.claude/CLAUDE.md`, ADRs, and glossary. Read those when working inside it
 
 ## Git identity / profiles
@@ -28,6 +29,7 @@ Switching:
 - `git personal` switches identity and runs `gh auth switch`
 - `git private` switches to the anon profile
 - Auto-switches for repos under `/mnt/d/repositories/private/` via `includeIf` (WSL only; other platforms switch explicitly)
+- The private profile is WSL-only. Native Windows has the personal profile alone
 
 Worktrees:
 
@@ -49,7 +51,7 @@ Never hardcode the private GitHub username in any public file.
 - **Runtimes:** mise, which reads `.nvmrc` automatically
 - **JS packages:** bun and bunx
 
-Runtimes (node, python, go) come from mise, never Nix. JS packages execute through bun/bunx.
+Runtimes (node, python, go, rust) come from mise, never Nix or winget. mise drives rustup, and a repo's `rust-toolchain.toml` pins its Rust. JS packages execute through bun/bunx. On native Windows, Claude Code runs Bash through Git Bash, and the terminal is Windows Terminal.
 
 ## Before starting any task
 
