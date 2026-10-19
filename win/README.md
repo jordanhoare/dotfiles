@@ -24,7 +24,7 @@ From an elevated PowerShell (or any PowerShell if Developer Mode is enabled in S
 D:\repositories\dotfiles\win\bootstrap.ps1
 ```
 
-The script runs `winget import` against `win/winget.json`, then links the Zed, mise, uv, git, SSH and Claude Code configs from the repo into `%APPDATA%` and `%USERPROFILE%`, and puts mise's shims on the user `Path`. Idempotent: safe to re-run after adding apps to `winget.json`, skills, or files to `config/zed/`. See ADR 0011 and ADR 0014.
+The script runs `winget import` against `win/winget.json`, then links the Zed, mise, uv, git, SSH and Claude Code configs from the repo into `%APPDATA%` and `%USERPROFILE%`, puts mise's shims on the user `Path`, and strips nvm for Windows from the `Path` and environment because runtimes come from mise (ADR 0002). Idempotent: safe to re-run after adding apps to `winget.json`, skills, or files to `config/zed/`. See ADR 0011 and ADR 0014.
 
 Open a new shell afterwards so the `Path` change applies.
 

@@ -131,6 +131,38 @@ if (($userPath -split ';') -notcontains $shims) {
     Write-Host "ok     $shims on PATH" -ForegroundColor DarkGray
 }
 
+# Runtimes come from mise (ADR 0002). nvm for Windows writes itself into the
+# machine Path, which Windows searches before the user Path, so its node.exe
+# outranks mise's shims and tools that resolve `node` by Path pick the wrong
+# runtime. Strip its Path entries and variables from both scopes. Machine
+# scope needs elevation; Developer Mode alone only covers the user scope.
+$strayRuntimePaths = @('C:\ProgramData\nvm', 'C:\nvm4w\nodejs')
+$strayRuntimeVars = @('NVM_HOME', 'NVM_SYMLINK')
+foreach ($scope in @('User', 'Machine')) {
+    if ($scope -eq 'Machine' -and -not $elevated) {
+        $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine') -split ';'
+        if ($machinePath | Where-Object { $strayRuntimePaths -contains $_ }) {
+            Write-Host 'warn   machine Path still lists nvm for Windows: re-run elevated to remove it' -ForegroundColor Yellow
+        }
+        continue
+    }
+    $current = [Environment]::GetEnvironmentVariable('Path', $scope) -split ';' | Where-Object { $_ -ne '' }
+    $kept = $current | Where-Object { $strayRuntimePaths -notcontains $_ }
+    if ($kept.Count -ne $current.Count) {
+        [Environment]::SetEnvironmentVariable('Path', ($kept -join ';'), $scope)
+        Write-Host "path   removed nvm for Windows from the $scope Path" -ForegroundColor Green
+    }
+    foreach ($name in $strayRuntimeVars) {
+        if ($null -ne [Environment]::GetEnvironmentVariable($name, $scope)) {
+            [Environment]::SetEnvironmentVariable($name, $null, $scope)
+            Write-Host "env    removed $name ($scope)" -ForegroundColor Green
+        }
+    }
+}
+if (winget list --id CoreyButler.NVMforWindows --exact --accept-source-agreements 2>$null | Select-String 'CoreyButler.NVMforWindows') {
+    Write-Host 'warn   nvm for Windows is installed; runtimes come from mise: winget uninstall --id CoreyButler.NVMforWindows' -ForegroundColor Yellow
+}
+
 if (-not (Test-Path -LiteralPath (Join-Path $env:USERPROFILE '.ssh\personal'))) {
     Write-Host 'warn   ~/.ssh/personal missing: run win\secrets.ps1 so git@personal remotes resolve' -ForegroundColor Yellow
 }
