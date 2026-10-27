@@ -81,7 +81,7 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 mise tasks        # list every task
 mise run switch   # activate the platform config (nix-darwin, Home Manager, or win/bootstrap.ps1)
 mise run secrets  # restore SSH keys from Bitwarden, decrypt git identity to ~/.config/git/private
-mise run hooks    # install pre-commit hooks
+mise run hooks    # install the git hooks (prek)
 mise run decrypt  # decrypt SOPS-encrypted git identity to ~/.config/git/private
 mise run up       # self-update mise, update flake.lock, switch, upgrade all tools
 ```

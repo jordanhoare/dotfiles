@@ -2,6 +2,21 @@
 # No [env] table: it would reach every task, so a task sets its own env.
 min_version = "2026.10.3"
 
+# Every tool here must install without the baseline: on a fresh machine
+# `mise run bootstrap` installs them before the baseline is linked, so nothing
+# that needs uv, node or another runtime. actionlint and stylua match the
+# baseline's pins.
+[tools]
+prek = "0.5.7"
+shellcheck = "0.11.0"
+shfmt = "3.14.1"
+taplo = "0.10.0"
+gitleaks = "8.30.1"
+zizmor = "1.31.1"
+editorconfig-checker = "4.0.2"
+actionlint = "1.7"
+stylua = "2.5"
+
 [tasks.bootstrap]
 description = "fresh machine: install nix, activate the platform config, install runtimes"
 depends = ["nix", "switch", "tools"]
@@ -38,5 +53,6 @@ run = "sops --encrypt --output config/git/private.enc ~/.config/git/private"
 run_windows = 'echo the private profile is wsl-only'
 
 [tasks.hooks]
-description = "install the pre-commit hooks"
-run = ["pre-commit install", "pre-commit install --hook-type commit-msg"]
+description = "install the git hooks"
+# --force drops the hooks pre-commit installed, which fail under prek.
+run = "prek install --force"

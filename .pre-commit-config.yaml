@@ -1,40 +1,81 @@
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: detect-private-key
       - id: check-added-large-files
-        args: ["--maxkb=500"]
+        args: [--maxkb=500]
       - id: check-merge-conflict
       - id: check-yaml
       - id: check-toml
+      - id: check-json
+        # Zed writes JSONC.
+        exclude: ^config/zed/
+      - id: mixed-line-ending
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.44.0
     hooks:
       - id: markdownlint-fix
-        args:
-          - --disable
-          - MD001
-          - MD003
-          - MD013
-          - MD024
-          - MD025
-          - MD026
-          - MD029
-          - MD033
-          - MD034
-          - MD036
-          - MD040
-          - MD041
-          - MD055
-          - MD056
-          - --
 
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.5.0
+  - repo: local
     hooks:
-      - id: detect-secrets
-        exclude: ^config/nvim/lazy-lock\.json$
+      - id: gitleaks
+        name: gitleaks
+        entry: mise exec -- gitleaks git --staged --redact --no-banner
+        language: system
+        pass_filenames: false
+
+      - id: taplo-format
+        name: taplo format
+        entry: mise exec -- taplo format
+        language: system
+        types: [toml]
+      - id: taplo-lint
+        name: taplo lint
+        entry: mise exec -- taplo lint
+        language: system
+        types: [toml]
+
+      # types: [shell] also matches zsh, which shellcheck and shfmt reject.
+      - id: shellcheck
+        name: shellcheck
+        entry: mise exec -- shellcheck
+        language: system
+        types_or: [sh, bash]
+        # Skill templates carry placeholders that the copying project fills in.
+        exclude: ^home/\.claude/skills/.*template\.sh$
+      - id: shfmt
+        name: shfmt
+        entry: mise exec -- shfmt
+        language: system
+        types_or: [sh, bash]
+        args: [-i, "2", -ci, -w]
+
+      - id: stylua
+        name: stylua
+        entry: mise exec -- stylua
+        language: system
+        types: [lua]
+
+      - id: actionlint
+        name: actionlint
+        entry: mise exec -- actionlint
+        language: system
+        files: ^\.github/workflows/
+      - id: zizmor
+        name: zizmor
+        entry: mise exec -- zizmor --config zizmor.yml
+        language: system
+        files: ^\.github/workflows/
+
+      - id: editorconfig-checker
+        name: editorconfig-checker
+        entry: mise exec -- editorconfig-checker
+        language: system
+        # sops writes the encrypted file.
+        exclude: ^config/git/private\.enc$

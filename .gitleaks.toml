@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+# detect-secrets kept sha1 hashes of its findings here. The file is gone from the
+# tree but stays in history, where a full scan reads each hash as a key.
+[[allowlists]]
+description = "detect-secrets baseline"
+paths = ['''^\.secrets\.baseline$''']

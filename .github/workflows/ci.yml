@@ -26,13 +26,22 @@ on:
       - .github/workflows/ci.yml
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   changes:
     runs-on: ubuntu-latest
+    # paths-filter lists a pull request's files through the api.
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       macos: ${{ steps.filter.outputs.macos }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -49,6 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: DeterminateSystems/nix-installer-action@v16
         with:
@@ -66,8 +77,8 @@ jobs:
           mise run --dry-run bootstrap
           mise run --dry-run switch 2>&1 | grep -F 'switch:linux'
 
-      - name: shellcheck entry script and task bodies
-        run: nix run nixpkgs#shellcheck -- -s sh install.sh .mise/tasks/*.sh .mise/tasks/switch/*.sh
+      - name: lint and format hooks
+        run: mise exec -- prek run --all-files --show-diff-on-failure
 
       - name: flake check (pure eval)
         run: nix flake check ./nix
@@ -80,9 +91,6 @@ jobs:
         run: |
           nix build ./nix#homeConfigurations."linux".activationPackage
           nix build ./nix#homeConfigurations."wsl".activationPackage
-
-      - name: nvim config validity (no plugin bootstrap)
-        run: nix run nixpkgs#stylua -- --check config/nvim/
 
       - name: guard - plaintext secret is never tracked
         run: |
@@ -99,6 +107,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.macos == 'true'
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: DeterminateSystems/nix-installer-action@v16
         with:
@@ -127,6 +137,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: jdx/mise-action@v2
         with:

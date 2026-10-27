@@ -1,0 +1,2 @@
+# Git Bash on Windows runs the shell scripts, and CRLF breaks them there.
+* text=auto eol=lf
