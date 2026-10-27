@@ -1,5 +1,5 @@
 #!/bin/sh
-# Entry point for a fresh macOS, Linux or WSL machine (ADR 0016):
+# Entry point for a fresh macOS, Linux or WSL machine:
 #   curl -fsSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.sh | sh
 # Does only what must happen before the clone: git, mise, the clone itself.
 # Everything after that is a mise task in mise.toml.
@@ -7,7 +7,8 @@ set -eu
 
 repo="https://github.com/jordanhoare/dotfiles.git"
 if [ -n "${WSL_DISTRO_NAME:-}" ]; then
-  dotfiles="/mnt/d/repositories/dotfiles"   # ADR 0006
+  # WSL keeps every repo on the Windows drive so Windows toolchains can reach it.
+  dotfiles="/mnt/d/repositories/dotfiles"
 else
   dotfiles="$HOME/repositories/dotfiles"
 fi

@@ -53,6 +53,7 @@ Banned outright:
 - **Section-divider banners.** `# ---- helpers ----`. If the file needs signposting, it needs splitting.
 - **Commented-out code.** Git has it.
 - **`TODO` without an owner or issue reference.** An unattributed TODO is a wish.
+- **ADR citations.** `# see ADR 0006` points at a doc the reader is not in. State the why in the comment itself; the ADR is for `docs/`.
 
 A comment that survives answers "why is this here, and what breaks if I remove it".
 

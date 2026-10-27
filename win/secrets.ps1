@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-Windows counterpart to bin/secrets for the personal account only. See ADR 0014.
+Windows counterpart to bin/secrets for the personal account only.
 
 .DESCRIPTION
 Restores ~/.ssh/personal and logs gh in with the PAT held in the hidden 'pat'

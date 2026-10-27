@@ -1,5 +1,5 @@
-# Repo operations (ADR 0016). Tasks only: tool pins live in config/mise/config.toml
-# (the baseline) and in each project's own mise.toml (ADR 0002). A [tools] table
+# Repo operations. Tasks only: tool pins live in config/mise/config.toml
+# (the baseline) and in each project's own mise.toml. A [tools] table
 # here would shadow the baseline for every shell opened inside this repo.
 min_version = "2026.10.3"
 
@@ -12,7 +12,7 @@ run_windows = 'echo bootstrap done. next: mise run secrets'
 [tasks.nix]
 description = "install nix with the determinate installer (skipped once /nix holds a profile)"
 raw = true
-run_windows = 'echo nix is not used on windows (ADR 0011)'
+run_windows = 'echo nix is not used on windows'
 run = '''
 set -eu
 if [ -x /nix/var/nix/profiles/default/bin/nix ]; then echo "nix already installed"; exit 0; fi
@@ -70,13 +70,13 @@ run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\secrets.p
 description = "decrypt config/git/private.enc to ~/.config/git/private"
 env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
 run = "sops --decrypt --output ~/.config/git/private config/git/private.enc"
-run_windows = 'echo the private profile is wsl-only (ADR 0014)'
+run_windows = 'echo the private profile is wsl-only'
 
 [tasks.encrypt]
 description = "re-encrypt ~/.config/git/private into config/git/private.enc"
 env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
 run = "sops --encrypt --output config/git/private.enc ~/.config/git/private"
-run_windows = 'echo the private profile is wsl-only (ADR 0014)'
+run_windows = 'echo the private profile is wsl-only'
 
 [tasks.hooks]
 description = "install the pre-commit hooks"

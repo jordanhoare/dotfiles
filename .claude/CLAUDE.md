@@ -116,6 +116,7 @@ One installer per tool (ADR 0002): if mise can install it and a project may pin 
 - Never commit plaintext git identity - `~/.config/git/private` lives outside the repo by design
 - Never hardcode the private GitHub username in any public file
 - Never declare a tool in both a Nix module and a mise config
+- Never cite an ADR in code or config comments. The comment carries the why in its own words; ADR references live in `.claude/docs/`
 - Never run `brew install` directly - declare casks in `nix/modules/macos.nix`
 - Never use `/mnt/d` paths in shared zsh config - WSL-only
 
