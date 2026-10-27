@@ -1,0 +1,12 @@
+name: nix and mise
+description: install nix with flakes enabled, the nix cache, and mise without its tools
+runs:
+  using: composite
+  steps:
+    - uses: DeterminateSystems/nix-installer-action@v16
+      with:
+        extra-conf: experimental-features = nix-command flakes
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: jdx/mise-action@v2
+      with:
+        install: false
