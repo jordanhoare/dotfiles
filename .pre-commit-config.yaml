@@ -75,7 +75,8 @@ repos:
 
       - id: editorconfig-checker
         name: editorconfig-checker
-        entry: mise exec -- editorconfig-checker
+        # Indent size misreads alignment in heredocs, jq programs and markdown lists.
+        entry: mise exec -- editorconfig-checker -disable-indent-size
         language: system
         # sops writes the encrypted file.
         exclude: ^config/git/private\.enc$
