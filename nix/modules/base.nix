@@ -71,8 +71,6 @@ in
     bitwarden-cli
     imagemagick
     fastfetch
-    shellcheck
-    shfmt
     luarocks
     llvm
   ];
