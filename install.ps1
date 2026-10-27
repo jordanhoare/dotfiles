@@ -5,7 +5,7 @@ Entry point for a fresh Windows machine:
   irm https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.ps1 | iex
 
 .DESCRIPTION
-Does only what must happen before the clone: git, mise, the clone itself.
+Does only what must happen before the clone: git, mise, pwsh, the clone itself.
 Everything after that is a mise task under .mise\; 'mise run bootstrap' runs
 win\bootstrap.ps1, which needs elevation or Developer Mode.
 #>
@@ -14,7 +14,8 @@ $ErrorActionPreference = 'Stop'
 
 $dotfiles = 'D:\repositories\dotfiles'
 
-foreach ($id in 'Git.Git', 'jdx.mise') {
+# mise runs every .ps1 task through pwsh, so PowerShell 7 must exist before 'mise run bootstrap'.
+foreach ($id in 'Git.Git', 'jdx.mise', 'Microsoft.PowerShell') {
     if (-not (winget list --id $id --exact --accept-source-agreements 2>$null | Select-String $id)) {
         winget install --id $id --exact --accept-package-agreements --accept-source-agreements
     }

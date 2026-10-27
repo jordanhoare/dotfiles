@@ -18,6 +18,7 @@
         { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
         { "PackageIdentifier": "ezwinports.make" },
         { "PackageIdentifier": "jdx.mise" },
+        { "PackageIdentifier": "Microsoft.PowerShell" },
         { "PackageIdentifier": "Bitwarden.CLI" },
         { "PackageIdentifier": "jqlang.jq" },
         { "PackageIdentifier": "dandavison.delta" }
