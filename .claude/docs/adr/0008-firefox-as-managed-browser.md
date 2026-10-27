@@ -37,15 +37,15 @@ On macOS, Firefox is installed from nixpkgs via `programs.firefox` (not as a Hom
 
 On Linux, Firefox is installed from nixpkgs directly. On WSL, Firefox is a Windows application outside nix scope.
 
-Enterprise policies are declared in `nix/modules/security.nix` under `programs.firefox.policies` and cover: telemetry suppression, first-run UI suppression, and force-installation of extensions.
+Enterprise policies are declared in `nix/modules/firefox.nix` under `programs.firefox.policies` and cover: telemetry suppression, first-run UI suppression, and force-installation of extensions.
 
-`config/firefox/arkenfox.js` is the upstream arkenfox `user.js` fetched verbatim. `config/firefox/user-overrides.js` contains personal overrides applied on top, following the standard arkenfox override pattern. Both files are concatenated via `programs.firefox.profiles.<name>.extraConfig` in `nix/modules/security.nix`.
+`config/firefox/arkenfox.js` is the upstream arkenfox `user.js` fetched verbatim. `config/firefox/user-overrides.js` contains personal overrides applied on top, following the standard arkenfox override pattern. Both files are concatenated via `programs.firefox.profiles.<name>.extraConfig` in `nix/modules/firefox.nix`.
 
 `privacy.resistFingerprinting` is intentionally omitted from the overrides. The goal is strong telemetry and tracking resistance within the common hardened-Firefox population, not resistance against active fingerprinting adversaries.
 
 ## Consequences
 
-- Browser profiles, extensions, and `user.js` hardening are all declared in `nix/modules/security.nix`
+- Browser profiles, extensions, and `user.js` hardening are all declared in `nix/modules/firefox.nix`
 - Reproducing the full browser environment on a new machine requires only `make switch`
 - Firefox auto-updates are disabled via policy (`DisableAppUpdate`) - nix owns the binary version
 - The Nix-packaged Firefox sets `MOZ_SYSTEM_DIR` to a read-only nix store path, so `/Library/Application Support/Mozilla/` is not read on macOS - policies must be baked into the app bundle

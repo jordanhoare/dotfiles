@@ -20,7 +20,7 @@ nix/
     ├── wsl.nix            WSL, no GUI apps (those come from Windows via winget)
     ├── macos.nix          nix-darwin system config, homebrew casks, nested home-manager
     ├── git.nix            git config linking
-    └── profiles.nix       the personal/private git identity split
+    └── firefox.nix        firefox policies, extensions, and arkenfox profile
 ```
 
 `mise run switch` builds and activates the config for the detected platform. On macOS it builds the system derivation first so `darwin-rebuild` comes from the flake-pinned nix-darwin rather than the registry.

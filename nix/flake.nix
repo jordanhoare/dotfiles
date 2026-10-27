@@ -20,7 +20,7 @@
       username = "jordanhoare";
       firstName = "Jordan";
 
-      commonHmModules = [ ./modules/base.nix ./modules/profiles.nix ];
+      commonHmModules = [ ./modules/base.nix ];
 
       mkHome = { system, homeDirectory, modules }:
         home-manager.lib.homeManagerConfiguration {
@@ -37,8 +37,6 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            # Pre-existing files at a symlink target are renamed with this
-            # suffix instead of aborting activation.
             home-manager.backupFileExtension = "bak";
             home-manager.extraSpecialArgs = {
               inherit username firstName;

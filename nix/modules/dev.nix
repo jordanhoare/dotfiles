@@ -2,7 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    bat
     delta
     lazygit
     neovim

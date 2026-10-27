@@ -51,7 +51,6 @@
     NSGlobalDomain = {
       AppleInterfaceStyle = "Dark";
       AppleICUForce24HourTime = true;
-      # Disable natural scrolling (unnatural for a keyboard-driven workflow)
       "com.apple.swipescrolldirection" = false;
       KeyRepeat = 2;
       InitialKeyRepeat = 15;
@@ -84,8 +83,7 @@
 
     spaces.spans-displays = false;
 
-    # Siri + Apple Intelligence + dictation + Spotlight suggestions + diagnostics.
-    # Re-asserted on every activation in case a macOS upgrade flips defaults back.
+    # Re-asserted on every activation because macOS upgrades flip these back.
     CustomUserPreferences = {
       "com.apple.assistant.support" = {
         "Assistant Enabled" = false;
@@ -131,76 +129,29 @@
       # tooling). lsregister is flushed in an activation script below so the
       # new bindings take effect without a logout.
       "com.apple.LaunchServices/com.apple.launchservices.secure" = {
-        LSHandlers = [
-          {
-            LSHandlerURLScheme = "mailto";
-            LSHandlerRoleAll = "org.nixos.firefox";
-          }
-          {
-            LSHandlerURLScheme = "http";
-            LSHandlerRoleAll = "org.nixos.firefox";
-          }
-          {
-            LSHandlerURLScheme = "https";
-            LSHandlerRoleAll = "org.nixos.firefox";
-          }
-          {
-            LSHandlerContentType = "public.html";
-            LSHandlerRoleAll = "org.nixos.firefox";
-          }
-          {
-            LSHandlerContentType = "com.adobe.pdf";
-            LSHandlerRoleAll = "org.nixos.firefox";
-          }
-          {
-            LSHandlerContentType = "net.daringfireball.markdown";
-            LSHandlerRoleAll = "md.obsidian";
-          }
-          {
-            LSHandlerContentType = "public.python-script";
-            LSHandlerRoleAll = "dev.zed.Zed";
-          }
-          {
-            LSHandlerContentType = "public.shell-script";
-            LSHandlerRoleAll = "dev.zed.Zed";
-          }
-          {
-            LSHandlerContentType = "public.json";
-            LSHandlerRoleAll = "dev.zed.Zed";
-          }
-          {
-            LSHandlerContentType = "public.yaml";
-            LSHandlerRoleAll = "dev.zed.Zed";
-          }
-          {
-            LSHandlerContentType = "org.tomlang.toml";
-            LSHandlerRoleAll = "dev.zed.Zed";
-          }
-          {
-            LSHandlerContentType = "public.movie";
-            LSHandlerRoleAll = "org.videolan.vlc";
-          }
-          {
-            LSHandlerContentType = "public.audio";
-            LSHandlerRoleAll = "org.videolan.vlc";
-          }
-          {
-            LSHandlerContentType = "public.mp4";
-            LSHandlerRoleAll = "org.videolan.vlc";
-          }
-          {
-            LSHandlerContentType = "public.mpeg-4";
-            LSHandlerRoleAll = "org.videolan.vlc";
-          }
-          {
-            LSHandlerContentType = "public.mp3";
-            LSHandlerRoleAll = "org.videolan.vlc";
-          }
-          {
-            LSHandlerContentType = "com.microsoft.waveform-audio";
-            LSHandlerRoleAll = "org.videolan.vlc";
-          }
-        ];
+        LSHandlers =
+          let
+            scheme = app: name: { LSHandlerURLScheme = name; LSHandlerRoleAll = app; };
+            content = app: name: { LSHandlerContentType = name; LSHandlerRoleAll = app; };
+          in
+          map (scheme "org.nixos.firefox") [ "mailto" "http" "https" ]
+          ++ map (content "org.nixos.firefox") [ "public.html" "com.adobe.pdf" ]
+          ++ map (content "md.obsidian") [ "net.daringfireball.markdown" ]
+          ++ map (content "dev.zed.Zed") [
+            "public.python-script"
+            "public.shell-script"
+            "public.json"
+            "public.yaml"
+            "org.tomlang.toml"
+          ]
+          ++ map (content "org.videolan.vlc") [
+            "public.movie"
+            "public.audio"
+            "public.mp4"
+            "public.mpeg-4"
+            "public.mp3"
+            "com.microsoft.waveform-audio"
+          ];
       };
     };
   };
@@ -226,7 +177,6 @@
 
   system.stateVersion = 5;
 
-  # User-level config nested under nix-darwin's home-manager integration.
   home-manager.users.${username} = {
     home.packages = [ pkgs.defaultbrowser ];
 
@@ -313,7 +263,6 @@
       fi
     '';
 
-    # Applied at activation time alongside all other home config.
     # First run from a bare Ghostty window triggers a one-time TCC prompt;
     # after that it works from tmux or anywhere else under Ghostty.
     home.activation.setWallpaper = ''
