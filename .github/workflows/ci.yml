@@ -8,8 +8,21 @@ on:
       - home/**
       - config/**
       - bin/**
+      - win/**
       - .mise/**
       - install.sh
+      - install.ps1
+      - .github/workflows/ci.yml
+  pull_request:
+    paths:
+      - nix/**
+      - home/**
+      - config/**
+      - bin/**
+      - win/**
+      - .mise/**
+      - install.sh
+      - install.ps1
       - .github/workflows/ci.yml
   workflow_dispatch:
 
@@ -25,10 +38,10 @@ jobs:
         with:
           filters: |
             macos:
-              - nix/modules/macos.nix
-              - nix/modules/macos-system.nix
+              - nix/modules/**
               - nix/flake.nix
               - nix/flake.lock
+              - .mise/**
 
   # Rung 4: build, activate as the runner user, and smoke-test the dotfiles.
   # Runs with no secrets - exercises only the unprivileged "stranger clones the repo" path.
@@ -42,6 +55,19 @@ jobs:
           extra-conf: experimental-features = nix-command flakes
 
       - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: tasks parse and dispatch
+        run: |
+          mise tasks ls
+          mise run --dry-run bootstrap
+          mise run --dry-run switch 2>&1 | grep -F 'switch:linux'
+
+      - name: shellcheck entry script and task bodies
+        run: nix run nixpkgs#shellcheck -- -s sh install.sh .mise/tasks/*.sh .mise/tasks/switch/*.sh
 
       - name: flake check (pure eval)
         run: nix flake check ./nix
@@ -80,8 +106,48 @@ jobs:
 
       - uses: DeterminateSystems/magic-nix-cache-action@v8
 
+      - uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: tasks parse and dispatch
+        run: |
+          mise tasks ls
+          mise run --dry-run switch 2>&1 | grep -F 'switch:macos'
+
       - name: flake check (pure eval)
         run: nix flake check ./nix
 
       - name: build macos system
         run: nix build ./nix#darwinConfigurations."macos".system
+
+  # Windows has no Nix. Checks that the task config parses there, that the
+  # .ps1 pairs are what Windows runs, and that every PowerShell script parses.
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: tasks parse and dispatch
+        shell: pwsh
+        run: |
+          mise tasks ls
+          $nix = mise run nix 2>&1 | Out-String
+          if ($nix -notmatch 'not used on windows') { throw "nix.ps1 did not run: $nix" }
+          $switch = mise run --dry-run switch 2>&1 | Out-String
+          if ($switch -notmatch 'bootstrap\.ps1') { throw "switch did not dispatch to bootstrap.ps1: $switch" }
+
+      - name: powershell scripts parse
+        shell: pwsh
+        run: |
+          $failed = $false
+          foreach ($file in Get-ChildItem -Recurse -Include *.ps1 -Path install.ps1, win, .mise) {
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$null, [ref]$errors) | Out-Null
+            if ($errors.Count) { $failed = $true; Write-Host "$($file.FullName):"; $errors | ForEach-Object { Write-Host "  $($_.Message)" } }
+          }
+          if ($failed) { exit 1 }
