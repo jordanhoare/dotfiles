@@ -1,6 +1,6 @@
 # Windows global mise config, linked to %USERPROFILE%\.config\mise\config.toml by
 # bootstrap.ps1. Slimmer than config/mise/config.toml: most tools there are Linux or
-# infrastructure tools that only run in WSL. See ADR 0014.
+# infrastructure tools that only run in WSL.
 
 [settings]
 trusted_config_paths = ['D:\repositories']

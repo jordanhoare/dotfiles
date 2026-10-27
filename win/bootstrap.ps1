@@ -3,7 +3,7 @@
 <#
 .SYNOPSIS
 Windows-side activation for this dotfiles repo, run by 'mise run switch'.
-Counterpart to the Home Manager activation on Linux/WSL/macOS. Intentionally nix-agnostic. See ADR 0011 and ADR 0014.
+Counterpart to the Home Manager activation on Linux/WSL/macOS. Intentionally nix-agnostic.
 
 .DESCRIPTION
 Runs 'winget import' against win/winget.json and installs the configs managed
@@ -131,7 +131,7 @@ if (($userPath -split ';') -notcontains $shims) {
     Write-Host "ok     $shims on PATH" -ForegroundColor DarkGray
 }
 
-# Runtimes come from mise (ADR 0002). nvm for Windows writes itself into the
+# Runtimes come from mise. nvm for Windows writes itself into the
 # machine Path, which Windows searches before the user Path, so its node.exe
 # outranks mise's shims and tools that resolve `node` by Path pick the wrong
 # runtime. Strip its Path entries and variables from both scopes. Machine

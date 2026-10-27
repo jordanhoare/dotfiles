@@ -1,18 +1,18 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-Entry point for a fresh Windows machine (ADR 0016):
+Entry point for a fresh Windows machine:
   irm https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.ps1 | iex
 
 .DESCRIPTION
 Does only what must happen before the clone: git, mise, the clone itself.
 Everything after that is a mise task in mise.toml; 'mise run bootstrap' runs
-win\bootstrap.ps1, which needs elevation or Developer Mode (ADR 0011).
+win\bootstrap.ps1, which needs elevation or Developer Mode.
 #>
 
 $ErrorActionPreference = 'Stop'
 
-$dotfiles = 'D:\repositories\dotfiles'   # ADR 0006
+$dotfiles = 'D:\repositories\dotfiles'
 
 foreach ($id in 'Git.Git', 'jdx.mise') {
     if (-not (winget list --id $id --exact --accept-source-agreements 2>$null | Select-String $id)) {
