@@ -4,8 +4,8 @@ min_version = "2026.10.3"
 
 # Every tool here must install without the baseline: on a fresh machine
 # `mise run bootstrap` installs them before the baseline is linked, so nothing
-# that needs uv, node or another runtime. actionlint, shellcheck, shfmt and
-# stylua match the baseline's pins.
+# that needs uv, node or another runtime. actionlint, shellcheck, shfmt, sops
+# and stylua match the baseline's pins.
 [tools]
 prek = "0.5.7"
 shellcheck = "0.11"
@@ -16,6 +16,7 @@ zizmor = "1.31.1"
 editorconfig-checker = "4.0.2"
 actionlint = "1.7"
 stylua = "2.5"
+sops = "3.13"
 
 [tasks.bootstrap]
 description = "fresh machine: install nix, activate the platform config, install runtimes"

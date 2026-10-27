@@ -32,6 +32,14 @@ repos:
         language: system
         pass_filenames: false
 
+      # Runs on every commit: a staged plaintext copy is not itself a *.sops file.
+      - id: sops
+        name: sops files encrypted
+        entry: mise run check:sops
+        language: system
+        pass_filenames: false
+        always_run: true
+
       - id: taplo-format
         name: taplo format
         entry: mise exec -- taplo format
