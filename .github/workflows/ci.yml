@@ -8,7 +8,7 @@ on:
       - home/**
       - config/**
       - bin/**
-      - mise.toml
+      - .mise/**
       - install.sh
       - .github/workflows/ci.yml
   workflow_dispatch:

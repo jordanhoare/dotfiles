@@ -8,7 +8,7 @@ Fresh machine? Bootstrap from [macOS](MacOS), [Linux](Linux), or [Windows](Windo
 
 ```bash
 mise run up   # self-updates mise, updates flake.lock, switches, and upgrades all other tools
-mise tasks    # lists every repo task (mise.toml replaced the Makefile, ADR 0016)
+mise tasks    # lists every repo task (`.mise/` replaced the Makefile, ADR 0016)
 ```
 
 ## Coding agents

@@ -86,7 +86,7 @@ mise run decrypt  # decrypt SOPS-encrypted git identity to ~/.config/git/private
 mise run up       # self-update mise, update flake.lock, switch, upgrade all tools
 ```
 
-Tasks live in `mise.toml` at the repo root and replace the Makefile (ADR 0016). The file carries tasks only; tool pins stay in `config/mise/config.toml`.
+Tasks live under `.mise/` and replace the Makefile (ADR 0016). `.mise/config.toml` holds one-line tasks and never a `[tools]` table; anything longer is a script in `.mise/tasks/`, as a `.sh` file with a `.ps1` pair when Windows needs it. Tool pins stay in `config/mise/config.toml`.
 
 ## New machine setup
 
