@@ -1,0 +1,98 @@
+# Repo operations (ADR 0016). Tasks only: tool pins live in config/mise/config.toml
+# (the baseline) and in each project's own mise.toml (ADR 0002). A [tools] table
+# here would shadow the baseline for every shell opened inside this repo.
+min_version = "2026.10.3"
+
+[tasks.bootstrap]
+description = "fresh machine: install nix, activate the platform config, install runtimes"
+depends = ["nix", "switch", "tools"]
+run = 'echo "bootstrap done. next: mise run secrets"'
+run_windows = 'echo bootstrap done. next: mise run secrets'
+
+[tasks.nix]
+description = "install nix with the determinate installer (skipped once /nix holds a profile)"
+raw = true
+run_windows = 'echo nix is not used on windows (ADR 0011)'
+run = '''
+set -eu
+if [ -x /nix/var/nix/profiles/default/bin/nix ]; then echo "nix already installed"; exit 0; fi
+# The Determinate installer refuses WSL without systemd. etc/wsl.conf turns it
+# on; the distro must restart before the setting is live.
+if [ -n "${WSL_DISTRO_NAME:-}" ] && [ ! -d /run/systemd/system ]; then
+  sudo install -m 644 etc/wsl.conf /etc/wsl.conf
+  echo "systemd enabled in /etc/wsl.conf. Run 'wsl --shutdown' from Windows, reopen the distro, then: mise run bootstrap"
+  exit 1
+fi
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install --no-confirm
+'''
+
+[tasks.switch]
+description = "activate the platform config: nix-darwin on macos, home manager on linux and wsl, bootstrap.ps1 on windows"
+raw = true
+run = 'mise run "switch:{{ os() }}"'
+run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\bootstrap.ps1'
+
+# darwin-rebuild comes from the flake-pinned nix-darwin, not the registry, and
+# the build also covers fresh machines where it is not yet on PATH.
+[tasks."switch:macos"]
+hide = true
+raw = true
+run = '''
+set -eu
+export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+nix build ./nix#darwinConfigurations.macos.system --out-link nix/result
+sudo nix/result/sw/bin/darwin-rebuild switch --flake ./nix#macos
+'''
+
+[tasks."switch:linux"]
+hide = true
+raw = true
+run = '''
+set -eu
+export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+platform="${PLATFORM:-linux}"
+if [ -n "${WSL_DISTRO_NAME:-}" ] && [ -z "${PLATFORM:-}" ]; then platform=wsl; fi
+nix run ./nix#home-manager -- switch --flake "./nix#$platform"
+'''
+
+[tasks.tools]
+description = "install the baseline runtimes from the global mise config"
+run = "mise install"
+
+[tasks.secrets]
+description = "restore ssh keys and gh logins from bitwarden, decrypt the private git identity"
+raw = true
+env = { DOTFILES = "{{ config_root }}" }
+run = "bin/secrets"
+run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\secrets.ps1'
+
+[tasks.decrypt]
+description = "decrypt config/git/private.enc to ~/.config/git/private"
+env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
+run = "sops --decrypt --output ~/.config/git/private config/git/private.enc"
+run_windows = 'echo the private profile is wsl-only (ADR 0014)'
+
+[tasks.encrypt]
+description = "re-encrypt ~/.config/git/private into config/git/private.enc"
+env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
+run = "sops --encrypt --output config/git/private.enc ~/.config/git/private"
+run_windows = 'echo the private profile is wsl-only (ADR 0014)'
+
+[tasks.hooks]
+description = "install the pre-commit hooks"
+run = ["pre-commit install", "pre-commit install --hook-type commit-msg"]
+
+[tasks.up]
+description = "update mise, flake.lock, switch, then upgrade every tool"
+raw = true
+run = '''
+set -eu
+mise self-update -y
+export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+nix flake update --flake ./nix
+mise run switch
+if command -v sheldon >/dev/null; then sheldon lock --update; fi
+mise upgrade
+if command -v uv >/dev/null; then uv tool upgrade --all; fi
+'''
+run_windows = ["winget upgrade --id jdx.mise", "mise upgrade", "uv tool upgrade --all"]

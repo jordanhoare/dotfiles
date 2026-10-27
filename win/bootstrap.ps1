@@ -2,8 +2,8 @@
 
 <#
 .SYNOPSIS
-Windows-side activation for this dotfiles repo. Counterpart to 'make switch'
-on Linux/WSL/macOS. Intentionally nix-agnostic. See ADR 0011 and ADR 0014.
+Windows-side activation for this dotfiles repo, run by 'mise run switch'.
+Counterpart to the Home Manager activation on Linux/WSL/macOS. Intentionally nix-agnostic. See ADR 0011 and ADR 0014.
 
 .DESCRIPTION
 Runs 'winget import' against win/winget.json and installs the configs managed

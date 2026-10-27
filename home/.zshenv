@@ -36,8 +36,3 @@ export MISE_GITHUB_TOKEN
 
 export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 export PATH="$HOME/.aftman/bin:$HOME/.cargo/bin:$HOME/.dotnet/tools:$PATH"
-
-# mise shims so non-interactive shells (Zed remote server over SSH, scripted
-# SSH, direnv hooks) see installed runtimes without needing `mise activate`,
-# which only runs from .zshrc on interactive shells.
-export PATH="$HOME/.local/share/mise/shims:$PATH"

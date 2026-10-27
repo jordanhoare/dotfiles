@@ -1,6 +1,6 @@
 # Windows
 
-Windows-native apps are managed declaratively via [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) and activated through `win/bootstrap.ps1`. The app list lives at `win/winget.json`; the Windows-side symlink design is described in [ADR 0011](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0011-windows-bootstrap.md). Everything else - shell, prompt, tmux, nvim - runs inside WSL and reads config from the dotfiles repo on the Windows filesystem.
+Windows-native apps are managed declaratively via [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) and activated through `win/bootstrap.ps1`, which `mise run switch` runs on Windows. The app list lives at `win/winget.json`; the Windows-side symlink design is described in [ADR 0011](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0011-windows-bootstrap.md). Everything else - shell, prompt, tmux, nvim - runs inside WSL and reads config from the dotfiles repo on the Windows filesystem.
 
 ## 1. winutil (one-time)
 
@@ -10,31 +10,27 @@ Run in PowerShell as Administrator to debloat a fresh Windows install:
 irm "https://christitus.com/win" | iex
 ```
 
-## 2. Clone the repo
+## 2. Install
+
+From an elevated PowerShell (or any PowerShell if Developer Mode is enabled in **Settings -> For developers**). One command: it installs git and mise with winget, clones the repo to `D:\repositories\dotfiles`, then runs `mise run bootstrap`, which runs `win\bootstrap.ps1`.
 
 ```powershell
-git clone https://github.com/jordanhoare/dotfiles.git D:\repositories\dotfiles
+irm https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.ps1 | iex
 ```
 
-The repo lives at `D:\repositories\dotfiles` on Windows and `/mnt/d/repositories/dotfiles` from inside WSL - same files, two views (see ADR 0006).
+`bootstrap.ps1` imports every app declared in `win/winget.json`, then links the Zed, mise, uv, git, SSH and Claude Code configs from the repo and puts mise's shims on the user `Path`. Idempotent - re-run it as `mise run switch` after editing `win/winget.json`, adding a skill, or adding files under `config/zed/`. See [ADR 0014](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0014-native-windows-development.md) for native Windows development.
 
-## 3. Bootstrap
+Open a new shell afterwards so the `Path` change applies.
 
-From an elevated PowerShell (or any PowerShell if Developer Mode is enabled in **Settings -> For developers**):
+## 3. Restore secrets
+
+Restores the personal SSH key and gh login from Bitwarden:
 
 ```powershell
-D:\repositories\dotfiles\win\bootstrap.ps1
+mise run secrets
 ```
 
-Imports every app declared in `win/winget.json`, then links the Zed, mise, uv, git, SSH and Claude Code configs from the repo and puts mise's shims on the user `Path`. Idempotent - safe to re-run after editing `win/winget.json`, adding a skill, or adding files under `config/zed/`. See [ADR 0014](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0014-native-windows-development.md) for native Windows development.
-
-Then restore the personal SSH key and gh login from Bitwarden:
-
-```powershell
-D:\repositories\dotfiles\win\secrets.ps1
-```
-
-Ghostty has no official Windows release as of mid-2026 and community ports do not meet the bar for inclusion. Windows-side terminal use defaults to Windows Terminal (preinstalled on Windows 11, declared in `winget.json` for explicitness); the actual Ghostty runs inside WSL via `make switch`.
+Ghostty has no official Windows release as of mid-2026 and community ports do not meet the bar for inclusion. Windows-side terminal use defaults to Windows Terminal (preinstalled on Windows 11, declared in `winget.json` for explicitness); the actual Ghostty runs inside WSL via `mise run switch`.
 
 If you've added Windows apps manually and want to capture them in the manifest:
 
@@ -54,32 +50,21 @@ Restart when prompted and complete the Ubuntu user setup.
 
 ## 5. Inside WSL
 
-```bash
-sudo apt install -y git curl make
-```
-
-Install Nix: https://nixos.org/download/#nix-install-linux
-
-Open a new shell to pick up the Nix environment.
-
-## 6. Activate WSL
-
-Installs every package, links every config file under `~/.config`, and runs `mise install` for managed runtimes:
+The same entry script as Linux. On WSL it reuses the clone at `/mnt/d/repositories/dotfiles` (see ADR 0006), so the one checkout serves both sides. The `nix` task enables systemd in `/etc/wsl.conf` on the first run and asks for a `wsl --shutdown` from Windows; rerun `mise run bootstrap` after the distro restarts.
 
 ```bash
-cd /mnt/d/repositories/dotfiles
-make switch
+curl -fsSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.sh | sh
 ```
 
-## 7. Restore secrets
+## 6. Restore secrets in WSL
 
 Logs in to Bitwarden, restores both SSH keys, and decrypts the private git profile to `~/.config/git/private`:
 
 ```bash
-make secrets
+mise run secrets
 ```
 
-## 8. Swap remote to SSH
+## 7. Swap remote to SSH
 
 ```bash
 git remote set-url origin git@personal:jordanhoare/dotfiles.git

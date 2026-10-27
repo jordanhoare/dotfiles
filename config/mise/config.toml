@@ -1,5 +1,5 @@
 [settings]
-trusted_config_paths = ["~/repositories"]
+trusted_config_paths = ["~/repositories", "/mnt/d/repositories"]
 auto_install = true
 jobs = 4
 python.compile = false

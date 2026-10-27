@@ -17,7 +17,7 @@ Borrowed from ASD-STE100, the controlled-English standard for maintenance docume
 - **Never synonym-swap a glossary term.** Writing "job", "task", and "run" for one concept reads as variety and costs the reader a re-derivation every time. Repeat the term.
 - **One topic per sentence.** Two clauses joined by "and" are usually two sentences.
 - **Active voice.** "The hook rejects the write", not "the write is rejected by the hook".
-- **Imperative for instructions.** "Run `make switch`", not "you should run" or "the user can run".
+- **Imperative for instructions.** "Run `mise run switch`", not "you should run" or "the user can run".
 - **No forward references.** "As we will see below" and "more on this later" mean the material is in the wrong order. Move it.
 - **Delete transition-only sentences.** If a sentence's only job is to introduce the next one, the next one already does that job.
 

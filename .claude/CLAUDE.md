@@ -50,7 +50,7 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 | File | Purpose |
 |---|---|
 | `win/winget.json` | Declarative Windows app list |
-| `win/bootstrap.ps1` | Windows counterpart to `make switch`: winget import plus config links (ADR 0011, 0014) |
+| `win/bootstrap.ps1` | Windows body of `mise run switch`: winget import plus config links (ADR 0011, 0014) |
 | `win/mise.toml` | Windows global mise config, smaller than `config/mise/config.toml` |
 | `win/secrets.ps1` | Restores the personal SSH key and gh login from Bitwarden |
 | `win/README.md` | Windows bootstrap steps |
@@ -78,37 +78,44 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 ## Common operations
 
 ```bash
-make switch       # activate Nix config for detected platform
-make secrets      # restore SSH keys from Bitwarden, decrypt git identity to ~/.config/git/private
-make hooks        # install pre-commit hooks
-make decrypt      # decrypt SOPS-encrypted git identity to ~/.config/git/private
-up                # update flake.lock + switch + upgrade all tools
+mise tasks        # list every task
+mise run switch   # activate the platform config (nix-darwin, Home Manager, or win/bootstrap.ps1)
+mise run secrets  # restore SSH keys from Bitwarden, decrypt git identity to ~/.config/git/private
+mise run hooks    # install pre-commit hooks
+mise run decrypt  # decrypt SOPS-encrypted git identity to ~/.config/git/private
+mise run up       # self-update mise, update flake.lock, switch, upgrade all tools
 ```
+
+Tasks live in `mise.toml` at the repo root and replace the Makefile (ADR 0016). The file carries tasks only; tool pins stay in `config/mise/config.toml`.
 
 ## New machine setup
 
 ```bash
-make switch       # installs bw, sops, and all tooling via Nix
-make secrets      # restores SSH keys, decrypts git identity to ~/.config/git/private
+curl -fsSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.sh | sh   # macOS, Linux, WSL
+irm https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.ps1 | iex        # Windows
+mise run secrets  # restores SSH keys, decrypts git identity to ~/.config/git/private
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
-The private git identity is decrypted directly to `~/.config/git/private` (not into the repo), and `config/git/config` picks it up via `[includeIf]` - silently no-ops when missing, so no second `make switch` pass is needed.
+The entry script installs git and mise, clones the repo, and runs `mise run bootstrap`, which installs Nix, switches, and installs the baseline runtimes. mise is the only hand-installed program; Home Manager does not install it (ADR 0016).
+
+The private git identity is decrypted directly to `~/.config/git/private` (not into the repo), and `config/git/config` picks it up via `[includeIf]` - silently no-ops when missing, so no second `mise run switch` pass is needed.
 
 On WSL, clone to `/mnt/d/repositories/dotfiles` not `~/repositories/`. See ADR 0006.
 
 ## Adding tools
 
-Edit `nix/modules/base.nix` (or the appropriate platform module) and run `make switch`. Never install tools manually.
+One installer per tool (ADR 0002): if mise can install it and a project may pin it, add it to `config/mise/config.toml` or the project's `mise.toml`. Otherwise edit `nix/modules/base.nix` (or the platform module) and run `mise run switch`. Never install tools manually, and never declare one tool in both.
 
 ## SSH and secrets
 
-`home/.ssh/config` is the only SSH file committed. Private keys are never committed - restored from Bitwarden via `make secrets`. `config/git/private.enc` is SOPS-encrypted against `~/.ssh/personal`.
+`home/.ssh/config` is the only SSH file committed. Private keys are never committed - restored from Bitwarden via `mise run secrets`. `config/git/private.enc` is SOPS-encrypted against `~/.ssh/personal`.
 
 ## What NOT to do
 
 - Never commit plaintext git identity - `~/.config/git/private` lives outside the repo by design
 - Never hardcode the private GitHub username in any public file
+- Never declare a tool in both a Nix module and a mise config
 - Never run `brew install` directly - declare casks in `nix/modules/macos.nix`
 - Never use `/mnt/d` paths in shared zsh config - WSL-only
 
