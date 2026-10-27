@@ -28,7 +28,7 @@ Projects that build Windows binaries are developed on native Windows, with Claud
 - The script prepends `%LOCALAPPDATA%\mise\shims` to the user `Path`. The non-interactive shells Claude Code spawns never run `mise activate`
 - `win/secrets.ps1` restores `~/.ssh/personal` and logs gh in from Bitwarden, as `bin/secrets` does for the personal account
 - `jq` and `delta` come from winget, because the Claude hooks need `jq` and `config/git/config` sets `delta` as the pager
-- The private profile stays WSL-only. Its identity needs a sops decrypt, and the `includeIf` paths in `config/git/config` match only `/mnt` paths
+- `mise run secrets` decrypts every Sops file on Windows as on WSL (ADR 0017). The private profile stays WSL-only: the `includeIf` paths in `config/git/config` match only `/mnt` paths
 - Worktrees go to `%USERPROFILE%\worktrees\<repo>\<name>`, the same `~/worktrees` rule as ADR 0013. On NTFS it changes nothing about speed
 
 ## Considered Options

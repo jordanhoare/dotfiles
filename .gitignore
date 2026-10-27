@@ -11,6 +11,9 @@ home/.claude/*
 # SSH
 home/.ssh/*
 !home/.ssh/config
+!home/.ssh/config.d/
+home/.ssh/config.d/*
+!home/.ssh/config.d/*.sops
 
 # Git
 config/git/private
