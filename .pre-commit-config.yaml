@@ -81,4 +81,4 @@ repos:
         entry: mise exec -- editorconfig-checker -disable-indent-size
         language: system
         # sops writes the encrypted file.
-        exclude: ^config/git/private\.enc$
+        exclude: \.sops$

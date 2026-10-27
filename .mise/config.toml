@@ -34,23 +34,12 @@ description = "install the baseline runtimes from the global mise config"
 run = "mise install"
 
 [tasks.secrets]
-description = "restore ssh keys and gh logins from bitwarden, decrypt the private git identity"
+description = "restore ssh keys and gh logins from bitwarden, then decrypt every *.sops file"
 raw = true
-env = { DOTFILES = "{{ config_root }}", SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
+# The decrypt needs ~/.ssh/personal, which the restore writes.
+depends_post = ["decrypt"]
 run = "bin/secrets"
 run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\secrets.ps1'
-
-[tasks.decrypt]
-description = "decrypt config/git/private.enc to ~/.config/git/private"
-env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
-run = "sops --decrypt --output ~/.config/git/private config/git/private.enc"
-run_windows = 'echo the private profile is wsl-only'
-
-[tasks.encrypt]
-description = "re-encrypt ~/.config/git/private into config/git/private.enc"
-env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
-run = "sops --encrypt --output config/git/private.enc ~/.config/git/private"
-run_windows = 'echo the private profile is wsl-only'
 
 [tasks.hooks]
 description = "install the git hooks"

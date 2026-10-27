@@ -80,9 +80,9 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 ```bash
 mise tasks        # list every task
 mise run switch   # activate the platform config (nix-darwin, Home Manager, or win/bootstrap.ps1)
-mise run secrets  # restore SSH keys from Bitwarden, decrypt git identity to ~/.config/git/private
+mise run secrets  # restore SSH keys from Bitwarden, then decrypt every *.sops file
 mise run hooks    # install the git hooks (prek)
-mise run decrypt  # decrypt SOPS-encrypted git identity to ~/.config/git/private
+mise run decrypt  # decrypt every *.sops file to its target under ~
 mise run up       # self-update mise, update flake.lock, switch, upgrade all tools
 ```
 
@@ -109,7 +109,9 @@ One installer per tool (ADR 0002): if mise can install it and a project may pin 
 
 ## SSH and secrets
 
-`home/.ssh/config` is the only SSH file committed. Private keys are never committed - restored from Bitwarden via `mise run secrets`. `config/git/private.enc` is SOPS-encrypted against `~/.ssh/personal`.
+Private keys are never committed - restored from Bitwarden via `mise run secrets`.
+
+An encrypted file is a `*.sops` file in the package matching its target: `home/<path>.sops` decrypts to `~/<path>`, `config/<path>.sops` to `~/.config/<path>`. One `.sops.yaml` rule encrypts them to `~/.ssh/personal`. `mise run decrypt` writes them all, on every platform; a committed config includes each (`[includeIf]` in `config/git/config`, `Include ~/.ssh/config.d/*` in `home/.ssh/config`). Add or change one with `sops edit <path>.sops`, never by editing the decrypted copy (ADR 0017).
 
 ## What NOT to do
 

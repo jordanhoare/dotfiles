@@ -6,9 +6,8 @@ Windows counterpart to bin/secrets for the personal account only.
 
 .DESCRIPTION
 Restores ~/.ssh/personal and logs gh in with the PAT held in the hidden 'pat'
-field of the same Bitwarden SSH Key item. The private account and its SOPS
-identity stay WSL-only: Windows has no sops step and the includeIf paths in
-config/git/config only match /mnt paths.
+field of the same Bitwarden SSH Key item. The private account stays WSL-only:
+the includeIf paths in config/git/config only match /mnt paths.
 #>
 
 $ErrorActionPreference = 'Stop'

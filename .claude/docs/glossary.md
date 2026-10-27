@@ -6,7 +6,7 @@ The upstream [arkenfox/user.js](https://github.com/arkenfox/user.js) hardening p
 
 ## Bootstrap
 
-Provisioning a fresh machine: the Entry script installs git and Mise, clones to the Dotfiles root, and runs the `bootstrap` Task, which installs Nix, runs `switch`, and installs the baseline runtimes. `mise run secrets` follows by hand. On Windows, `switch` runs the Windows bootstrap.
+Provisioning a fresh machine: the Entry script installs git and Mise, clones to the Dotfiles root, and runs the `bootstrap` Task, which installs Nix, runs `switch`, and installs the baseline runtimes. `mise run secrets` follows by hand and decrypts every [Sops file](#sops-file). On Windows, `switch` runs the Windows bootstrap.
 
 ## Browser Profile
 
@@ -50,11 +50,15 @@ The VPN client on WSL, Linux, and macOS, run as a system daemon with the standar
 
 ## Profile
 
-A git identity, either **personal** (`jordanhoare`) or **private** (anonymous), held as a config fragment at `~/.config/git/<profile>` with `[user]` and `[github]` sections. `config/git/config` includes personal by default and private inside the private paths. `git personal` and `git private` copy a Profile into the current repo and switch the `gh` account to match. The personal fragment is committed plaintext; the private one is sops-encrypted at `config/git/private.enc` and decrypted by `mise run secrets` straight to `~/.config/git/private`, so the private username never enters the repo or the Nix store.
+A git identity, either **personal** (`jordanhoare`) or **private** (anonymous), held as a config fragment at `~/.config/git/<profile>` with `[user]` and `[github]` sections. `config/git/config` includes personal by default and private inside the private paths. `git personal` and `git private` copy a Profile into the current repo and switch the `gh` account to match. The personal fragment is committed plaintext; the private one is the [Sops file](#sops-file) `config/git/private.sops`, decrypted by `mise run secrets` straight to `~/.config/git/private`, so the private username never enters the repo or the Nix store.
 
 ## Task
 
 A repo operation under `.mise/`, run with `mise run <name>` and listed by `mise tasks`. One-liners live in `.mise/config.toml`; longer ones are scripts in `.mise/tasks/` with a `.ps1` pair when Windows needs one. `.mise/config.toml` never holds `[env]`.
+
+## Sops file
+
+A committed `*.sops` file, encrypted whole to the personal SSH key, that `mise run decrypt` writes to the target its Package gives: `home/<path>.sops` to `~/<path>`, `config/<path>.sops` to `~/.config/<path>`. Unlike a Dotfile, it is never linked by Home Manager; a committed config includes the decrypted copy instead. See ADR 0017.
 
 ## Symlink
 

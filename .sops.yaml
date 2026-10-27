@@ -1,3 +1,17 @@
+# Who can read the encrypted files. Every `*.sops` file sits in the package that
+# matches its target (home/ for ~, config/ for ~/.config) and `mise run decrypt`
+# writes it there. Never commit a private key.
+
+# yaml anchors are the only way to reuse a recipient across rules in .sops.yaml.
+keys:
+  # The personal SSH public key as an age recipient (sops >= 3.10). The private half
+  # is restored from Bitwarden by `mise run secrets`.
+  - &personal ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLljxwDh6Wzx04GbTvk8M4m3nnSqQQlqTGeKJ0QhgHE
+
+# sops takes the first matching rule: a file with other readers goes above this one.
+# The .sops extension is unknown to sops, so each file is encrypted whole as binary.
 creation_rules:
-  - path_regex: .*config/git/private(\.enc)?$
-    age: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLljxwDh6Wzx04GbTvk8M4m3nnSqQQlqTGeKJ0QhgHE
+  - path_regex: \.sops$
+    key_groups:
+      - age:
+          - *personal

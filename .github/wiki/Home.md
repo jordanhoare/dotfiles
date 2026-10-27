@@ -24,12 +24,12 @@ One installer per tool (ADR 0002). mise owns anything a project could pin: add i
 
 ## Secrets
 
-Each account's SSH Key item in Bitwarden carries two things: the SSH private key, and a hidden custom field named `pat` holding a classic GitHub PAT (scopes `repo`, `read:org`, `gist`, `workflow`). `mise run secrets` restores the keys, logs `gh` in to both accounts from those PATs (no browser), and decrypts the private git profile.
+Each account's SSH Key item in Bitwarden carries two things: the SSH private key, and a hidden custom field named `pat` holding a classic GitHub PAT (scopes `repo`, `read:org`, `gist`, `workflow`). `mise run secrets` restores the keys, logs `gh` in to both accounts from those PATs (no browser), and decrypts every `*.sops` file.
 
 ```bash
-mise run secrets  # restore SSH keys + gh PATs + decrypt private profile
-mise run encrypt  # re-encrypt after editing ~/.config/git/private
-mise run decrypt  # decrypt the private profile without the full Bitwarden flow
+mise run secrets               # restore SSH keys + gh PATs, then decrypt
+mise run decrypt               # decrypt every *.sops file without the Bitwarden flow
+sops edit <path>.sops          # add or change an encrypted file, then decrypt
 ```
 
-The private git profile is sops-encrypted at `config/git/private.enc` against `~/.ssh/personal` and decrypts to `~/.config/git/private` (outside the repo). `config/git/config` picks it up via `[includeIf]` and silently no-ops when missing.
+Encrypted files are `*.sops` files in the package matching their target, encrypted to `~/.ssh/personal`: `config/git/private.sops` decrypts to `~/.config/git/private`, `home/.ssh/config.d/reliquia.sops` to `~/.ssh/config.d/reliquia`. A committed config includes each one and no-ops when it is missing.
