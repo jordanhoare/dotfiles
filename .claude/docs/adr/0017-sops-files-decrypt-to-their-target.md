@@ -12,7 +12,7 @@ Native Windows is also a development platform (ADR 0014) and needs the same decr
 - **One creation rule in `.sops.yaml`.** `\.sops$` encrypts to the personal SSH key as an age recipient, declared once as a yaml anchor. A file with other readers gets a narrower rule above it, since sops takes the first match.
 - **Whole-file binary encryption.** The `.sops` extension is unknown to sops, so it stores each file as one encrypted blob. Config fragments are not yaml, and their diffs stay unreadable.
 - **`mise run decrypt` writes every committed Sops file to its target.** It is a `.sh`/`.ps1` pair in `.mise/tasks/`, so the same Task runs on macOS, Linux, WSL and native Windows. It reads `git ls-files '*.sops'`, so an untracked plaintext copy is never touched. Each target is readable by its owner alone: mode 600 on Unix, an `icacls` grant on Windows.
-- **The `secrets` Task runs `decrypt` after it.** `depends_post` in `.mise/config.toml` orders the two. `bin/secrets` and `win/secrets.ps1` restore keys and `gh` logins only, and know nothing of sops or the repo layout.
+- **The `secrets` Task runs `decrypt` after it.** `depends_post` in the header of `.mise/tasks/secrets.sh` and `secrets.ps1` orders the two. Both scripts restore keys and `gh` logins only, and know nothing of sops or the repo layout. They live in the Task layer, not the `bin/` Package: they are one bootstrap step, not a command for `PATH`.
 - **A committed config includes each decrypted file.** Home Manager never links a Sops file: the Nix store is world-readable. `config/git/config` picks up `~/.config/git/private` through `[includeIf]`; `home/.ssh/config` opens with `Include ~/.ssh/config.d/*`. Both no-op when the file is missing.
 - **A hook keeps plaintext out of git.** The `sops` prek hook runs `mise run check:sops` on every commit and in CI. It fails when `sops filestatus` does not report a tracked Sops file as encrypted, and when the decrypted copy (`<path>` beside `<path>.sops`) is tracked. `sops` joins the repo's `[tools]` for it.
 - **Edit a Sops file in place with `sops edit <path>.sops`**, then run `mise run decrypt`. `~/.zshenv` exports `SOPS_AGE_SSH_PRIVATE_KEY_FILE`, so plain `sops` finds the key. There is no `encrypt` Task.
@@ -20,7 +20,8 @@ Native Windows is also a development platform (ADR 0014) and needs the same decr
 ## Considered options
 
 - **A manifest mapping each encrypted file to its target.** Allows any target path. Rejected: the Package layout already maps repo paths to home paths, and a manifest is one more file to keep in step.
-- **Decrypt from inside `bin/secrets` and `win/secrets.ps1`.** Rejected: it couples a linked `~/bin` script to the repo layout and duplicates the walk in two languages outside the Task layer.
+- **Decrypt from inside the two secrets scripts.** Rejected: it duplicates the walk in two languages and ties the key restore to the repo layout.
+- **Decrypt into the repo, gitignored beside each Sops file, with a Symlink from the target.** The git-crypt shape: every target becomes a Symlink into the repo. Rejected: sops has no git filter, so a plaintext file that loses its ignore rule commits as plaintext, and `mkOutOfStoreSymlink` needs the absolute Dotfiles root, which differs per Platform.
 - **sops-nix or agenix.** Rejected: neither covers native Windows, and both need the key at activation time, which a fresh machine lacks until `mise run secrets` runs.
 - **`encrypted_regex` with yaml files, as the Reliquia platform repo does.** Keeps keys reviewable in a diff. Rejected: ssh and git config fragments are not yaml.
 

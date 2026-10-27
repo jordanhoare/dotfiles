@@ -28,7 +28,7 @@
 
   # gh rewrites config.yml on login/alias/migration, so it cannot be a read-only
   # store symlink. Same setter pattern as gcloud above. git_protocol is omitted
-  # here on purpose - bin/secrets sets it per-host via `gh auth login`.
+  # here on purpose - `mise run secrets` sets it per-host via `gh auth login`.
   home.activation.ghConfig = ''
     if command -v gh >/dev/null 2>&1; then
       mkdir -p "$HOME/.config/gh"

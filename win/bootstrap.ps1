@@ -158,7 +158,7 @@ if (winget list --id CoreyButler.NVMforWindows --exact --accept-source-agreement
 }
 
 if (-not (Test-Path -LiteralPath (Join-Path $env:USERPROFILE '.ssh\personal'))) {
-    Write-Host 'warn   ~/.ssh/personal missing: run win\secrets.ps1 so git@personal remotes resolve' -ForegroundColor Yellow
+    Write-Host 'warn   ~/.ssh/personal missing: run 'mise run secrets' so git@personal remotes resolve' -ForegroundColor Yellow
 }
 
 $gitconfig = Join-Path $env:USERPROFILE '.gitconfig'
