@@ -82,7 +82,7 @@ mise run switch   # activate the platform config (nix-darwin, Home Manager, or w
 mise run secrets  # restore SSH keys from Bitwarden, then decrypt every *.sops file
 mise run hooks    # install the git hooks (prek)
 mise run decrypt  # decrypt every *.sops file to its target under ~
-mise run up       # self-update mise, update flake.lock, switch, upgrade all tools
+mise run up       # upgrade winget apps (windows) or flake.lock, switch, upgrade all tools
 ```
 
 Tasks live under `.mise/` and replace the Makefile (ADR 0016). `.mise/config.toml` holds one-line tasks and never an `[env]` table; anything longer is a script in `.mise/tasks/`, as a `.sh` file with a `.ps1` pair when Windows needs it. Its `[tools]` table pins only the repo's own check tools; a tool the baseline in `config/mise/config.toml` also pins takes the baseline's version.

@@ -1,6 +1,6 @@
-#MISE description="update mise, flake.lock, switch, then upgrade every tool"
+#MISE description="upgrade every winget app, switch, then upgrade every mise and uv tool"
 $ErrorActionPreference = 'Stop'
-winget upgrade --id jdx.mise --accept-package-agreements --accept-source-agreements
+winget upgrade --all --accept-package-agreements --accept-source-agreements
 mise run switch
 mise upgrade
 uv tool upgrade --all

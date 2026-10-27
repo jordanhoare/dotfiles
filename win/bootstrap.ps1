@@ -35,7 +35,8 @@ if (-not ($elevated -or $devMode)) {
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $wingetManifest = Join-Path $PSScriptRoot 'winget.json'
 Write-Host "Importing winget packages from $wingetManifest" -ForegroundColor Cyan
-winget import --import-file $wingetManifest --accept-package-agreements --accept-source-agreements
+# Upgrades belong to 'mise run up'; switch only installs what the manifest lacks.
+winget import --import-file $wingetManifest --no-upgrade --accept-package-agreements --accept-source-agreements
 
 # Mode: 'Symlink' for files the app treats as read-only; 'Copy' for files the
 # app rewrites at runtime, so local writes never bleed back into the repo.
