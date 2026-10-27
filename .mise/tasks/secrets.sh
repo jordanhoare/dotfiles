@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#MISE description="restore ssh keys and gh logins from bitwarden, then decrypt every *.sops file"
+#MISE raw=true
+# The decrypt needs ~/.ssh/personal, which this restore writes.
+#MISE depends_post=["decrypt"]
 set -euo pipefail
 
 # gh ignores stored credentials whenever GH_TOKEN/GITHUB_TOKEN is set, so every

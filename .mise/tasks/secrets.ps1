@@ -1,8 +1,11 @@
+#MISE description="restore ssh keys and gh logins from bitwarden, then decrypt every *.sops file"
+#MISE raw=true
+#MISE depends_post=["decrypt"]
 #Requires -Version 5.1
 
 <#
 .SYNOPSIS
-Windows counterpart to bin/secrets.
+Windows counterpart to secrets.sh.
 
 .DESCRIPTION
 Restores ~/.ssh/personal and ~/.ssh/private, and logs gh in to each account

@@ -34,14 +34,6 @@ run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\bootstrap
 description = "install the baseline runtimes from the global mise config"
 run = "mise install"
 
-[tasks.secrets]
-description = "restore ssh keys and gh logins from bitwarden, then decrypt every *.sops file"
-raw = true
-# The decrypt needs ~/.ssh/personal, which the restore writes.
-depends_post = ["decrypt"]
-run = "bin/secrets"
-run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\secrets.ps1'
-
 [tasks.hooks]
 description = "install the git hooks"
 # --force drops the hooks pre-commit installed, which fail under prek.
