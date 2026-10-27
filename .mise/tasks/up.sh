@@ -2,7 +2,7 @@
 #MISE description="update mise, flake.lock, switch, then upgrade every tool"
 #MISE raw=true
 set -eu
-export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+export PATH="/nix/var/nix/profiles/default/bin:${PATH}"
 
 mise self-update -y
 nix flake update --flake ./nix

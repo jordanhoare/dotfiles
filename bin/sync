@@ -5,10 +5,10 @@ set -euo pipefail
 # and its $HOME fallback resolved to a path that does not exist on WSL.
 GARDEN="${GARDEN:?GARDEN is unset - is .zshenv sourced?}"
 
-if [[ ! -d "$GARDEN" ]]; then
-  echo "error: garden not found at $GARDEN" >&2
+if [[ ! -d "${GARDEN}" ]]; then
+  echo "error: garden not found at ${GARDEN}" >&2
   exit 1
 fi
 
-cd "$GARDEN"
+cd "${GARDEN}"
 mise run sync

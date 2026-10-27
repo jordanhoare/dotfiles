@@ -32,6 +32,7 @@ The Windows side is **intentionally nix-agnostic**. Bootstrap runs through a sin
 Ghostty is intentionally out of the Windows-side surface. As of mid-2026 there is no official Ghostty Windows release, and the upstream team has asked community ports not to use "Ghostty for Windows" branding. Windows-side terminal use is the Microsoft-shipped Windows Terminal (declared in `win/winget.json`); the actual Ghostty runs inside WSL and is opened either directly under WSL or via Windsurf/VSCode-fork's integrated terminal. Revisit if an official Ghostty Windows package ships.
 
 The script is **idempotent with backup semantics**:
+
 - Target missing -> create symlink.
 - Target is a symlink already pointing at the right source -> no-op.
 - Target is a symlink pointing somewhere else -> delete and recreate.
