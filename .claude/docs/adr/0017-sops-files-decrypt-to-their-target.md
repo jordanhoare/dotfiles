@@ -14,6 +14,7 @@ Native Windows is also a development platform (ADR 0014) and needs the same decr
 - **`mise run decrypt` writes every committed Sops file to its target.** It is a `.sh`/`.ps1` pair in `.mise/tasks/`, so the same Task runs on macOS, Linux, WSL and native Windows. It reads `git ls-files '*.sops'`, so an untracked plaintext copy is never touched. Each target is readable by its owner alone: mode 600 on Unix, an `icacls` grant on Windows.
 - **The `secrets` Task runs `decrypt` after it.** `depends_post` in `.mise/config.toml` orders the two. `bin/secrets` and `win/secrets.ps1` restore keys and `gh` logins only, and know nothing of sops or the repo layout.
 - **A committed config includes each decrypted file.** Home Manager never links a Sops file: the Nix store is world-readable. `config/git/config` picks up `~/.config/git/private` through `[includeIf]`; `home/.ssh/config` opens with `Include ~/.ssh/config.d/*`. Both no-op when the file is missing.
+- **A hook keeps plaintext out of git.** The `sops` prek hook runs `mise run check:sops` on every commit and in CI. It fails when `sops filestatus` does not report a tracked Sops file as encrypted, and when the decrypted copy (`<path>` beside `<path>.sops`) is tracked. `sops` joins the repo's `[tools]` for it.
 - **Edit a Sops file in place with `sops edit <path>.sops`**, then run `mise run decrypt`. `~/.zshenv` exports `SOPS_AGE_SSH_PRIVATE_KEY_FILE`, so plain `sops` finds the key. There is no `encrypt` Task.
 
 ## Considered options

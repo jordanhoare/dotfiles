@@ -111,7 +111,7 @@ One installer per tool (ADR 0002): if mise can install it and a project may pin 
 
 Private keys are never committed - restored from Bitwarden via `mise run secrets`.
 
-An encrypted file is a `*.sops` file in the package matching its target: `home/<path>.sops` decrypts to `~/<path>`, `config/<path>.sops` to `~/.config/<path>`. One `.sops.yaml` rule encrypts them to `~/.ssh/personal`. `mise run decrypt` writes them all, on every platform; a committed config includes each (`[includeIf]` in `config/git/config`, `Include ~/.ssh/config.d/*` in `home/.ssh/config`). Add or change one with `sops edit <path>.sops`, never by editing the decrypted copy (ADR 0017).
+An encrypted file is a `*.sops` file in the package matching its target: `home/<path>.sops` decrypts to `~/<path>`, `config/<path>.sops` to `~/.config/<path>`. One `.sops.yaml` rule encrypts them to `~/.ssh/personal`. `mise run decrypt` writes them all, on every platform; a committed config includes each (`[includeIf]` in `config/git/config`, `Include ~/.ssh/config.d/*` in `home/.ssh/config`). Add or change one with `sops edit <path>.sops`, never by editing the decrypted copy. The `sops` prek hook fails a commit that tracks an unencrypted `*.sops` file or the plaintext beside one (ADR 0017).
 
 ## What NOT to do
 
