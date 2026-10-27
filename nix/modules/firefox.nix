@@ -14,10 +14,13 @@ let
     [ "file://${config.home.homeDirectory}/.config/firefox/newtab.html" ]
     (builtins.readFile ../../config/firefox/mozilla.cfg);
 
-  # force_installed with install_url is required per Mozilla policy docs.
-  # Firefox ignores installation_mode without install_url for sideloaded extensions.
-  # https://mozilla.github.io/policy-templates/#extensionsettings
-  amoUrl = id: "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
+  # Firefox ignores installation_mode without install_url for sideloaded
+  # extensions: https://mozilla.github.io/policy-templates/#extensionsettings
+  forceInstalled = id: {
+    installation_mode = "force_installed";
+    install_url = "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
+    private_browsing = true;
+  };
 in
 {
   programs.firefox = {
@@ -57,42 +60,15 @@ in
         };
       };
 
-      ExtensionSettings = {
-        "uBlock0@raymondhill.net" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "uBlock0@raymondhill.net";
-          private_browsing = true;
-        };
-        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-          private_browsing = true;
-        };
-        "leechblockng@proginosko.com" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "leechblockng@proginosko.com";
-          private_browsing = true;
-        };
-        "@news-feed-eradicator" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "@news-feed-eradicator";
-          private_browsing = true;
-        };
-        "vpn@proton.ch" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "vpn@proton.ch";
-          private_browsing = true;
-        };
-        "clipper@obsidian.md" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "clipper@obsidian.md";
-          private_browsing = true;
-        };
-        "{ad81280b-0506-473b-815b-9fbbdd754448}" = {
-          installation_mode = "force_installed";
-          install_url = amoUrl "{ad81280b-0506-473b-815b-9fbbdd754448}";
-        };
-      };
+      ExtensionSettings = lib.genAttrs [
+        "uBlock0@raymondhill.net"
+        "{446900e4-71c2-419f-a6a7-df9c091e268b}"
+        "leechblockng@proginosko.com"
+        "@news-feed-eradicator"
+        "vpn@proton.ch"
+        "clipper@obsidian.md"
+        "{ad81280b-0506-473b-815b-9fbbdd754448}"
+      ] forceInstalled;
     };
 
     profiles.personal = {

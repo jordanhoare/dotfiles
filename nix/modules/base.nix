@@ -1,14 +1,10 @@
 { pkgs, lib, username, homeDirectory, ... }:
 
 let
-  # Skills are bucketed by lifecycle (plan/build/health/lang/meta) in the repo so
-  # the tree is navigable. Claude Code only globs skills/*/SKILL.md, one level
-  # deep, so each skill is linked flat into ~/.claude/skills and the buckets stay
-  # a repo-side concern. Discovery is automatic: a new skill or a whole new
-  # bucket needs no change here.
-  # Codex skips symlinked files, so ~/.agents/skills gets one directory link per
-  # skill. ~/.claude/skills stays per-file: a directory link there would collide
-  # with the existing links on activation.
+  # Claude Code globs skills/*/SKILL.md one level deep, so the lifecycle buckets
+  # are flattened here. Codex skips symlinked files, so ~/.agents/skills gets a
+  # directory link per skill; ~/.claude/skills stays per-file to avoid colliding
+  # with its existing links on activation.
   skillsRoot = ../../home/.claude/skills;
 
   subdirsOf = path:
@@ -38,16 +34,10 @@ in
     ./cloud.nix
     ./dev.nix
     ./zed.nix
-    ./security.nix
+    ./firefox.nix
   ];
 
   home.stateVersion = "24.11";
-
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
 
   home.username = username;
   home.homeDirectory = homeDirectory;
@@ -67,7 +57,6 @@ in
     jq
     pwgen
     age
-    gnupg
     bitwarden-cli
     imagemagick
     fastfetch
@@ -104,6 +93,4 @@ in
     ".config/wallpapers/source.jpg".source = ../../config/wallpapers/source.jpg;
     ".config/wallpapers/wallpaper.jpg".source = ../../config/wallpapers/wallpaper.jpg;
   };
-
-  home.sessionPath = [ "$HOME/bin" ];
 }
