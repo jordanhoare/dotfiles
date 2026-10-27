@@ -17,6 +17,8 @@ repos:
         exclude: ^config/zed/
       - id: mixed-line-ending
 
+  # The only hook not run through mise: markdownlint needs node, which the
+  # repo tool pins must not depend on.
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.44.0
     hooks:
