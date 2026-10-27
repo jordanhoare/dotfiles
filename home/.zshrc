@@ -10,23 +10,19 @@ eval "$(starship init zsh)"
 eval "$(sheldon source)"
 eval "$(mise activate zsh)"
 eval "$(zoxide init zsh)"
-command -v direnv &>/dev/null && { export DIRENV_LOG_FORMAT=""; eval "$(direnv hook zsh)"; }
+export DIRENV_LOG_FORMAT=""
+eval "$(direnv hook zsh)"
 
 _update_git_identity() {
   export STARSHIP_GIT_USER=$(git config github.user 2>/dev/null)
 }
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd _update_git_identity
 
+# uv is a mise runtime, so it is absent until `mise run tools` has run.
 command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
-[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
-if [[ -n "$WSL_DISTRO_NAME" ]]; then
-  source ~/.zsh/platform/wsl.zsh
-elif [[ "$OSTYPE" == darwin* ]]; then
-  source ~/.zsh/platform/macos.zsh
-else
-  source ~/.zsh/platform/linux.zsh
-fi
+[[ -n "$WSL_DISTRO_NAME" ]] && source ~/.zsh/wsl.zsh
 
 alias repos='cd $REPOS'
 alias dot='cd $DOTFILES'
@@ -46,19 +42,15 @@ alias reload='source ~/.zshrc'
 
 gclone() { gh repo clone "$1"; }
 
-# Mirror git's identity includeIf rules for gh: switch the active gh account
-# based on cwd so authenticated gh operations match the git identity that
-# would commit in this path. Reads the expected gh user from the same git
-# config files the includeIf already references; never names a handle inline.
+# Keep the active gh account on the identity git would commit with here.
+# Outside a repo, git's [includeIf] cannot fire, so the private paths are
+# matched by hand to cover `gh repo clone` and `gh repo create`.
 gh() {
   local target lower="${(L)PWD}"
   case "$lower" in
-    /mnt/d/repositories/private/*|/mnt/e/poe/*)
-      target=$(command git config --file ~/.config/git/private github.user 2>/dev/null)
-      ;;
-    *)
-      target=$(command git config --file ~/.config/git/personal github.user 2>/dev/null)
-      ;;
+    /mnt/d/repositories/private/* | /mnt/e/poe/*)
+      target=$(command git config --file ~/.config/git/private github.user 2>/dev/null) ;;
+    *) target=$(command git config github.user 2>/dev/null) ;;
   esac
   [ -n "$target" ] && command gh auth switch --user "$target" >/dev/null 2>&1
   command gh "$@"

@@ -7,8 +7,11 @@
     tmux
   ];
 
+  # .zshrc runs `direnv hook zsh` itself; home-manager's zsh integration needs
+  # programs.zsh, which this repo does not use.
   programs.direnv = {
     enable = true;
+    enableZshIntegration = false;
     nix-direnv.enable = true;
   };
 
@@ -16,10 +19,7 @@
     ".zshrc".source = ../../home/.zshrc;
     ".zshenv".source = ../../home/.zshenv;
     ".zprofile".source = ../../home/.zprofile;
-    ".zlogin".source = ../../home/.zlogin;
-    ".zsh/platform/linux.zsh".source = ../../home/.zsh/platform/linux.zsh;
-    ".zsh/platform/macos.zsh".source = ../../home/.zsh/platform/macos.zsh;
-    ".zsh/platform/wsl.zsh".source = ../../home/.zsh/platform/wsl.zsh;
+    ".zsh/wsl.zsh".source = ../../home/.zsh/wsl.zsh;
 
     ".config/starship/starship.toml".source = ../../config/starship/starship.toml;
     ".config/sheldon/plugins.toml".source = ../../config/sheldon/plugins.toml;
