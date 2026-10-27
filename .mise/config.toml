@@ -1,7 +1,5 @@
-# Repo operations. Tasks only: tool pins live in config/mise/config.toml (the
-# baseline) and in each project's own mise.toml. A [tools] table here would
-# shadow the baseline for every shell opened inside this repo.
-# Anything longer than a line is a script under .mise/tasks/.
+# Repo operations. Anything longer than a line is a script under .mise/tasks/.
+# No [env] table: it would reach every task, so a task sets its own env.
 min_version = "2026.10.3"
 
 [tasks.bootstrap]
