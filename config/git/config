@@ -52,7 +52,7 @@
   whoami = "!echo \"$(git config user.name) <$(git config user.email)>\""
 
 [safe]
-	directory = *
+  directory = *
 
 # Optimize git for all Windows mounts (/mnt/*) - 9p filesystem stat calls are slow
 # This applies to all repos on Windows filesystems accessed from WSL
@@ -67,23 +67,23 @@
 [commit]
   gpgSign = false
 [fetch]
-	tags = true
-	fsckObjects = false
-	writeCommitGraph = true
+  tags = true
+  fsckObjects = false
+  writeCommitGraph = true
 [status]
-	submoduleSummary = false
-	showUntrackedFiles = normal
-	aheadBehind = false
+  submoduleSummary = false
+  showUntrackedFiles = normal
+  aheadBehind = false
 [feature]
-	manyFiles = true
+  manyFiles = true
 [remote "origin"]
-	tagOpt = --force
+  tagOpt = --force
 [credential "https://github.com"]
-	helper =
-	helper = !gh auth git-credential
+  helper =
+  helper = !gh auth git-credential
 [credential "https://gist.github.com"]
-	helper =
-	helper = !gh auth git-credential
+  helper =
+  helper = !gh auth git-credential
 [includeIf "gitdir:/mnt/d/repositories/private/"]
   path = ~/.config/git/private
 [includeIf "gitdir/i:/mnt/e/poe/"]

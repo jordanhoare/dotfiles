@@ -10,7 +10,7 @@ if [ -n "${WSL_DISTRO_NAME:-}" ]; then
   # WSL keeps every repo on the Windows drive so Windows toolchains can reach it.
   dotfiles="/mnt/d/repositories/dotfiles"
 else
-  dotfiles="$HOME/repositories/dotfiles"
+  dotfiles="${HOME}/repositories/dotfiles"
 fi
 
 install_clt() {
@@ -21,8 +21,8 @@ install_clt() {
   sudo touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
   label=$(softwareupdate -l 2>/dev/null | grep -B 1 -E 'Command Line Tools' | awk -F'*' '/^ *\*/ {print $2}' | sed -e 's/^ *Label: //' -e 's/^ *//' | head -n1)
   sudo rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-  if [ -n "$label" ]; then
-    sudo softwareupdate -i "$label" --verbose
+  if [ -n "${label}" ]; then
+    sudo softwareupdate -i "${label}" --verbose
     sudo xcode-select --switch /Library/Developer/CommandLineTools
   else
     xcode-select --install
@@ -39,16 +39,17 @@ case "$(uname -s)" in
       sudo apt-get install -y git curl
     fi
     ;;
+  *) ;;
 esac
 
-if ! [ -x "$HOME/.local/bin/mise" ]; then
+if ! [ -x "${HOME}/.local/bin/mise" ]; then
   curl -fsSL https://mise.run | MISE_INSTALL_HELP=0 sh
 fi
 
-if ! [ -d "$dotfiles/.git" ]; then
-  mkdir -p "$(dirname "$dotfiles")"
-  git clone "$repo" "$dotfiles"
+if ! [ -d "${dotfiles}/.git" ]; then
+  mkdir -p "$(dirname "${dotfiles}")"
+  git clone "${repo}" "${dotfiles}"
 fi
 
-cd "$dotfiles"
-exec "$HOME/.local/bin/mise" run bootstrap
+cd "${dotfiles}"
+exec "${HOME}/.local/bin/mise" run bootstrap

@@ -5,9 +5,9 @@
 set -uo pipefail
 
 payload=$(cat)
-command=$(jq -r '.tool_input.command // empty' <<<"$payload")
-[[ -z $command ]] && exit 0
-cwd=$(jq -r '.cwd // empty' <<<"$payload")
+command=$(jq -r '.tool_input.command // empty' <<<"${payload}")
+[[ -z ${command} ]] && exit 0
+cwd=$(jq -r '.cwd // empty' <<<"${payload}")
 
 # Cursor documents the JSON reason, not stderr, as the message for a block.
 block() {
@@ -26,7 +26,7 @@ command=$(awk '
     delimiter = substr($0, RSTART, RLENGTH)
     gsub(/^<<-?[ ]*["'"'"']?/, "", delimiter)
   }
-' <<<"$command")
+' <<<"${command}")
 
 # Anchored at a word boundary so a path containing "git clean" does not trip the pattern.
 dangerous_patterns=(
@@ -42,22 +42,22 @@ dangerous_patterns=(
 )
 
 for pattern in "${dangerous_patterns[@]}"; do
-  if grep -qE "$pattern" <<<"$command"; then
-    block "BLOCKED: '$command' matches '$pattern'. The user has withheld this command; ask them to run it themselves with the '! ' prefix."
+  if grep -qE "${pattern}" <<<"${command}"; then
+    block "BLOCKED: '${command}' matches '${pattern}'. The user has withheld this command; ask them to run it themselves with the '! ' prefix."
   fi
 done
 
 # Agents push feature branches freely; main is the user's to push, so the agent
 # commits there and hands over.
-push_segments=$(grep -oE '(^|[;&|(][[:space:]]*)git +push[^;&|]*' <<<"$command") || exit 0
+push_segments=$(grep -oE '(^|[;&|(][[:space:]]*)git +push[^;&|]*' <<<"${command}") || exit 0
 
 current_branch=$(git -C "${cwd:-.}" rev-parse --abbrev-ref HEAD 2>/dev/null)
-if [[ $current_branch == main || $current_branch == master ]]; then
-  target="the current branch ($current_branch)"
-elif grep -qE '[ :+](main|master)( |$)' <<<"$push_segments"; then
+if [[ ${current_branch} == main || ${current_branch} == master ]]; then
+  target="the current branch (${current_branch})"
+elif grep -qE '[ :+](main|master)( |$)' <<<"${push_segments}"; then
   target="main"
 else
   exit 0
 fi
 
-block "BLOCKED: '$command' pushes $target. Commit only, then tell the user to push with '! git push'."
+block "BLOCKED: '${command}' pushes ${target}. Commit only, then tell the user to push with '! git push'."

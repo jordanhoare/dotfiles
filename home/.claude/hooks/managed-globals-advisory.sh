@@ -6,7 +6,7 @@
 set -uo pipefail
 
 command=$(jq -r '.tool_input.command // empty')
-[[ -z $command ]] && exit 0
+[[ -z ${command} ]] && exit 0
 
 # `uv pip install` targets the project venv, not the machine. Neutralise it so the
 # bare `pip install` pattern below cannot claim it.
@@ -28,17 +28,18 @@ global_patterns=(
 )
 
 for pattern in "${global_patterns[@]}"; do
-  grep -qE "$pattern" <<<"$scan" || continue
+  grep -qE "${pattern}" <<<"${scan}" || continue
 
-  advisory=$(cat <<'EOF'
+  advisory=$(
+    cat <<'EOF'
 Globals on this machine are managed by ~/repositories/dotfiles (Nix + Home Manager):
   runtimes and tools -> mise
   js packages        -> bun / bunx
   system packages    -> declare in nix/modules/base.nix, then `mise run switch`
 If this dependency is project-local, use the project's own manager instead.
 EOF
-)
-  jq -nc --arg ctx "$advisory" \
+  )
+  jq -nc --arg ctx "${advisory}" \
     '{hookSpecificOutput:{hookEventName:"PreToolUse",additionalContext:$ctx}}'
   exit 0
 done
