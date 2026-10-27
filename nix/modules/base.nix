@@ -53,7 +53,6 @@ in
   home.homeDirectory = homeDirectory;
 
   home.packages = with pkgs; [
-    gnumake
     coreutils
     curl
     wget
@@ -66,10 +65,7 @@ in
     eza
     bat
     jq
-    just
     pwgen
-    mise
-    sops
     age
     gnupg
     bitwarden-cli

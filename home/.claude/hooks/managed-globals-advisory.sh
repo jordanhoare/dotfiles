@@ -34,7 +34,7 @@ for pattern in "${global_patterns[@]}"; do
 Globals on this machine are managed by ~/repositories/dotfiles (Nix + Home Manager):
   runtimes and tools -> mise
   js packages        -> bun / bunx
-  system packages    -> declare in nix/modules/base.nix, then `make switch`
+  system packages    -> declare in nix/modules/base.nix, then `mise run switch`
 If this dependency is project-local, use the project's own manager instead.
 EOF
 )

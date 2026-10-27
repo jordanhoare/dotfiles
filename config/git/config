@@ -4,7 +4,7 @@
   process = git-lfs filter-process
   required = true
 
-; Personal identity is sourced from ~/.config/git/personal (decrypted by `make secrets`).
+; Personal identity is sourced from ~/.config/git/personal (decrypted by `mise run secrets`).
 ; Private identity overrides for repos under the private path via [includeIf] below.
 [include]
   path = ~/.config/git/personal

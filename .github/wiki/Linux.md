@@ -1,43 +1,27 @@
 # Linux
 
-## 1. Prerequisites
+## 1. Install
+
+One command. It installs git and curl, installs mise, clones the repo to `~/repositories/dotfiles`, then runs `mise run bootstrap`: Nix via the Determinate installer, the Home Manager activation, and the baseline runtimes. Expect sudo prompts.
 
 ```bash
-sudo apt install -y git curl make
+curl -fsSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.sh | sh
 ```
 
-Install Nix: https://nixos.org/download/#nix-install-linux
+Open a new shell afterwards.
 
-Open a new shell to pick up the Nix environment.
-
-## 2. Clone
-
-```bash
-mkdir -p ~/repositories
-git clone https://github.com/jordanhoare/dotfiles.git ~/repositories/dotfiles
-cd ~/repositories/dotfiles
-```
-
-## 3. Activate
-
-Installs every package, links every config file, and applies the dotfiles to your home directory.
-
-```bash
-make switch
-```
-
-## 4. Restore secrets
+## 2. Restore secrets
 
 Logs in to Bitwarden, restores both SSH keys, and decrypts the private git profile to `~/.config/git/private`.
 
 ```bash
-make secrets
+mise run secrets
 ```
 
-## 5. Swap remote to SSH
+## 3. Swap remote to SSH
 
 ```bash
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
-Done. See [Home](Home) for updating, identity switching, and other daily ops.
+Done. See [Home](Home) for updating, identity switching, and other daily ops. ADR 0016 covers why mise is the only hand-installed program.

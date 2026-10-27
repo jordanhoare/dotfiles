@@ -6,7 +6,7 @@ Personal dotfiles for Jordan Hoare. The repository captures shell, terminal, git
 
 ## Domain
 
-The repository solves one problem: bring a fresh machine to a known, fully-configured state, and keep that state consistent across every machine the maintainer uses. Configuration is the artifact; reproducibility and idempotence are the goals. `make switch` converges any supported OS to the configured state. Editing a file in the repo takes effect immediately via Home Manager symlinks.
+The repository solves one problem: bring a fresh machine to a known, fully-configured state, and keep that state consistent across every machine the maintainer uses. Configuration is the artifact; reproducibility and idempotence are the goals. `mise run switch` converges any supported OS to the configured state, and a fresh machine starts from one entry script that installs mise, clones, and runs `mise run bootstrap`. Editing a file in the repo takes effect immediately via Home Manager symlinks.
 
 ## Users
 

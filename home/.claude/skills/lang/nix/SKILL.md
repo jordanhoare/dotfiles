@@ -23,7 +23,7 @@ nix/
     └── profiles.nix       the personal/private git identity split
 ```
 
-`make switch` builds and activates the config for the detected platform. On macOS it builds the system derivation first so `darwin-rebuild` comes from the flake-pinned nix-darwin rather than the registry.
+`mise run switch` builds and activates the config for the detected platform. On macOS it builds the system derivation first so `darwin-rebuild` comes from the flake-pinned nix-darwin rather than the registry.
 
 ## Build before you commit
 
@@ -69,4 +69,4 @@ The source path is relative to the module file. Only declared files are linked; 
 1. Read which phase failed. Everything before it succeeded and everything after it did not run.
 2. Reproduce the build alone with `nix build`. If that passes, the fault is in activation, not evaluation.
 3. For Homebrew failures, check whether brew itself is stale before suspecting the module.
-4. Re-run `make switch` after the fix rather than assuming a partial activation left a usable state.
+4. Re-run `mise run switch` after the fix rather than assuming a partial activation left a usable state.
