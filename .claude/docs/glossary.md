@@ -56,7 +56,7 @@ Each Profile's identity lives in a single file at `~/.config/git/<profile>`, a g
 
 ## Task
 
-A named repo operation under `.mise/` at the Dotfiles root, run with `mise run <name>` and listed by `mise tasks`. One-line Tasks live in `.mise/config.toml`; longer ones are scripts in `.mise/tasks/`. Tasks replace the Makefile. `.mise/config.toml` carries Tasks only; tool pins stay in the baseline config. See ADR 0016.
+A named repo operation under `.mise/` at the Dotfiles root, run with `mise run <name>` and listed by `mise tasks`. One-line Tasks live in `.mise/config.toml`; longer ones are scripts in `.mise/tasks/`. Tasks replace the Makefile. `.mise/config.toml` may also pin the tools the repo's own checks need, and never holds `[env]`. See ADR 0016.
 
 ## Symlink
 
