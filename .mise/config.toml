@@ -1,0 +1,44 @@
+# Repo operations. Tasks only: tool pins live in config/mise/config.toml (the
+# baseline) and in each project's own mise.toml. A [tools] table here would
+# shadow the baseline for every shell opened inside this repo.
+# Anything longer than a line is a script under .mise/tasks/.
+min_version = "2026.10.3"
+
+[tasks.bootstrap]
+description = "fresh machine: install nix, activate the platform config, install runtimes"
+depends = ["nix", "switch", "tools"]
+run = 'echo "bootstrap done. next: mise run secrets"'
+run_windows = 'echo bootstrap done. next: mise run secrets'
+
+[tasks.switch]
+description = "activate the platform config: nix-darwin on macos, home manager on linux and wsl, bootstrap.ps1 on windows"
+raw = true
+run = 'mise run "switch:{{ os() }}"'
+run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\bootstrap.ps1'
+
+[tasks.tools]
+description = "install the baseline runtimes from the global mise config"
+run = "mise install"
+
+[tasks.secrets]
+description = "restore ssh keys and gh logins from bitwarden, decrypt the private git identity"
+raw = true
+env = { DOTFILES = "{{ config_root }}" }
+run = "bin/secrets"
+run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\secrets.ps1'
+
+[tasks.decrypt]
+description = "decrypt config/git/private.enc to ~/.config/git/private"
+env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
+run = "sops --decrypt --output ~/.config/git/private config/git/private.enc"
+run_windows = 'echo the private profile is wsl-only'
+
+[tasks.encrypt]
+description = "re-encrypt ~/.config/git/private into config/git/private.enc"
+env = { SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
+run = "sops --encrypt --output config/git/private.enc ~/.config/git/private"
+run_windows = 'echo the private profile is wsl-only'
+
+[tasks.hooks]
+description = "install the pre-commit hooks"
+run = ["pre-commit install", "pre-commit install --hook-type commit-msg"]

@@ -11,7 +11,7 @@
 Everything below is managed by the dotfiles repo, cloned to `D:\repositories\dotfiles` on Windows and WSL and `~/repositories/dotfiles` on macOS and native Linux.
 
 - Nix + Home Manager own package installs and dotfile symlinks; nix-darwin adds macOS system config
-- `mise run switch` activates the config for the detected platform; `mise tasks` lists the rest. Tasks in `mise.toml` replaced the Makefile
+- `mise run switch` activates the config for the detected platform; `mise tasks` lists the rest. Tasks under `.mise/` replaced the Makefile
 - `mise run secrets` restores SSH keys from Bitwarden and decrypts the private git identity
 - To add a tool: mise owns anything a project could pin (`config/mise/config.toml` or the project's `mise.toml`); Nix owns the rest (`nix/modules/base.nix` or the platform module, then `mise run switch`). Never install manually, never declare a tool in both
 - Native Windows has no Nix: `mise run switch` runs `win/bootstrap.ps1`, which imports `win/winget.json` and links the same configs, and `win/secrets.ps1` restores the personal SSH key. Declare a Windows tool in `win/winget.json`, or in `win/mise.toml` for a runtime

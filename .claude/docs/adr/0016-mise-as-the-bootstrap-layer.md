@@ -8,7 +8,7 @@ mise was also installed twice on Unix machines: once by Home Manager, once by wh
 
 ## Decision
 
-- **mise tasks replace the Makefile and `bin/up`.** `mise.toml` at the repo root carries `[tasks]` only, never `[tools]` or `[env]`, so it does not shadow the baseline in `config/mise/config.toml` and needs no trust prompt on first run. `mise run bootstrap` is the one command on every platform.
+- **mise tasks replace the Makefile and `bin/up`.** `.mise/config.toml` carries `[tasks]` only, never `[tools]` or `[env]`, so it does not shadow the baseline in `config/mise/config.toml` and needs no trust prompt on first run. A task in the TOML is one line; anything longer is a script in `.mise/tasks/`, a `.sh` file paired with a `.ps1` file where Windows needs a body, and hidden when it exists only to be called by another task. `mise run bootstrap` is the one command on every platform.
 - **mise installs itself.** `https://mise.run` on macOS, Linux and WSL, `winget install jdx.mise` on Windows. Home Manager does not install mise. This is the one named exception to ADR 0005: the mise version floats and `mise run up` runs `mise self-update`.
 - **Entry scripts do only pre-clone work.** `install.sh` installs the Xcode Command Line Tools on macOS or `git` and `curl` on Debian-family Linux, installs mise, clones the repo to the Dotfiles root, and runs `mise run bootstrap`. `install.ps1` does the same with winget. Neither holds logic a task could hold.
 - **Nix stays the package and symlink layer.** The `nix` task installs it with the Determinate installer and `--no-confirm`, and skips when `/nix` already holds a profile. On WSL the task installs the repo's `etc/wsl.conf` when systemd is not running and exits asking for `wsl --shutdown`; the second run installs Nix.
