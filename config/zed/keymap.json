@@ -1,49 +1,27 @@
 [
   {
-    "context": "Editor",
-    "bindings": {
-      "alt-s": "workspace::SaveWithoutFormat"
-    }
-  },
-  {
     "context": "Workspace",
     "bindings": {
-      "cmd-p": ["task::Spawn", { "task_name": "Television: Find File" }],
-      "ctrl-p": ["task::Spawn", { "task_name": "Television: Find File" }],
-      "cmd-shift-f": "zed::NoAction",
-      "ctrl-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }],
-      "cmd-shift-r": "task::Spawn",
       "cmd-shift-o": "project_symbols::Toggle",
       "cmd-shift-d": "diagnostics::Deploy",
+      "cmd-shift-r": "task::Spawn",
       "cmd-b": "project_panel::ToggleFocus",
       "cmd-shift-b": "workspace::ToggleLeftDock",
-      "cmd-g": "git_panel::ToggleFocus",
       "cmd-e": "tab_switcher::Toggle",
-      "cmd-shift-m": "diagnostics::Deploy",
-      "cmd-shift-l": "editor::SelectAllMatches"
-    }
-  },
-  {
-    "context": "Editor && mode == full",
-    "bindings": {
-      "cmd-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }]
-    }
-  },
-  {
-    "context": "Pane",
-    "bindings": {
-      "cmd-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }]
-    }
-  },
-  {
-    "context": "Workspace",
-    "bindings": {
-      "cmd-shift-f": ["task::Spawn", { "task_name": "Television: Live Grep" }]
+      "cmd-g": "git::Diff",
+      "cmd-shift-g": "git_panel::ToggleFocus",
+      "cmd-k cmd-g": "git::Commit",
+      "cmd-k cmd-b": "git::Branch",
+      "cmd-k cmd-u": "git::ViewUnstagedChanges",
+      "cmd-k cmd-t": "git::ViewStagedChanges",
+      "cmd-k cmd-h": "git::ViewStash",
+      "cmd-k cmd-w": "git::Worktree"
     }
   },
   {
     "context": "Editor",
     "bindings": {
+      "alt-s": "workspace::SaveWithoutFormat",
       "cmd-.": "editor::ToggleCodeActions",
       "f2": "editor::Rename",
       "f12": "editor::GoToDefinition",
@@ -51,7 +29,11 @@
       "cmd-shift-i": "editor::Format",
       "cmd-k cmd-i": "editor::Hover",
       "f8": "editor::GoToDiagnostic",
-      "shift-f8": "editor::GoToPreviousDiagnostic"
+      "shift-f8": "editor::GoToPreviousDiagnostic",
+      "alt-down": "editor::GoToHunk",
+      "alt-up": "editor::GoToPreviousHunk",
+      "cmd-k cmd-r": "git::Restore",
+      "cmd-shift-l": "editor::SelectAllMatches"
     }
   }
 ]

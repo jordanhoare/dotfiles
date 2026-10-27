@@ -50,8 +50,25 @@
     "default_width": 320,
     "status_style": "label_color",
     "sort_by_path": false,
+    "tree_view": true,
     "collapse_untracked_diff": true,
+    "show_count_badge": true,
   },
+  "diff_view_style": "unified",
+  "file_finder": {
+    "file_icons": true,
+    "prefill_query_from_selection": true,
+  },
+  "tab_switcher": {
+    "show_file_preview": true,
+  },
+  "search": {
+    "regex": false,
+    "case_sensitive": false,
+    "whole_word": false,
+    "include_ignored": false,
+  },
+  "extension_suggestions": false,
   "tab_size": 2,
   "format_on_save": "on",
   "soft_wrap": "none",
@@ -74,6 +91,8 @@
       "min_column": 80,
     },
     "git_gutter": "tracked_files",
+    "hunk_style": "staged_hollow",
+    "show_stage_restore_buttons": true,
   },
   "diagnostics": {
     "inline": {
@@ -92,7 +111,7 @@
     "diagnostics": false,
     "metrics": false,
   },
-  "auto_update": false,
+  "auto_update": true,
   "auto_install_extensions": {
     "catppuccin": true,
     "catppuccin-blur": true,

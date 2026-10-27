@@ -17,6 +17,7 @@
       # binary drift behind the metadata until a cask uses a DSL method the old
       # brew lacks, and bundle dies.
       autoUpdate = true;
+      upgrade = true;
       cleanup = "zap";
     };
     casks = [
