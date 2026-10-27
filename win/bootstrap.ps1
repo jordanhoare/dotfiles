@@ -37,12 +37,8 @@ $wingetManifest = Join-Path $PSScriptRoot 'winget.json'
 Write-Host "Importing winget packages from $wingetManifest" -ForegroundColor Cyan
 winget import --import-file $wingetManifest --accept-package-agreements --accept-source-agreements
 
-# --- install manifest ---
-# parallel to nix/modules/zed.nix - keep both in sync when adding entries.
-# Mode = 'Symlink' for files the app treats as read-only config; 'Copy' for
-# files the app mutates at runtime (one-way push from repo, local writes lost
-# on next bootstrap).
-
+# Mode: 'Symlink' for files the app treats as read-only; 'Copy' for files the
+# app rewrites at runtime, so local writes never bleed back into the repo.
 $links = @(
     @{ Source = Join-Path $repo 'config\zed\settings.json'; Target = Join-Path $env:APPDATA 'Zed\settings.json'; Mode = 'Copy' }
     @{ Source = Join-Path $repo 'config\zed\keymap.json';   Target = Join-Path $env:APPDATA 'Zed\keymap.json';   Mode = 'Symlink' }
@@ -69,57 +65,55 @@ Get-ChildItem -Directory (Join-Path $repo 'home\.claude\skills') | ForEach-Objec
     }
 }
 
-foreach ($link in $links) {
-    $source = $link.Source
-    $target = $link.Target
-    $mode = $link.Mode
+function Backup-RealFile($target) {
+    $backup = "$target.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+    Move-Item -LiteralPath $target -Destination $backup
+    return $backup
+}
 
-    if (-not (Test-Path -LiteralPath $source)) {
-        Write-Host "skip   $target (source missing: $source)" -ForegroundColor Yellow
-        continue
+function Install-Copy($source, $target, $existing) {
+    if ($existing -and $existing.LinkType -eq 'SymbolicLink') {
+        Remove-Item -LiteralPath $target -Force
     }
+    Copy-Item -LiteralPath $source -Destination $target -Force
+    Write-Host "copy   $target <- $source" -ForegroundColor Green
+}
 
-    $parent = Split-Path -Parent $target
-    if (-not (Test-Path -LiteralPath $parent)) {
-        New-Item -ItemType Directory -Path $parent -Force | Out-Null
-    }
-
-    $existing = Get-Item -LiteralPath $target -Force -ErrorAction SilentlyContinue
-
-    if ($mode -eq 'Copy') {
-        if ($existing -and $existing.LinkType -eq 'SymbolicLink') {
-            Remove-Item -LiteralPath $target -Force
-        }
-        Copy-Item -LiteralPath $source -Destination $target -Force
-        Write-Host "copy   $target <- $source" -ForegroundColor Green
-        continue
-    }
-
+function Install-Symlink($source, $target, $existing) {
     if ($null -eq $existing) {
         New-Item -ItemType SymbolicLink -Path $target -Target $source | Out-Null
         Write-Host "link   $target -> $source" -ForegroundColor Green
-        continue
+        return
     }
-
-    if ($existing.LinkType -eq 'SymbolicLink') {
-        $currentTarget = $existing.Target
-        if ($currentTarget -is [array]) { $currentTarget = $currentTarget[0] }
-
-        if ((Resolve-Path -LiteralPath $currentTarget -ErrorAction SilentlyContinue).Path -eq $source) {
-            Write-Host "ok     $target" -ForegroundColor DarkGray
-            continue
-        }
-
-        Remove-Item -LiteralPath $target -Force
+    if ($existing.LinkType -ne 'SymbolicLink') {
+        $backup = Backup-RealFile $target
         New-Item -ItemType SymbolicLink -Path $target -Target $source | Out-Null
-        Write-Host "relink $target -> $source (was: $currentTarget)" -ForegroundColor Yellow
+        Write-Host "backup $target -> $backup, then linked to $source" -ForegroundColor Yellow
+        return
+    }
+    $currentTarget = $existing.Target
+    if ($currentTarget -is [array]) { $currentTarget = $currentTarget[0] }
+    if ((Resolve-Path -LiteralPath $currentTarget -ErrorAction SilentlyContinue).Path -eq $source) {
+        Write-Host "ok     $target" -ForegroundColor DarkGray
+        return
+    }
+    Remove-Item -LiteralPath $target -Force
+    New-Item -ItemType SymbolicLink -Path $target -Target $source | Out-Null
+    Write-Host "relink $target -> $source (was: $currentTarget)" -ForegroundColor Yellow
+}
+
+foreach ($link in $links) {
+    if (-not (Test-Path -LiteralPath $link.Source)) {
+        Write-Host "skip   $($link.Target) (source missing: $($link.Source))" -ForegroundColor Yellow
         continue
     }
-
-    $backup = "$target.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
-    Move-Item -LiteralPath $target -Destination $backup
-    New-Item -ItemType SymbolicLink -Path $target -Target $source | Out-Null
-    Write-Host "backup $target -> $backup, then linked to $source" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path (Split-Path -Parent $link.Target) -Force | Out-Null
+    $existing = Get-Item -LiteralPath $link.Target -Force -ErrorAction SilentlyContinue
+    if ($link.Mode -eq 'Copy') {
+        Install-Copy $link.Source $link.Target $existing
+    } else {
+        Install-Symlink $link.Source $link.Target $existing
+    }
 }
 
 $shims = Join-Path $env:LOCALAPPDATA 'mise\shims'
