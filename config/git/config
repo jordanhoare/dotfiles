@@ -4,8 +4,7 @@
   process = git-lfs filter-process
   required = true
 
-; Personal identity is sourced from ~/.config/git/personal (decrypted by `mise run secrets`).
-; Private identity overrides for repos under the private path via [includeIf] below.
+; The private profile overrides this inside the private paths via [includeIf] below.
 [include]
   path = ~/.config/git/personal
 
@@ -47,22 +46,20 @@
   autoSetupRemote = true
 
 [alias]
-  personal = "!git config user.name \"$(git config --file ~/.config/git/personal user.name)\" && git config user.email \"$(git config --file ~/.config/git/personal user.email)\" && git config github.user \"$(git config --file ~/.config/git/personal github.user)\" && { gh auth switch --user \"$(git config --file ~/.config/git/personal github.user)\" 2>/dev/null || echo 'warn: gh not authenticated; run `gh auth login`'; }"
-  private = "!git config user.name \"$(git config --file ~/.config/git/private user.name)\" && git config user.email \"$(git config --file ~/.config/git/private user.email)\" && git config github.user \"$(git config --file ~/.config/git/private github.user)\" && { gh auth switch --user \"$(git config --file ~/.config/git/private github.user)\" 2>/dev/null || echo 'warn: gh not authenticated; run `gh auth login`'; }"
+  ; `git profile <name>` copies the identity from ~/.config/git/<name> into the
+  ; repo config and moves gh onto the same account.
+  profile = "!f() { p=~/.config/git/$1; [ -f \"$p\" ] || { echo \"error: no profile at $p\" >&2; exit 1; }; for k in user.name user.email github.user; do git config \"$k\" \"$(git config --file \"$p\" \"$k\")\"; done; gh auth switch --user \"$(git config --file \"$p\" github.user)\" 2>/dev/null || echo 'warn: gh not authenticated; run `gh auth login`'; }; f"
+  personal = profile personal
+  private = profile private
   whoami = "!echo \"$(git config user.name) <$(git config user.email)>\""
 
 [safe]
   directory = *
 
-# Optimize git for all Windows mounts (/mnt/*) - 9p filesystem stat calls are slow
-# This applies to all repos on Windows filesystems accessed from WSL
+; Mode bits are not meaningful on the 9p mounts WSL uses for Windows drives.
 [includeIf "gitdir:/mnt/"]
   [core]
-    # This prevents git from checking file permissions on every operation
     fileMode = false
-  [status]
-    aheadBehind = false
-    showUntrackedFiles = normal
 
 [commit]
   gpgSign = false
