@@ -26,9 +26,10 @@ Projects that build Windows binaries are developed on native Windows, with Claud
 - mise owns runtimes on Windows as it does on WSL. It installs rustup itself, and `win/mise.toml` enables the `rust` idiomatic file, so a repo's `rust-toolchain.toml` outranks the global `rust` entry. No global rustup or uv comes from winget
 - `win/mise.toml` is a separate, smaller file than `config/mise/config.toml`. Most tools in the shared file are Linux or infrastructure tools that run only in WSL
 - The script prepends `%LOCALAPPDATA%\mise\shims` to the user `Path`. The non-interactive shells Claude Code spawns never run `mise activate`
-- `win/secrets.ps1` restores `~/.ssh/personal` and logs gh in from Bitwarden, as `bin/secrets` does for the personal account
+- `win/secrets.ps1` restores `~/.ssh/personal` and `~/.ssh/private` and logs gh in to both accounts from Bitwarden, as `bin/secrets` does
 - `jq` and `delta` come from winget, because the Claude hooks need `jq` and `config/git/config` sets `delta` as the pager
-- `mise run secrets` decrypts every Sops file on Windows as on WSL (ADR 0017). The private profile stays WSL-only: the `includeIf` paths in `config/git/config` match only `/mnt` paths
+- `mise run secrets` decrypts every Sops file on Windows as on WSL (ADR 0017), the private identity among them
+- The private profile works on Windows. `config/git/config` carries each private `includeIf` twice, as the `/mnt/d/...` path WSL sees and the `D:/...` path Windows sees, so a private repo gets the private identity from either side
 - Worktrees go to `%USERPROFILE%\worktrees\<repo>\<name>`, the same `~/worktrees` rule as ADR 0013. On NTFS it changes nothing about speed
 
 ## Considered Options

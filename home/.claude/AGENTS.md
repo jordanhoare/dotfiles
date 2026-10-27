@@ -28,8 +28,7 @@ Switching:
 
 - `git personal` switches identity and runs `gh auth switch`
 - `git private` switches to the anon profile
-- Auto-switches for repos under `/mnt/d/repositories/private/` via `includeIf` (WSL only; other platforms switch explicitly)
-- The private profile is WSL-only. Native Windows has the personal profile alone
+- Auto-switches for repos under `D:\repositories\private\` via `includeIf`, on WSL (`/mnt/d/...`) and native Windows; macOS and native Linux switch explicitly
 
 Worktrees:
 

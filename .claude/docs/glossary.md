@@ -50,7 +50,7 @@ The VPN client on WSL, Linux, and macOS, run as a system daemon with the standar
 
 ## Profile
 
-A git identity, either **personal** (`jordanhoare`) or **private** (anonymous), held as a config fragment at `~/.config/git/<profile>` with `[user]` and `[github]` sections. `config/git/config` includes personal by default and private inside the private paths. `git personal` and `git private` copy a Profile into the current repo and switch the `gh` account to match. The personal fragment is committed plaintext; the private one is the [Sops file](#sops-file) `config/git/private.sops`, decrypted by `mise run secrets` straight to `~/.config/git/private`, so the private username never enters the repo or the Nix store.
+A git identity, either **personal** (`jordanhoare`) or **private** (anonymous), held as a config fragment at `~/.config/git/<profile>` with `[user]` and `[github]` sections. `config/git/config` includes personal by default and private inside the private paths, as both WSL and native Windows see them. `git personal` and `git private` copy a Profile into the current repo and switch the `gh` account to match. The personal fragment is committed plaintext; the private one is the [Sops file](#sops-file) `config/git/private.sops`, decrypted by `mise run secrets` straight to `~/.config/git/private`, so the private username never enters the repo or the Nix store.
 
 ## Task
 

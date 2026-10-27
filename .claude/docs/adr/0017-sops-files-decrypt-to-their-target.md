@@ -26,6 +26,6 @@ Native Windows is also a development platform (ADR 0014) and needs the same decr
 ## Consequences
 
 - A change made to a decrypted target is lost on the next `mise run decrypt`. The Sops file is the source.
-- The private Profile's identity now decrypts on native Windows too. It stays inert there, because the `[includeIf]` paths in `config/git/config` match only `/mnt` paths.
+- The private Profile's identity now decrypts on native Windows too, and `config/git/config` matches the Windows paths of the private repos, so the private Profile works there (ADR 0014).
 - `sops` joins `win/mise.toml`.
 - A Sops file outside `home/` or `config/` is skipped with a warning.

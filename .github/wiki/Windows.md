@@ -24,7 +24,7 @@ Open a new shell afterwards so the `Path` change applies.
 
 ## 3. Restore secrets
 
-Restores the personal SSH key and gh login from Bitwarden:
+Restores both SSH keys and gh logins from Bitwarden, then decrypts every `*.sops` file. Repos under `D:\repositories\private\` pick up the private identity, as they do from WSL.
 
 ```powershell
 mise run secrets
@@ -58,7 +58,7 @@ curl -fsSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.s
 
 ## 6. Restore secrets in WSL
 
-Logs in to Bitwarden, restores both SSH keys, and decrypts the private git profile to `~/.config/git/private`:
+Logs in to Bitwarden, restores both SSH keys, and decrypts every `*.sops` file to its target:
 
 ```bash
 mise run secrets
