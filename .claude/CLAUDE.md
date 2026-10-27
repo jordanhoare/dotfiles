@@ -10,7 +10,7 @@ Personal dotfiles for Jordan Hoare. Managed via Nix and Home Manager across thre
 
 | Package | Target | Contents |
 |---|---|---|
-| `home/` | `~` | `.zshrc`, `.zlogin`, `.zprofile`, `.zshenv`, `.ssh/config`, `.claude/`, `.codex/` |
+| `home/` | `~` | `.zshrc`, `.zprofile`, `.zshenv`, `.zsh/`, `.ssh/config`, `.claude/`, `.codex/` |
 | `config/` | `~/.config` | `git/`, `gh/`, `ghostty/`, `mise/`, `uv/`, `sheldon/`, etc. |
 | `bin/` | `~/bin` | Personal executable scripts |
 | `etc/` | `/etc` | `timezone`, `locale.conf` - Linux/WSL only, applied manually |
@@ -40,9 +40,10 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 |---|---|
 | `nix/flake.nix` | Entry point - defines `darwinConfigurations.macos`, `homeConfigurations.linux`, `homeConfigurations.wsl` |
 | `nix/flake.lock` | Committed - pins all package versions |
-| `nix/modules/base.nix` | Packages and dotfile links shared across all platforms |
-| `nix/modules/linux.nix` | Native Linux: shared Linux bits plus GUI apps (Obsidian, Bitwarden) |
-| `nix/modules/wsl.nix` | WSL: shared Linux bits only; GUI apps come from Windows via winget |
+| `nix/modules/base.nix` | Imports the shared modules below, plus the packages and links every platform gets |
+| `nix/modules/shell.nix`, `git.nix`, `dev.nix`, `cloud.nix`, `zed.nix`, `firefox.nix` | Shared modules, one per concern |
+| `nix/modules/linux.nix` | Native Linux: GUI apps (Obsidian, Bitwarden, Hyprland) |
+| `nix/modules/wsl.nix` | WSL: no GUI apps; those come from Windows via winget |
 | `nix/modules/macos.nix` | macOS nix-darwin system config + nested home-manager user config |
 
 ### Windows
@@ -53,7 +54,6 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 | `win/bootstrap.ps1` | Windows body of `mise run switch`: winget import plus config links (ADR 0011, 0014) |
 | `win/mise.toml` | Windows global mise config, smaller than `config/mise/config.toml` |
 | `win/secrets.ps1` | Restores the personal SSH key and gh login from Bitwarden |
-| `win/README.md` | Windows bootstrap steps |
 
 ### Non-managed directories
 
