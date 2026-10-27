@@ -21,8 +21,6 @@ else
   export VISUAL="nano"
 fi
 export BROWSER="firefox"
-export GIT_USERNAME="jordanhoare"
-export SOPS_AGE_KEY_FILE=~/.aincrad/.sops.age.key
 export SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/personal
 
 export HOMEBREW_NO_ENV_HINTS=1
@@ -35,4 +33,4 @@ MISE_GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
 export MISE_GITHUB_TOKEN
 
 export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
-export PATH="$HOME/.aftman/bin:$HOME/.cargo/bin:$HOME/.dotnet/tools:$PATH"
+export PATH="$HOME/.cargo/bin:$HOME/.dotnet/tools:$PATH"
