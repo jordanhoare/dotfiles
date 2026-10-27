@@ -2,66 +2,64 @@
 
 ## Arkenfox
 
-The hardening preset applied to all Firefox browser profiles via `user.js`. The upstream [arkenfox/user.js](https://github.com/arkenfox/user.js) is committed verbatim at `config/firefox/arkenfox.js` and concatenated with `config/firefox/user-overrides.js` (personal adjustments) via `programs.firefox.profiles.<name>.extraConfig`. `privacy.resistFingerprinting` is intentionally left off - it would make the browser fingerprint uniquely identifiable outside a large anonymity set. See ADR 0008.
+The upstream [arkenfox/user.js](https://github.com/arkenfox/user.js) hardening preset, committed verbatim at `config/firefox/arkenfox.js` and applied under `config/firefox/user-overrides.js`. `privacy.resistFingerprinting` stays off: it marks the browser as unique outside a large anonymity set.
 
 ## Bootstrap
 
-The process of provisioning a new machine. An Entry script installs git and Mise, clones the repo to the Dotfiles root, and runs the `bootstrap` Task, which installs Nix, activates the platform config, and installs the baseline runtimes. `mise run secrets` then restores SSH keys, logs `gh` in to each account from the PATs in Bitwarden, and decrypts the private git identity. On Windows the `switch` Task runs the [Windows bootstrap](#windows-bootstrap), after `winutil` has been run by hand once. See ADR 0016.
+Provisioning a fresh machine: the Entry script installs git and Mise, clones to the Dotfiles root, and runs the `bootstrap` Task, which installs Nix, runs `switch`, and installs the baseline runtimes. `mise run secrets` follows by hand. On Windows, `switch` runs the Windows bootstrap.
 
 ## Browser Profile
 
-A fully isolated Firefox instance with its own process, cookie store, history, credentials, and extensions. Distinct from a git Profile. Two browser profiles are declared: **personal** (default, daily driver) and **private** (anonymised, separate identity). Managed declaratively via `programs.firefox` in Home Manager. See ADR 0008.
+An isolated Firefox instance with its own history, credentials, and extensions, declared under `programs.firefox.profiles`. Distinct from a git Profile.
 
 ## Dotfile
 
-A configuration file managed by this repository. Tracked dotfiles are symlinked into their target directory via Home Manager `home.file` - editing the file in the repo is immediately live.
-
-## Entry script
-
-`install.sh` or `install.ps1` at the repo root, fetched with `curl | sh` or `irm | iex` on a fresh machine. It does only what must happen before the clone: Xcode Command Line Tools or git, Mise, the clone, then a hand-off to the `bootstrap` Task. Distinct from a Task, which runs inside the cloned repo. See ADR 0016.
+A configuration file this repository owns. Home Manager symlinks it into place, so an edit in the repo is live at once.
 
 ## Dotfiles root
 
-The canonical location of the dotfiles repository. Platform-specific: `~/repositories/dotfiles` on macOS and native Linux; `/mnt/d/repositories/dotfiles` on WSL. See ADR 0006.
+Where the repository is cloned: `~/repositories/dotfiles` on macOS and native Linux, `/mnt/d/repositories/dotfiles` on WSL, `D:\repositories\dotfiles` on Windows.
+
+## Entry script
+
+`install.sh` or `install.ps1`, fetched with `curl | sh` or `irm | iex` on a fresh machine. It does only what must happen before the clone exists and then hands off to the `bootstrap` Task. Distinct from a Task, which runs inside the clone.
 
 ## Flake
 
-A self-contained Nix project with a `flake.nix` entry point and a committed `flake.lock` pinning all dependency versions. Lives at `nix/flake.nix` and defines one named Home Manager configuration per platform.
+The Nix project at `nix/flake.nix`, with `flake.lock` pinning every input. It defines one configuration per Platform.
 
 ## Home Manager
 
-The Nix tool that manages the user environment declaratively. Owns package installs (via nixpkgs) and dotfile symlinks (via `home.file`). Activated with `mise run switch`. Does not install Mise.
+The Nix tool that installs user packages and links Dotfiles. Activated by `mise run switch`. It never installs Mise.
 
 ## Mise
 
-The runtime version manager and Task runner, and the one program installed by hand on a fresh machine. `config/mise/config.toml` (`win/mise.toml` on Windows) is the baseline of runtimes wanted in every shell; a project's own `mise.toml` pins the tools that project needs and outranks the baseline for those tools. Installed by `mise.run` on macOS, Linux and WSL and by winget on Windows, never by Home Manager. See ADR 0002 and ADR 0016.
+The runtime manager and Task runner, and the one program installed by hand. `config/mise/config.toml` (`win/mise.toml` on Windows) is the baseline of runtimes wanted in every shell; a project's own `mise.toml` outranks it for the tools that project pins.
 
 ## Package
 
-A top-level directory in the dotfiles repo whose files are linked into place by Home Manager `home.file`: `home/` (target: `~`), `config/` (target: `~/.config`), `bin/` (target: `~/bin`), `etc/` (target: `/etc`, Linux/WSL only, applied manually).
+A top-level repo directory whose files are linked into place: `home/` to `~`, `config/` to `~/.config`, `bin/` to `~/bin`, `etc/` to `/etc`, written once by the `nix` Task on WSL and by hand elsewhere.
 
 ## Platform
 
-The OS context in which the shell runs. Three supported platforms: **WSL** (primary), **Linux** (native, e.g. VMs), **macOS**. Each has a named configuration in `nix/flake.nix`.
+The OS a shell runs on: WSL, native Linux, macOS, or Windows. The first three have a configuration in the Flake; Windows has the Windows bootstrap.
 
 ## ProtonVPN
 
-The VPN client installed on all platforms. Runs as an OS-level daemon covering all machine traffic. Configured with a standard kill switch (blocks internet if the tunnel drops, but permits LAN traffic). Installed declaratively via nix. See ADR 0009.
+The VPN client on WSL, Linux, and macOS, run as a system daemon with the standard kill switch: internet is blocked when the tunnel drops, LAN traffic is not.
 
 ## Profile
 
-A git identity context - either **personal** (`jordanhoare`) or **private** (anon). Controls `user.name`, `user.email`, and the active `gh` CLI account.
-
-Each Profile's identity lives in a single file at `~/.config/git/<profile>`, a git-config fragment with `[user]` and `[github]` sections. `config/git/config` loads the personal identity by default via `[include]`, and overrides to private inside the private-repos path via `[includeIf]`. The `git personal` and `git private` aliases switch the active identity by reading from these files and switching the active `gh` account; the `gh` step warns rather than fails if `gh` is not yet authenticated. The personal Profile is committed plaintext and linked by Nix (`nix/modules/profiles.nix`); it is not sensitive. The private Profile is sops-encrypted at `config/git/private.enc` and decrypted by `mise run secrets` directly to `~/.config/git/private`, outside the repo and outside the world-readable Nix store - so the private username never lands anywhere tracked or shared.
+A git identity, either **personal** (`jordanhoare`) or **private** (anonymous), held as a config fragment at `~/.config/git/<profile>` with `[user]` and `[github]` sections. `config/git/config` includes personal by default and private inside the private paths. `git personal` and `git private` copy a Profile into the current repo and switch the `gh` account to match. The personal fragment is committed plaintext; the private one is sops-encrypted at `config/git/private.enc` and decrypted by `mise run secrets` straight to `~/.config/git/private`, so the private username never enters the repo or the Nix store.
 
 ## Task
 
-A named repo operation under `.mise/` at the Dotfiles root, run with `mise run <name>` and listed by `mise tasks`. One-line Tasks live in `.mise/config.toml`; longer ones are scripts in `.mise/tasks/`. Tasks replace the Makefile. `.mise/config.toml` may also pin the tools the repo's own checks need, and never holds `[env]`. See ADR 0016.
+A repo operation under `.mise/`, run with `mise run <name>` and listed by `mise tasks`. One-liners live in `.mise/config.toml`; longer ones are scripts in `.mise/tasks/` with a `.ps1` pair when Windows needs one. `.mise/config.toml` never holds `[env]`.
 
 ## Symlink
 
-A filesystem pointer from a target path (e.g. `~/.zshrc`) to the corresponding file in the dotfiles repo. On Linux/WSL/macOS, managed by Home Manager `home.file`. On Windows, managed by `win/bootstrap.ps1` using per-file repo-rooted symlinks (e.g. `%APPDATA%\Zed\settings.json -> D:\repositories\dotfiles\config\zed\settings.json`). In both cases, editing the repo file is immediately reflected in the live application. See also [Windows bootstrap](#windows-bootstrap).
+A pointer from a live path to a file in the repo. Home Manager creates them on Linux, WSL, and macOS; `win/bootstrap.ps1` creates them on Windows.
 
 ## Windows bootstrap
 
-The Windows-side activation script at `win/bootstrap.ps1`, run by the `switch` Task on Windows. Counterpart to the Home Manager activation on Linux/WSL/macOS, but intentionally nix-agnostic - it runs without Nix, WSL, or any of the Linux toolchain installed. Does two things: (1) imports declared apps via `winget import --import-file win/winget.json`, (2) creates per-file repo-rooted symlinks for the four managed Zed files (`settings.json`, `keymap.json`, `tasks.json`, `snippets/`). Idempotent: re-running is safe; pre-existing real files at a target path are moved to `<name>.bak.<timestamp>` rather than clobbered. Requires elevated PowerShell or Windows Developer Mode for symlink creation; the script checks this precondition and exits cleanly with a hint if neither is set. See ADR 0011.
+`win/bootstrap.ps1`, the Windows body of the `switch` Task. It needs no Nix or WSL: it runs `winget import` against `win/winget.json`, then links or copies the managed configs into `%APPDATA%` and `%USERPROFILE%`. A real file at a link target is moved to `<name>.bak.<timestamp>`. Symlinks need an elevated shell or Developer Mode; the script checks and exits with a hint otherwise.
