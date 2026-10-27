@@ -92,13 +92,13 @@ Tasks live under `.mise/` and replace the Makefile (ADR 0016). `.mise/config.tom
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.sh | sh   # macOS, Linux, WSL
 irm https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.ps1 | iex        # Windows
-mise run secrets  # restores SSH keys, decrypts git identity to ~/.config/git/private
+mise run secrets  # restores SSH keys, then decrypts every *.sops file
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
 The entry script installs git and mise, clones the repo, and runs `mise run bootstrap`, which installs Nix, switches, and installs the baseline runtimes. mise is the only hand-installed program; Home Manager does not install it (ADR 0016).
 
-The private git identity is decrypted directly to `~/.config/git/private` (not into the repo), and `config/git/config` picks it up via `[includeIf]` - silently no-ops when missing, so no second `mise run switch` pass is needed.
+Each Sops file decrypts directly to its target outside the repo, and a committed config includes it (`[includeIf]`, ssh `Include`), which no-ops when missing, so no second `mise run switch` pass is needed.
 
 On WSL, clone to `/mnt/d/repositories/dotfiles` not `~/repositories/`. See ADR 0006.
 
