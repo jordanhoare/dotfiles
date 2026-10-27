@@ -26,7 +26,7 @@ install_clt() {
     sudo xcode-select --switch /Library/Developer/CommandLineTools
   else
     xcode-select --install
-    echo "finish the Command Line Tools dialog, then rerun this script" >&2
+    echo "error: finish the Command Line Tools dialog, then rerun this script" >&2
     exit 1
   fi
 }
