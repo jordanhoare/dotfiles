@@ -9,7 +9,8 @@ if [ -x /nix/var/nix/profiles/default/bin/nix ]; then
 fi
 
 # The Determinate installer refuses WSL without systemd. etc/wsl.conf turns it
-# on; the distro must restart before the setting is live.
+# on; the distro must restart before the setting is live. Later edits to
+# etc/wsl.conf are applied by hand.
 if [ -n "${WSL_DISTRO_NAME:-}" ] && [ ! -d /run/systemd/system ]; then
   sudo install -m 644 etc/wsl.conf /etc/wsl.conf
   echo "systemd enabled in /etc/wsl.conf. Run 'wsl --shutdown' from Windows, reopen the distro, then: mise run bootstrap"

@@ -36,7 +36,7 @@ run = "mise install"
 [tasks.secrets]
 description = "restore ssh keys and gh logins from bitwarden, decrypt the private git identity"
 raw = true
-env = { DOTFILES = "{{ config_root }}" }
+env = { DOTFILES = "{{ config_root }}", SOPS_AGE_SSH_PRIVATE_KEY_FILE = "{{ env.HOME }}/.ssh/personal" }
 run = "bin/secrets"
 run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\secrets.ps1'
 

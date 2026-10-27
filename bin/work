@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# open or attach a tmux dev session for the current project.
-# layout: left pane = zsh at $PWD, right pane = claude code.
-
 set -euo pipefail
 
 session="$(basename "${PWD}" | tr '. ' '__')"
