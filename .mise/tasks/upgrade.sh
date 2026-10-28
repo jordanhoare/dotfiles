@@ -4,7 +4,7 @@
 set -eu
 export PATH="/nix/var/nix/profiles/default/bin:${PATH}"
 
-dirty=$(git status --porcelain)
+dirty=$(git status --porcelain --untracked-files=no)
 if [ -n "${dirty}" ]; then
   echo "error: the tree is dirty; commit or stash before upgrading" >&2
   exit 1

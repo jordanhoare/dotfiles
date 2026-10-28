@@ -1,7 +1,7 @@
 #MISE description="pull, update every winget app and tool, then apply"
 $ErrorActionPreference = 'Stop'
 
-if (git status --porcelain) { throw 'the tree is dirty; commit or stash before upgrading' }
+if (git status --porcelain --untracked-files=no) { throw 'the tree is dirty; commit or stash before upgrading' }
 git pull --ff-only
 if ($LASTEXITCODE -ne 0) { throw 'git pull failed' }
 
