@@ -80,8 +80,10 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 mise tasks        # list the four tasks; --hidden shows the steps they call
 mise run apply    # install packages, link dotfiles, install git hooks (nix-darwin, Home Manager, or win/apply.ps1)
 mise run secrets  # restore SSH keys from Bitwarden, then decrypt every *.sops file
-mise run upgrade  # pull, update flake.lock and every tool (winget apps on Windows), then apply
+mise run upgrade  # pull the merged renovate bumps, apply, then upgrade the unpinned tools
 ```
+
+Renovate owns every pin: it opens a pull request for `flake.lock`, the mise `[tools]` tables and the GitHub Actions, and CI builds it. Never run `nix flake update` or `mise upgrade` by hand; merge the pull request and run `mise run upgrade`.
 
 Tasks live under `.mise/` and replace the Makefile (ADR 0016). `.mise/config.toml` holds one-line tasks and never an `[env]` table; anything longer is a script in `.mise/tasks/`, as a `.sh` file with a `.ps1` pair when Windows needs it. Its `[tools]` table pins only the repo's own check tools; a tool the baseline in `config/mise/config.toml` also pins takes the baseline's version.
 

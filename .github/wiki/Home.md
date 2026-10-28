@@ -8,9 +8,11 @@ Fresh machine? Start at [macOS](MacOS), [Linux](Linux), or [Windows](Windows).
 
 ```bash
 mise run apply    # install packages, link dotfiles, install git hooks
-mise run upgrade  # pull, update flake.lock and every tool (winget apps on Windows), then apply
+mise run upgrade  # pull the merged renovate bumps, apply, then upgrade the unpinned tools
 mise tasks        # list the four tasks; --hidden shows the steps they call
 ```
+
+[Renovate](https://docs.renovatebot.com) owns every pin. It opens a pull request for `nix/flake.lock`, the mise tool tables and the GitHub Actions, CI builds it, and `mise run upgrade` pulls what merged. Nothing in the repo is bumped by hand.
 
 ## Tools
 
