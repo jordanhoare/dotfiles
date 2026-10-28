@@ -7,9 +7,9 @@ Fresh machine? Start at [macOS](MacOS), [Linux](Linux), or [Windows](Windows).
 ## Updating
 
 ```bash
-mise run apply    # apply the repo to this machine after editing it
+mise run apply    # install packages, link dotfiles, install git hooks
 mise run upgrade  # pull, update flake.lock and every tool (winget apps on Windows), then apply
-mise tasks        # list every task
+mise tasks        # list the four tasks; --hidden shows the steps they call
 ```
 
 ## Tools

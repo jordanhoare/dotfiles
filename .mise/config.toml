@@ -25,7 +25,7 @@ run = 'echo "bootstrap done. next: mise run secrets"'
 run_windows = 'echo bootstrap done. next: mise run secrets'
 
 [tasks.apply]
-description = "apply this repo to the machine"
+description = "install packages, link dotfiles, install git hooks"
 raw = true
 run = 'mise run "apply:{{ os() }}"'
 run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\apply.ps1'

@@ -18,4 +18,4 @@ Dotfiles and tools must be reproducible across macOS, Linux, and WSL with pinned
 
 - `flake.lock` updated deliberately via `upgrade`
 - Never run `brew install` directly - declare casks in `nix/modules/macos-system.nix`
-- Adding a tool means editing the appropriate module and running `make switch`
+- Adding a tool means editing the appropriate module and running `mise run apply`

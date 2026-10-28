@@ -77,8 +77,8 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 ## Common operations
 
 ```bash
-mise tasks        # list every task
-mise run apply    # apply the repo to this machine (nix-darwin, Home Manager, or win/apply.ps1), then install the git hooks
+mise tasks        # list the four tasks; --hidden shows the steps they call
+mise run apply    # install packages, link dotfiles, install git hooks (nix-darwin, Home Manager, or win/apply.ps1)
 mise run secrets  # restore SSH keys from Bitwarden, then decrypt every *.sops file
 mise run upgrade  # pull, update flake.lock and every tool (winget apps on Windows), then apply
 ```
