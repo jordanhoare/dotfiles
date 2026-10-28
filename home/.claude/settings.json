@@ -24,6 +24,7 @@
       "Bash(git whoami:*)"
     ]
   },
+  "model": "fable",
   "hooks": {
     "PreToolUse": [
       {
@@ -51,10 +52,14 @@
       }
     ]
   },
-  "model": "opus",
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true
   },
   "outputStyle": "plain",
+  "modelSettings": {
+    "claude-fable-5-1": {
+      "effortLevel": "low"
+    }
+  },
   "autoMemoryEnabled": false
 }
