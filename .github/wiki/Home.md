@@ -12,7 +12,7 @@ mise run upgrade  # pull the merged renovate bumps, apply, then upgrade the unpi
 mise tasks        # list the four tasks; --hidden shows the steps they call
 ```
 
-[Renovate](https://docs.renovatebot.com) owns every pin. It opens a pull request for `nix/flake.lock`, the mise tool tables and the GitHub Actions, CI builds it, and `mise run upgrade` pulls what merged. Nothing in the repo is bumped by hand.
+[Renovate](https://docs.renovatebot.com) owns every pin. It opens a pull request for `nix/flake.lock`, the mise tool tables, the GitHub Actions digests and the pre-commit hook revisions, CI builds it, and `mise run upgrade` pulls what merged. Nothing in the repo is bumped by hand.
 
 ## Tools
 

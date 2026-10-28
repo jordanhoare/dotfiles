@@ -1,0 +1,101 @@
+// Renovate's configuration, mounted into renovatebot/github-action by `configurationFile` in
+// .github/workflows/renovate.yml. It is loaded as self-hosted (global) config, so it is not named
+// renovate.json5: Renovate would then read the same file a second time as the repository config.
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  // The checked-out file is the whole config; nothing is read from the repository's default branch.
+  onboarding: false,
+  requireConfig: "optional",
+  extends: [
+    "config:recommended",
+    ":semanticCommits",
+    // config:recommended types runtime dependencies `fix(deps)`; every pin bump here is `chore(deps)`.
+    ":semanticCommitTypeAll(chore)",
+    "helpers:pinGitHubActionDigests",
+  ],
+  // config:recommended's presets win over this file's own keys: its monorepo groups split the weekly
+  // pull request, and :dependencyDashboard reopens the dashboard over `dependencyDashboard: false`.
+  ignorePresets: ["group:monorepos", "group:recommended", ":dependencyDashboard"],
+  semanticCommitType: "chore",
+  semanticCommitScope: "deps",
+  // The noreply address of the account that holds RENOVATE_TOKEN.
+  gitAuthor: "Jordan Hoare <57948967+jordanhoare@users.noreply.github.com>",
+  // Every manifest in the repository. Nothing under home/ or config/ is a manifest for any other manager.
+  enabledManagers: ["nix", "mise", "github-actions", "pre-commit", "custom.regex"],
+  // These two managers are opt-in: listing them above alone extracts nothing.
+  nix: { enabled: true },
+  "pre-commit": { enabled: true },
+  // A release this young may still be yanked; the delay trades a few days of exposure for that.
+  minimumReleaseAge: "3 days",
+  // GitHub's auto-merge, which the ruleset's pull-request-plus-`ci` rule satisfies; squash is the
+  // repository's one allowed merge method.
+  platformAutomerge: true,
+  automergeStrategy: "squash",
+  labels: ["dependencies", "{{updateType}}"],
+  // Windows below are UTC, like the workflow's cron, which sits inside every one of them.
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ["before 6am on monday"],
+    commitMessageAction: "bump",
+    commitMessageTopic: "flake.lock",
+    automerge: true,
+  },
+  packageRules: [
+    {
+      // The flake's inputs track branches on purpose: nixpkgs-unstable, home-manager and nix-darwin
+      // move to wherever the branch is, once a week, through lock file maintenance alone.
+      description: "The flake: lock file maintenance only, never a ref or digest bump",
+      matchManagers: ["nix"],
+      enabled: false,
+    },
+    {
+      description: "GitHub Actions digests, in the workflows and the composite action: one pull request, automerged",
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["digest", "pin", "pinDigest", "patch", "minor"],
+      groupName: "github actions",
+      automerge: true,
+    },
+    {
+      description: "The renovate version the workflow pins: grouped with the actions",
+      matchManagers: ["custom.regex"],
+      matchDepNames: ["renovate"],
+      matchUpdateTypes: ["patch", "minor"],
+      groupName: "github actions",
+      automerge: true,
+    },
+    {
+      description: "The three mise tool tables and the remote hook repositories in .pre-commit-config.yaml: one weekly pull request, automerged once ci resolves every pin",
+      matchManagers: ["mise", "pre-commit"],
+      matchUpdateTypes: ["patch", "minor"],
+      groupName: "mise tools",
+      schedule: ["before 6am on monday"],
+      automerge: true,
+    },
+    {
+      // A 0.x minor may break under semver; Renovate still types it `minor`, so it is listed here.
+      description: "Majors, and 0.x minors: one pull request each, never automerged, a person merges",
+      matchUpdateTypes: ["major"],
+      groupName: null,
+      automerge: false,
+      rebaseWhen: "conflicted",
+    },
+    {
+      matchCurrentVersion: "<1.0.0",
+      matchUpdateTypes: ["minor"],
+      groupName: null,
+      automerge: false,
+      rebaseWhen: "conflicted",
+    },
+  ],
+  customManagers: [
+    {
+      // The github-actions manager pins the action's digest but never reads a `with:` value.
+      description: "The renovate version pinned as renovate-version in renovate.yml and the dry run in ci.yml",
+      customType: "regex",
+      managerFilePatterns: ["/^\\.github/workflows/(renovate|ci)\\.yml$/"],
+      matchStrings: ["renovate-version: (?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      depNameTemplate: "renovate",
+      datasourceTemplate: "npm",
+    },
+  ],
+}

@@ -1,8 +1,4 @@
 rules:
-  unpinned-uses:
-    config:
-      policies:
-        "*": ref-pin
   # actionlint rejects the `$/` self-repository form zizmor prefers.
   self-repository:
     ignore:

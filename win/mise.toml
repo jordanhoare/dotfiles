@@ -13,52 +13,52 @@ idiomatic_version_file_enable_tools = ["rust"]
 
 [tools]
 # runtimes
-go = "1.26"
-node = "24.16"
-python = "3.14"
-bun = "1.3"
-rust = "1.96"
-zig = "0.16"
+go = "1.26.10"
+node = "24.16.0"
+python = "3.14.10"
+bun = "1.3.14"
+rust = "1.96.1"
+zig = "0.16.0"
 
 # python toolchain
-uv = "0.11"
+uv = "0.11.33"
 
 # infrastructure
-terraform = "1.15"
-opentofu = "1.12"
-sops = "3.13"
+terraform = "1.15.9"
+opentofu = "1.12.9"
+sops = "3.13.3"
 
 # kubernetes
-kubectl = "1.36"
-helm = "4.2"
-kustomize = "5.8"
-kubeconform = "0.8"
-k9s = "0.51"
-argocd = "3.4"
-kubectx = "0.11"
-flux2 = "2.8"
+kubectl = "1.36.5"
+helm = "4.2.4"
+kustomize = "5.8.3"
+kubeconform = "0.8.0"
+k9s = "0.51.0"
+argocd = "3.4.12"
+kubectx = "0.11.0"
+flux2 = "2.8.8"
 
 # cloud
-vault = "2.0"
+vault = "2.0.4"
 
 # linters and formatters
-shellcheck = "0.11"
-shfmt = "3.14"
-actionlint = "1.7"
-tflint = "0.63"
-golangci-lint = "2.12"
-gofumpt = "0.10"
-hadolint = "2.14"
-stylua = "2.5"
-biome = "2.4"
+shellcheck = "0.11.0"
+shfmt = "3.14.1"
+actionlint = "1.7.12"
+tflint = "0.63.1"
+golangci-lint = "2.12.2"
+gofumpt = "0.10.0"
+hadolint = "2.14.0"
+stylua = "2.5.2"
+biome = "2.4.16"
 
 # language servers
-terraform-ls = "0.38"
+terraform-ls = "0.38.8"
 
 # build tools
-conan = "2.29"
+conan = "2.29.1"
 
 # utilities
-yq = "4.53"
-restic = "0.18"
-sqlite = "3.53"
+yq = "4.53.6"
+restic = "0.18.1"
+sqlite = "3.53.4"

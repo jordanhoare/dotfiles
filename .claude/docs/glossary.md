@@ -40,6 +40,10 @@ The runtime manager and Task runner, and the one program installed by hand. `con
 
 A top-level repo directory whose files are linked into place: `home/` to `~`, `config/` to `~/.config`, `bin/` to `~/bin`, `etc/` to `/etc`, written once by the `nix` Task on WSL and by hand elsewhere.
 
+## Pin
+
+A version the repo holds for a Platform to reproduce: an input in `flake.lock`, a tool in one of the three Mise `[tools]` tables, an action digest in a workflow, or a hook revision. A Pin is always a full version and moves only through a Renovate pull request, never by a command on a machine. The commit scope for such a change is `deps`.
+
 ## Platform
 
 The OS a shell runs on: WSL, native Linux, macOS, or Windows. The first three have a configuration in the Flake; Windows has the Windows bootstrap.
@@ -51,6 +55,10 @@ The VPN client on WSL, Linux, and macOS, run as a system daemon with the standar
 ## Profile
 
 A git identity, either **personal** (`jordanhoare`) or **private** (anonymous), held as a config fragment at `~/.config/git/<profile>` with `[user]` and `[github]` sections. `config/git/config` includes personal by default and private inside the private paths, as both WSL and native Windows see them. `git personal` and `git private` copy a Profile into the current repo and switch the `gh` account to match. The personal fragment is committed plaintext; the private one is the [Sops file](#sops-file) `config/git/private.sops`, decrypted by `mise run secrets` straight to `~/.config/git/private`, so the private username never enters the repo or the Nix store.
+
+## Renovate
+
+The bot that bumps every Pin. It runs self-hosted from `.github/workflows/renovate.yml` under the policy in `.github/renovate-config.json5`, opens one pull request per group, and CI builds each before merge. Tools no file pins (Mise itself, sheldon plugins, uv tools, winget apps) are outside its reach and are refreshed by the `upgrade` Task. See ADR 0018.
 
 ## Task
 
