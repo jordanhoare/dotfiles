@@ -54,7 +54,7 @@ $links = @(
     @{ Source = Join-Path $repo 'home\.ssh\config';                    Target = Join-Path $env:USERPROFILE '.ssh\config';                           Mode = 'Copy' }
     @{ Source = Join-Path $repo 'home\.claude\AGENTS.md';              Target = Join-Path $env:USERPROFILE '.claude\AGENTS.md';                     Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'home\.claude\CLAUDE.md';              Target = Join-Path $env:USERPROFILE '.claude\CLAUDE.md';                     Mode = 'Symlink' }
-    @{ Source = Join-Path $repo 'home\.claude\settings.json';          Target = Join-Path $env:USERPROFILE '.claude\settings.json';                 Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'home\.claude\settings.json';          Target = Join-Path $env:USERPROFILE '.claude\settings.json';                 Mode = 'Copy' }    # /model writes here; a link would dirty the repo
     @{ Source = Join-Path $repo 'home\.claude\hooks';                  Target = Join-Path $env:USERPROFILE '.claude\hooks';                         Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'home\.claude\output-styles';          Target = Join-Path $env:USERPROFILE '.claude\output-styles';                 Mode = 'Symlink' }
 )

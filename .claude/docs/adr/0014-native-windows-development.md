@@ -20,7 +20,8 @@ Projects that build Windows binaries are developed on native Windows, with Claud
 | `%APPDATA%\uv\uv.toml` | `config\uv\uv.toml` | Symlink |
 | `%USERPROFILE%\.config\git\{config,attributes,personal,hooks\agent-push-guard}` | `config\git\...` | Symlink |
 | `%USERPROFILE%\.ssh\config` | `home\.ssh\config` | Copy |
-| `%USERPROFILE%\.claude\{AGENTS.md,CLAUDE.md,settings.json,hooks,output-styles}` | `home\.claude\...` | Symlink |
+| `%USERPROFILE%\.claude\{AGENTS.md,CLAUDE.md,hooks,output-styles}` | `home\.claude\...` | Symlink |
+| `%USERPROFILE%\.claude\settings.json` | `home\.claude\settings.json` | Copy |
 | `%USERPROFILE%\.claude\skills\<skill>` | each `home\.claude\skills\<bucket>\<skill>` | Symlink |
 
 - mise owns runtimes on Windows as it does on WSL. It installs rustup itself, and `win/mise.toml` enables the `rust` idiomatic file, so a repo's `rust-toolchain.toml` outranks the global `rust` entry. No global rustup or uv comes from winget
@@ -43,5 +44,5 @@ Projects that build Windows binaries are developed on native Windows, with Claud
 - `win/bootstrap.ps1` now duplicates link entries from `nix/modules/base.nix` and `nix/modules/git.nix`. ADR 0011 accepted this cost at five entries. The skills, which are the bulk of the surface, are discovered by walking the buckets, so a new skill needs no change on either side.
 - An existing `%USERPROFILE%\.gitconfig` is read after `~/.config/git/config`, so a `[user]` section there overrides the personal identity. The script warns and leaves the file alone, because that file may carry machine-local includes.
 - The Claude hooks are bash and run through Git Bash on Windows. A missing `jq` makes `block-dangerous-git.sh` read an empty command and allow it, so `jq` is a hard dependency.
-- Windows-side Claude edits to `settings.json` land in the repo working tree, as ADR 0011 already accepts for Zed.
+- `settings.json` is copied, not linked, because `/model` rewrites it in place and a link dirtied the repo on every model change. A model picked with `/model` lasts until the next `mise run switch` copies the committed default back, the trade-off ADR 0011 already makes for Zed.
 - Claude Code project memory is off on every platform (`autoMemoryEnabled: false`). Facts that matter live in the repo, so a move between WSL and Windows loses nothing.
