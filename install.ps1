@@ -7,7 +7,7 @@ Entry point for a fresh Windows machine:
 .DESCRIPTION
 Does only what must happen before the clone: git, mise, pwsh, the clone itself.
 Everything after that is a mise task under .mise\; 'mise run bootstrap' runs
-win\bootstrap.ps1, which needs elevation or Developer Mode.
+win\apply.ps1, which needs elevation or Developer Mode.
 #>
 
 $ErrorActionPreference = 'Stop'

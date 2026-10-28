@@ -69,7 +69,7 @@ jobs:
         run: |
           mise tasks ls
           mise run --dry-run bootstrap
-          mise run --dry-run switch 2>&1 | grep -F 'switch:linux'
+          mise run --dry-run apply 2>&1 | grep -F 'apply:linux'
 
       - name: lint and format hooks
         run: mise exec -- prek run --all-files --show-diff-on-failure
@@ -111,7 +111,7 @@ jobs:
       - name: tasks parse and dispatch
         run: |
           mise tasks ls
-          mise run --dry-run switch 2>&1 | grep -F 'switch:macos'
+          mise run --dry-run apply 2>&1 | grep -F 'apply:macos'
 
       - name: flake check (pure eval)
         run: nix flake check ./nix
@@ -138,8 +138,8 @@ jobs:
           mise tasks ls
           $nix = mise run nix 2>&1 | Out-String
           if ($nix -notmatch 'not used on windows') { throw "nix.ps1 did not run: $nix" }
-          $switch = mise run --dry-run switch 2>&1 | Out-String
-          if ($switch -notmatch 'bootstrap\.ps1') { throw "switch did not dispatch to bootstrap.ps1: $switch" }
+          $apply = mise run --dry-run apply 2>&1 | Out-String
+          if ($apply -notmatch 'apply\.ps1') { throw "apply did not dispatch to apply.ps1: $apply" }
 
       - name: powershell scripts parse
         shell: pwsh

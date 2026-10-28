@@ -1,5 +1,5 @@
 # %USERPROFILE%\.wslconfig - WSL host-level config, applies to all distros.
-# Symlinked from %USERPROFILE%\.wslconfig to this file by win/bootstrap.ps1.
+# Symlinked from %USERPROFILE%\.wslconfig to this file by win/apply.ps1.
 # After changes, restart WSL: 'wsl --shutdown' from Windows PowerShell.
 
 [wsl2]

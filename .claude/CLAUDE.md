@@ -51,7 +51,7 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 | File | Purpose |
 |---|---|
 | `win/winget.json` | Declarative Windows app list |
-| `win/bootstrap.ps1` | Windows body of `mise run switch`: winget import plus config links (ADR 0011, 0014) |
+| `win/apply.ps1` | Windows body of `mise run apply`: winget import plus config links (ADR 0011, 0014) |
 | `win/mise.toml` | Windows global mise config, mirrors `config/mise/config.toml` minus the winget-owned and WSL-only tools |
 
 ### Non-managed directories
@@ -78,11 +78,9 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 
 ```bash
 mise tasks        # list every task
-mise run switch   # activate the platform config (nix-darwin, Home Manager, or win/bootstrap.ps1)
+mise run apply    # apply the repo to this machine (nix-darwin, Home Manager, or win/apply.ps1), then install the git hooks
 mise run secrets  # restore SSH keys from Bitwarden, then decrypt every *.sops file
-mise run hooks    # install the git hooks (prek)
-mise run decrypt  # decrypt every *.sops file to its target under ~
-mise run up       # self-update mise and flake.lock (winget apps on Windows), switch, upgrade all tools
+mise run upgrade  # pull, update flake.lock and every tool (winget apps on Windows), then apply
 ```
 
 Tasks live under `.mise/` and replace the Makefile (ADR 0016). `.mise/config.toml` holds one-line tasks and never an `[env]` table; anything longer is a script in `.mise/tasks/`, as a `.sh` file with a `.ps1` pair when Windows needs it. Its `[tools]` table pins only the repo's own check tools; a tool the baseline in `config/mise/config.toml` also pins takes the baseline's version.
@@ -98,13 +96,13 @@ git remote set-url origin git@personal:jordanhoare/dotfiles.git
 
 The entry script installs git and mise, clones the repo, and runs `mise run bootstrap`, which installs Nix, switches, and installs the baseline runtimes. mise is the only hand-installed program; Home Manager does not install it (ADR 0016).
 
-Each Sops file decrypts directly to its target outside the repo, and a committed config includes it (`[includeIf]`, ssh `Include`), which no-ops when missing, so no second `mise run switch` pass is needed.
+Each Sops file decrypts directly to its target outside the repo, and a committed config includes it (`[includeIf]`, ssh `Include`), which no-ops when missing, so no second `mise run apply` pass is needed.
 
 On WSL, clone to `/mnt/d/repositories/dotfiles` not `~/repositories/`. See ADR 0006.
 
 ## Adding tools
 
-One installer per tool (ADR 0002): if mise can install it and a project may pin it, add it to `config/mise/config.toml` or the project's `mise.toml`. Otherwise edit `nix/modules/base.nix` (or the platform module) and run `mise run switch`. Never install tools manually, and never declare one tool in both.
+One installer per tool (ADR 0002): if mise can install it and a project may pin it, add it to `config/mise/config.toml` or the project's `mise.toml`. Otherwise edit `nix/modules/base.nix` (or the platform module) and run `mise run apply`. Never install tools manually, and never declare one tool in both.
 
 ## SSH and secrets
 

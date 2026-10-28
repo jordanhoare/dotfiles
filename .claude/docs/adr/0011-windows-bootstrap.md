@@ -14,9 +14,9 @@ Both were marked TODO in earlier commits pending a deliberate design.
 
 ## Decision
 
-The Windows side is **intentionally nix-agnostic**. Bootstrap runs through a single script, `win/bootstrap.ps1`, invoked from elevated PowerShell on Windows. Nix is not installed, not invoked, and not referenced anywhere in the Windows bootstrap. The script does two things:
+The Windows side is **intentionally nix-agnostic**. Bootstrap runs through a single script, `win/apply.ps1`, invoked from elevated PowerShell on Windows. Nix is not installed, not invoked, and not referenced anywhere in the Windows bootstrap. The script does two things:
 
-1. `winget import --import-file win/winget.json --no-upgrade --accept-package-agreements --accept-source-agreements`. Upgrades are left to `mise run up`, so a switch never downloads installers for apps already present.
+1. `winget import --import-file win/winget.json --no-upgrade --accept-package-agreements --accept-source-agreements`. Upgrades are left to `mise run upgrade`, so an apply never downloads installers for apps already present.
 2. Creates per-file **repo-rooted** symlinks for managed Windows-side dotfiles:
 
    | Target | Source |
@@ -47,7 +47,7 @@ Stateful credential directories (`.azure`, `.aws`) are **out of scope** for the 
 - Windows-side bootstrap works on a fresh Windows machine with only the repo cloned to `D:\repositories\dotfiles`. No WSL distro required, no `wsl --install` required, no `\\wsl.localhost\` UNC paths in the symlink targets.
 - The Windows-side symlinks survive `make switch` invocations on the WSL side - they don't depend on `/nix/store` paths that regenerate.
 - Windows-side editor UI edits land directly in the repo working tree, visible to `git status`. This contradicts ADR 0007's "intentionally ephemeral" stance, which is preserved only on the WSL side via Home Manager's read-only symlinks. The Windows side accepts a different policy: edits are real and either committed or discarded.
-- The link manifest is duplicated between `nix/modules/zed.nix` and `win/bootstrap.ps1`. At the current size (5 entries) the cost of keeping them in sync by hand is lower than the cost of building a shared manifest abstraction. Worth revisiting only if the managed-editor file count grows materially.
+- The link manifest is duplicated between `nix/modules/zed.nix` and `win/apply.ps1`. At the current size (5 entries) the cost of keeping them in sync by hand is lower than the cost of building a shared manifest abstraction. Worth revisiting only if the managed-editor file count grows materially.
 - `winget import` is naturally idempotent; re-running the script is safe.
 - ADR 0014 extends the manifest with the mise, uv, git, ssh and Claude Code agent layer for native Windows development.
-- If the editor decision is ever revisited (see ADR 0010), `bootstrap.ps1`'s symlink manifest is the only Windows-side surface that needs editing, alongside the corresponding Nix module.
+- If the editor decision is ever revisited (see ADR 0010), `apply.ps1`'s symlink manifest is the only Windows-side surface that needs editing, alongside the corresponding Nix module.

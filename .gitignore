@@ -50,5 +50,5 @@ home/.kube/config
 config/nvim/.repro
 config/nvim/doc/tags
 
-# Nix build artefact - produced by `mise run switch` on macOS
+# Nix build artefact - produced by `mise run apply` on macOS
 nix/result

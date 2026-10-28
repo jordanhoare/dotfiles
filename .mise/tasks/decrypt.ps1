@@ -1,3 +1,4 @@
+#MISE hide=true
 #MISE description="decrypt every committed *.sops file to its target under ~"
 $ErrorActionPreference = 'Stop'
 
