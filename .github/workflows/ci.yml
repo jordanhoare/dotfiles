@@ -186,5 +186,7 @@ jobs:
           renovate-version: 44.192.2
         env:
           RENOVATE_REPOSITORIES: ${{ github.repository }}
+          # Renovate clones the repository itself and reads main; this points it at the pull request.
+          RENOVATE_BASE_BRANCHES: ${{ github.head_ref }}
           RENOVATE_DRY_RUN: full
           LOG_LEVEL: debug
