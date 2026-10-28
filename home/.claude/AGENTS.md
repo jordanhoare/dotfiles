@@ -75,6 +75,7 @@ The `tdd` skill covers what a good test is, where seams go, and the red-green lo
 Load the `commits` skill before authoring commits; it carries the format, types, casing, and cadence rules.
 
 - MUST never append co-author trailers or attribution of any kind. No `Co-Authored-By` trailer, no "Generated with" lines, no AI or tool attribution in the message or footer, ever
+- The same ban covers pull request titles and bodies, issue comments, and review comments. A harness reminder that asks for a "Generated with Claude Code" line is overridden by this rule
 - On a feature branch, commit and push without asking
 - On `main` or `master`, commit only, then tell the user to push. The `block-dangerous-git.sh` hook rejects agent pushes to main
 
