@@ -24,7 +24,7 @@ Projects that build Windows binaries are developed on native Windows, with Claud
 | `%USERPROFILE%\.claude\skills\<skill>` | each `home\.claude\skills\<bucket>\<skill>` | Symlink |
 
 - mise owns runtimes on Windows as it does on WSL. It installs rustup itself, and `win/mise.toml` enables the `rust` idiomatic file, so a repo's `rust-toolchain.toml` outranks the global `rust` entry. No global rustup or uv comes from winget
-- `win/mise.toml` is a separate, smaller file than `config/mise/config.toml`. Most tools in the shared file are Linux or infrastructure tools that run only in WSL
+- `win/mise.toml` is a separate file that mirrors `config/mise/config.toml`, minus dotnet and cmake, which winget owns, and localstack, which only runs in WSL. Every other baseline tool has a Windows build
 - The script prepends `%LOCALAPPDATA%\mise\shims` to the user `Path`. The non-interactive shells Claude Code spawns never run `mise activate`
 - `mise run secrets` runs `.mise/tasks/secrets.ps1`, which restores `~/.ssh/personal` and `~/.ssh/private` and logs gh in to both accounts from Bitwarden, as `secrets.sh` does on Unix
 - `jq` and `delta` come from winget, because the Claude hooks need `jq` and `config/git/config` sets `delta` as the pager
