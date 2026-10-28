@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits", ":semanticCommitScope(deps)"],
+  "nix": { "enabled": true },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"],
+    "commitMessageAction": "bump",
+    "commitMessageTopic": "flake.lock"
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["mise"],
+      "groupName": "mise tools",
+      "schedule": ["before 6am on monday"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "pinDigests": true
+    }
+  ]
+}

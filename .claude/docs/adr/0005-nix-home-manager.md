@@ -16,6 +16,6 @@ Dotfiles and tools must be reproducible across macOS, Linux, and WSL with pinned
 
 ## Consequences
 
-- `flake.lock` updated deliberately via `upgrade`
+- `flake.lock` moves only through renovate pull requests, which ci builds before merge; `mise run upgrade` pulls the merged bump and applies it
 - Never run `brew install` directly - declare casks in `nix/modules/macos-system.nix`
 - Adding a tool means editing the appropriate module and running `mise run apply`
