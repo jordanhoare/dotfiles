@@ -1,35 +1,36 @@
 # dotfiles
 
-Personal dotfiles for macOS, Linux, and WSL managed with [Nix](https://nixos.org) and [Home Manager](https://github.com/nix-community/home-manager).
+Personal dotfiles for macOS, Linux, Windows, and WSL. [Nix](https://nixos.org) and [Home Manager](https://github.com/nix-community/home-manager) own packages and symlinks, [mise](https://mise.jdx.dev) owns runtimes and repo tasks, and [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) owns Windows apps.
 
-Fresh machine? Bootstrap from [macOS](MacOS), [Linux](Linux), or [Windows](Windows).
+Fresh machine? Start at [macOS](MacOS), [Linux](Linux), or [Windows](Windows).
 
 ## Updating
 
 ```bash
-mise run up   # self-updates mise and flake.lock (winget apps on Windows), switches, and upgrades all other tools
-mise tasks    # lists every repo task (`.mise/` replaced the Makefile, ADR 0016)
+mise run up       # update mise and flake.lock (winget apps on Windows), switch, upgrade every tool
+mise run switch   # re-activate after editing the repo
+mise tasks        # list every task
 ```
 
-## Coding agents
+## Tools
 
-`mise run switch` links the agent layer for Claude Code, Cursor and Codex ([ADR 0012](https://github.com/jordanhoare/dotfiles/blob/main/.claude/docs/adr/0012-agent-layer-for-claude-cursor-codex.md)). Two steps stay manual on each machine:
+One installer per tool. mise owns anything a project could pin, declared in `config/mise/config.toml` or a project's own `mise.toml`. Nix owns the rest, declared under `nix/modules/` and activated by `mise run switch`. Never install by hand, and never declare one tool in both.
 
-1. **Cursor:** paste `~/.claude/AGENTS.md` into Settings → Rules → User Rules, and again after it changes. Keep the third-party toggle on so Cursor imports the git guard.
-2. **Codex:** trust `block-dangerous-git.sh` in `/hooks`.
+## Identity
 
-## Adding tools
+Two git profiles: `personal` by default, and a private one that repos under `D:\repositories\private\` pick up on Windows and WSL.
 
-One installer per tool (ADR 0002). mise owns anything a project could pin: add it to `config/mise/config.toml` or the project's own `mise.toml`. Nix owns the rest: edit `nix/modules/base.nix` (or the platform module) and run `mise run switch`. Never install tools manually, and never declare one tool in both.
+```bash
+git personal   # switch identity and gh account
+git private    # switch to the private profile
+```
 
 ## Secrets
 
-Each account's SSH Key item in Bitwarden carries two things: the SSH private key, and a hidden custom field named `pat` holding a classic GitHub PAT (scopes `repo`, `read:org`, `gist`, `workflow`). `mise run secrets` restores the keys, logs `gh` in to both accounts from those PATs (no browser), and decrypts every `*.sops` file.
+Private keys never enter the repo. Bitwarden holds each account's SSH key and a GitHub PAT. `mise run secrets` restores the keys, logs `gh` in from the PATs, and decrypts every `*.sops` file. An encrypted file is a [sops](https://getsops.io) file in the package matching its target, so `config/git/private.sops` decrypts to `~/.config/git/private`, encrypted to the personal SSH key. A committed config includes each one and no-ops when it is missing.
 
 ```bash
-mise run secrets               # restore SSH keys + gh PATs, then decrypt
-mise run decrypt               # decrypt every *.sops file without the Bitwarden flow
-sops edit <path>.sops          # add or change an encrypted file, then decrypt
+mise run secrets        # restore keys and gh logins, then decrypt
+mise run decrypt        # decrypt only
+sops edit <path>.sops   # add or change an encrypted file, then decrypt
 ```
-
-Encrypted files are `*.sops` files in the package matching their target, encrypted to `~/.ssh/personal`: `config/git/private.sops` decrypts to `~/.config/git/private`, `home/.ssh/config.d/reliquia.sops` to `~/.ssh/config.d/reliquia`. A committed config includes each one and no-ops when it is missing.

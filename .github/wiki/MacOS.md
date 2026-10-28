@@ -2,7 +2,7 @@
 
 ## 1. Install
 
-One command. It installs the Xcode Command Line Tools, installs mise, clones the repo to `~/repositories/dotfiles`, then runs `mise run bootstrap`: Nix via the Determinate installer, the nix-darwin activation, and the baseline runtimes. Expect sudo prompts.
+Installs the Xcode Command Line Tools, mise, and Nix, clones the repo to `~/repositories/dotfiles`, and activates nix-darwin. Expect sudo prompts.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.sh | sh
@@ -24,4 +24,4 @@ mise run secrets
 git remote set-url origin git@personal:jordanhoare/dotfiles.git
 ```
 
-Done. See [Home](Home) for updating, identity switching, and other daily ops. ADR 0016 covers why mise is the only hand-installed program.
+Done. See [Home](Home) for updating, identity switching, and other daily ops.
