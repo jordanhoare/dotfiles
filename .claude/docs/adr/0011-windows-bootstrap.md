@@ -16,7 +16,7 @@ Both were marked TODO in earlier commits pending a deliberate design.
 
 The Windows side is **intentionally nix-agnostic**. Bootstrap runs through a single script, `win/bootstrap.ps1`, invoked from elevated PowerShell on Windows. Nix is not installed, not invoked, and not referenced anywhere in the Windows bootstrap. The script does two things:
 
-1. `winget import --import-file win/winget.json --accept-package-agreements --accept-source-agreements`
+1. `winget import --import-file win/winget.json --no-upgrade --accept-package-agreements --accept-source-agreements`. Upgrades are left to `mise run up`, so a switch never downloads installers for apps already present.
 2. Creates per-file **repo-rooted** symlinks for managed Windows-side dotfiles:
 
    | Target | Source |

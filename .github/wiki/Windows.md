@@ -12,7 +12,7 @@ irm "https://christitus.com/win" | iex
 
 ## 2. Install
 
-From an elevated PowerShell (or any PowerShell if Developer Mode is enabled in **Settings -> For developers**). One command: it installs git and mise with winget, clones the repo to `D:\repositories\dotfiles`, then runs `mise run bootstrap`, which runs `win\bootstrap.ps1`.
+From an elevated PowerShell (or any PowerShell if Developer Mode is enabled in **Settings -> For developers**). One command: it installs git, mise and PowerShell 7 with winget, clones the repo to `D:\repositories\dotfiles`, then runs `mise run bootstrap`, which runs `win\bootstrap.ps1`.
 
 ```powershell
 irm https://raw.githubusercontent.com/jordanhoare/dotfiles/main/install.ps1 | iex

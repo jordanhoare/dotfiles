@@ -1,5 +1,5 @@
 #!/bin/sh
-#MISE description="update mise, flake.lock, switch, then upgrade every tool"
+#MISE description="update mise and flake.lock, switch, then upgrade every tool"
 #MISE raw=true
 set -eu
 export PATH="/nix/var/nix/profiles/default/bin:${PATH}"
