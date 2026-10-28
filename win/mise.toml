@@ -1,5 +1,5 @@
 # Windows global mise config, linked to %USERPROFILE%\.config\mise\config.toml by
-# bootstrap.ps1. Mirrors config/mise/config.toml minus dotnet and cmake, which
+# apply.ps1. Mirrors config/mise/config.toml minus dotnet and cmake, which
 # winget owns on Windows, and localstack, which only runs in WSL.
 
 [settings]

@@ -1,4 +1,4 @@
-#MISE description="restore ssh keys and gh logins from bitwarden, then decrypt every *.sops file"
+#MISE description="restore keys and gh logins from bitwarden, decrypt secrets"
 #MISE raw=true
 #MISE depends_post=["decrypt"]
 #Requires -Version 5.1

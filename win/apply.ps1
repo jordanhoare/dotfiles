@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-Windows-side activation for this dotfiles repo, run by 'mise run switch'.
+Windows-side activation for this dotfiles repo, run by 'mise run apply'.
 Counterpart to the Home Manager activation on Linux/WSL/macOS. Intentionally nix-agnostic.
 
 .DESCRIPTION
@@ -35,7 +35,7 @@ if (-not ($elevated -or $devMode)) {
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $wingetManifest = Join-Path $PSScriptRoot 'winget.json'
 Write-Host "Importing winget packages from $wingetManifest" -ForegroundColor Cyan
-# Upgrades belong to 'mise run up'; switch only installs what the manifest lacks.
+# Upgrades belong to 'mise run upgrade'; apply only installs what the manifest lacks.
 winget import --import-file $wingetManifest --no-upgrade --accept-package-agreements --accept-source-agreements
 
 # Mode: 'Symlink' for files the app treats as read-only; 'Copy' for files the

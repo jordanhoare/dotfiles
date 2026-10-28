@@ -6,7 +6,7 @@ The upstream [arkenfox/user.js](https://github.com/arkenfox/user.js) hardening p
 
 ## Bootstrap
 
-Provisioning a fresh machine: the Entry script installs git and Mise, clones to the Dotfiles root, and runs the `bootstrap` Task, which installs Nix, runs `switch`, and installs the baseline runtimes. `mise run secrets` follows by hand and decrypts every [Sops file](#sops-file). On Windows, `switch` runs the Windows bootstrap.
+Provisioning a fresh machine: the Entry script installs git and Mise, clones to the Dotfiles root, and runs the `bootstrap` Task, which installs Nix, runs `apply`, and installs the baseline runtimes. `mise run secrets` follows by hand and decrypts every [Sops file](#sops-file). On Windows, `apply` runs the Windows bootstrap.
 
 ## Browser Profile
 
@@ -30,7 +30,7 @@ The Nix project at `nix/flake.nix`, with `flake.lock` pinning every input. It de
 
 ## Home Manager
 
-The Nix tool that installs user packages and links Dotfiles. Activated by `mise run switch`. It never installs Mise.
+The Nix tool that installs user packages and links Dotfiles. Activated by `mise run apply`. It never installs Mise.
 
 ## Mise
 
@@ -54,7 +54,7 @@ A git identity, either **personal** (`jordanhoare`) or **private** (anonymous), 
 
 ## Task
 
-A repo operation under `.mise/`, run with `mise run <name>` and listed by `mise tasks`. One-liners live in `.mise/config.toml`; longer ones are scripts in `.mise/tasks/` with a `.ps1` pair when Windows needs one. `.mise/config.toml` never holds `[env]`.
+A repo operation under `.mise/`, run with `mise run <name>` and listed by `mise tasks`. Four are visible: `bootstrap`, `apply`, `upgrade`, `secrets`; a Task that only another Task or CI calls is hidden. One-liners live in `.mise/config.toml`; longer ones are scripts in `.mise/tasks/` with a `.ps1` pair when Windows needs one. `.mise/config.toml` never holds `[env]`.
 
 ## Sops file
 
@@ -62,8 +62,8 @@ A committed `*.sops` file, encrypted whole to the personal SSH key, that `mise r
 
 ## Symlink
 
-A pointer from a live path to a file in the repo. Home Manager creates them on Linux, WSL, and macOS; `win/bootstrap.ps1` creates them on Windows.
+A pointer from a live path to a file in the repo. Home Manager creates them on Linux, WSL, and macOS; `win/apply.ps1` creates them on Windows.
 
 ## Windows bootstrap
 
-`win/bootstrap.ps1`, the Windows body of the `switch` Task. It needs no Nix or WSL: it runs `winget import` against `win/winget.json`, then links or copies the managed configs into `%APPDATA%` and `%USERPROFILE%`. A real file at a link target is moved to `<name>.bak.<timestamp>`. Symlinks need an elevated shell or Developer Mode; the script checks and exits with a hint otherwise.
+`win/apply.ps1`, the Windows body of the `apply` Task. It needs no Nix or WSL: it runs `winget import` against `win/winget.json`, then links or copies the managed configs into `%APPDATA%` and `%USERPROFILE%`. A real file at a link target is moved to `<name>.bak.<timestamp>`. Symlinks need an elevated shell or Developer Mode; the script checks and exits with a hint otherwise.

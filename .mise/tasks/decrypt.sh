@@ -1,4 +1,5 @@
 #!/bin/sh
+#MISE hide=true
 #MISE description="decrypt every committed *.sops file to its target under ~"
 set -eu
 

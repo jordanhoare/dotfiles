@@ -1,4 +1,5 @@
 #!/bin/sh
+#MISE hide=true
 #MISE description="install nix with the determinate installer (skipped once /nix holds a profile)"
 #MISE raw=true
 set -eu

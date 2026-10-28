@@ -7,14 +7,14 @@ Fresh machine? Start at [macOS](MacOS), [Linux](Linux), or [Windows](Windows).
 ## Updating
 
 ```bash
-mise run up       # update mise and flake.lock (winget apps on Windows), switch, upgrade every tool
-mise run switch   # re-activate after editing the repo
+mise run apply    # apply the repo to this machine after editing it
+mise run upgrade  # pull, update flake.lock and every tool (winget apps on Windows), then apply
 mise tasks        # list every task
 ```
 
 ## Tools
 
-One installer per tool. mise owns anything a project could pin, declared in `config/mise/config.toml` or a project's own `mise.toml`. Nix owns the rest, declared under `nix/modules/` and activated by `mise run switch`. Never install by hand, and never declare one tool in both.
+One installer per tool. mise owns anything a project could pin, declared in `config/mise/config.toml` or a project's own `mise.toml`. Nix owns the rest, declared under `nix/modules/` and activated by `mise run apply`. Never install by hand, and never declare one tool in both.
 
 ## Identity
 
@@ -31,6 +31,6 @@ Private keys never enter the repo. Bitwarden holds each account's SSH key and a 
 
 ```bash
 mise run secrets        # restore keys and gh logins, then decrypt
-mise run decrypt        # decrypt only
+mise run decrypt        # decrypt only, a hidden task for after `sops edit`
 sops edit <path>.sops   # add or change an encrypted file, then decrypt
 ```

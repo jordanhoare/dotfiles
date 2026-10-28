@@ -19,22 +19,25 @@ stylua = "2.5"
 sops = "3.13"
 
 [tasks.bootstrap]
-description = "fresh machine: install nix, activate the platform config, install runtimes"
-depends = ["nix", "switch", "tools"]
+description = "fresh machine: install nix, apply the config, install runtimes"
+depends = ["nix", "apply", "tools"]
 run = 'echo "bootstrap done. next: mise run secrets"'
 run_windows = 'echo bootstrap done. next: mise run secrets'
 
-[tasks.switch]
-description = "activate the platform config: nix-darwin on macos, home manager on linux and wsl, bootstrap.ps1 on windows"
+[tasks.apply]
+description = "apply this repo to the machine"
 raw = true
-run = 'mise run "switch:{{ os() }}"'
-run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\bootstrap.ps1'
+run = 'mise run "apply:{{ os() }}"'
+run_windows = 'powershell -NoProfile -ExecutionPolicy Bypass -File win\apply.ps1'
+depends_post = ["hooks"]
 
 [tasks.tools]
 description = "install the baseline runtimes from the global mise config"
+hide = true
 run = "mise install"
 
 [tasks.hooks]
 description = "install the git hooks"
+hide = true
 # --force drops the hooks pre-commit installed, which fail under prek.
 run = "prek install --force"

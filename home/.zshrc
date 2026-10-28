@@ -19,7 +19,7 @@ _update_git_identity() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _update_git_identity
 
-# uv is a mise runtime, so it is absent until `mise run tools` has run.
+# uv is a mise runtime, so it is absent until `mise run bootstrap` has run.
 command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
 
 [[ -n "$WSL_DISTRO_NAME" ]] && source ~/.zsh/wsl.zsh

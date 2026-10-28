@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="restore ssh keys and gh logins from bitwarden, then decrypt every *.sops file"
+#MISE description="restore keys and gh logins from bitwarden, decrypt secrets"
 #MISE raw=true
 # The decrypt needs ~/.ssh/personal, which this restore writes.
 #MISE depends_post=["decrypt"]
