@@ -59,6 +59,7 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 | Directory | Purpose |
 |---|---|
 | `.claude/docs/` | ADRs, glossary, context, agent instructions |
+| `.github/renovate-config.json5`, `.github/workflows/renovate.yml` | Self-hosted Renovate: the pin policy and the daily run (ADR 0018) |
 | `.github/wiki/` | Wiki pages synced to GitHub Wiki on push |
 
 ## Key tooling
@@ -83,7 +84,7 @@ mise run secrets  # restore SSH keys from Bitwarden, then decrypt every *.sops f
 mise run upgrade  # pull the merged renovate bumps, apply, then upgrade the unpinned tools
 ```
 
-Renovate owns every pin: it opens a pull request for `flake.lock`, the mise `[tools]` tables and the GitHub Actions, and CI builds it. Never run `nix flake update` or `mise upgrade` by hand; merge the pull request and run `mise run upgrade`.
+Renovate owns every pin: it opens a pull request for `flake.lock`, the mise `[tools]` tables, the GitHub Actions digests and the pre-commit hook revisions, and CI builds it. Never run `nix flake update` or `mise upgrade` by hand; merge the pull request and run `mise run upgrade`. Every mise pin is a full `x.y.z` (ADR 0018).
 
 Tasks live under `.mise/` and replace the Makefile (ADR 0016). `.mise/config.toml` holds one-line tasks and never an `[env]` table; anything longer is a script in `.mise/tasks/`, as a `.sh` file with a `.ps1` pair when Windows needs it. Its `[tools]` table pins only the repo's own check tools; a tool the baseline in `config/mise/config.toml` also pins takes the baseline's version.
 

@@ -3,10 +3,10 @@ description: install nix with flakes enabled, the nix cache, and mise without it
 runs:
   using: composite
   steps:
-    - uses: DeterminateSystems/nix-installer-action@v16
+    - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
       with:
         extra-conf: experimental-features = nix-command flakes
-    - uses: DeterminateSystems/magic-nix-cache-action@v8
-    - uses: jdx/mise-action@v2
+    - uses: DeterminateSystems/magic-nix-cache-action@87b14cf437d03d37989d87f0fa5ce4f5dc1a330b # v8
+    - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
       with:
         install: false

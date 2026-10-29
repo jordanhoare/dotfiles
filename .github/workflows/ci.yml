@@ -14,6 +14,8 @@ on:
       - install.ps1
       - .github/workflows/ci.yml
       - .github/actions/**
+      - .github/workflows/renovate.yml
+      - .github/renovate-config.json5
   pull_request:
     paths:
       - nix/**
@@ -26,6 +28,8 @@ on:
       - install.ps1
       - .github/workflows/ci.yml
       - .github/actions/**
+      - .github/workflows/renovate.yml
+      - .github/renovate-config.json5
   workflow_dispatch:
 
 permissions:
@@ -40,11 +44,12 @@ jobs:
       pull-requests: read
     outputs:
       macos: ${{ steps.filter.outputs.macos }}
+      renovate: ${{ steps.filter.outputs.renovate }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@0e4a8c6effa4802afeda77dc8d303f8176d7dfad # v3.0.4
         id: filter
         with:
           filters: |
@@ -53,12 +58,15 @@ jobs:
               - nix/flake.nix
               - nix/flake.lock
               - .mise/**
+            renovate:
+              - .github/workflows/renovate.yml
+              - .github/renovate-config.json5
 
   # Runs with no secrets, so it covers only what a stranger cloning the repo gets.
   linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
           # gitleaks scans every commit, not just the tip.
@@ -77,6 +85,10 @@ jobs:
       # The gitleaks hook scans staged changes only, and CI stages nothing.
       - name: secret scan over the full history
         run: mise exec -- gitleaks git --redact --no-banner
+
+      # Nothing in ci installs the baseline; this resolves every pin a renovate bump touches.
+      - name: baseline pins resolve and win/mise.toml mirrors the baseline
+        run: mise run check:pins
 
       - name: flake check (pure eval)
         run: nix flake check ./nix
@@ -103,7 +115,7 @@ jobs:
     needs: changes
     if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.macos == 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
       - uses: ./.github/actions/nix-and-mise
@@ -124,11 +136,11 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
         with:
           install: false
 
@@ -151,3 +163,30 @@ jobs:
             if ($errors.Count) { $failed = $true; Write-Host "$($file.FullName):"; $errors | ForEach-Object { Write-Host "  $($_.Message)" } }
           }
           if ($failed) { exit 1 }
+
+  # Validates the policy and logs the pull requests the scheduled run would open, with no token
+  # that can write.
+  renovate:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: github.event_name == 'pull_request' && needs.changes.outputs.renovate == 'true'
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: renovatebot/github-action@2804199d260ad00c1fae0e9e842888369391c776 # v46.3.10
+        with:
+          configurationFile: .github/renovate-config.json5
+          token: ${{ secrets.GITHUB_TOKEN }}
+          renovate-version: 44.192.2
+        env:
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          # Renovate clones the repository itself and reads main; this points it at the pull request.
+          RENOVATE_BASE_BRANCHES: ${{ github.head_ref }}
+          RENOVATE_DRY_RUN: full
+          LOG_LEVEL: debug

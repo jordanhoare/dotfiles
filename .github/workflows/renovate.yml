@@ -1,0 +1,50 @@
+# Self-hosted Renovate under the policy in .github/renovate-config.json5. The job declares the
+# `production` environment, whose deployment branch policy is `main`, to reach RENOVATE_TOKEN: a
+# fine-grained personal access token that acts as the owner, so its pull requests run `ci` with no
+# approval click and GitHub's auto-merge completes. A pull request that changes either file gets a
+# dry run with GITHUB_TOKEN from the `ci` workflow instead.
+name: renovate
+
+on:
+  schedule:
+    # Daily, off the hour: GitHub delays or drops schedules that fire on the hour. In UTC, inside the
+    # `before 6am on monday` windows of the config.
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      log_level:
+        description: Renovate's log level
+        type: choice
+        default: info
+        options: [info, debug, trace]
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/renovate.yml
+      - .github/renovate-config.json5
+
+permissions:
+  contents: read
+
+# Two runs at once would rebase each other's branches.
+concurrency:
+  group: renovate
+  cancel-in-progress: false
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: renovatebot/github-action@2804199d260ad00c1fae0e9e842888369391c776 # v46.3.10
+        with:
+          configurationFile: .github/renovate-config.json5
+          token: ${{ secrets.RENOVATE_TOKEN }}
+          renovate-version: 44.192.2
+        env:
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          LOG_LEVEL: ${{ inputs.log_level || 'info' }}
