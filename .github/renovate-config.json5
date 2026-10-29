@@ -21,7 +21,7 @@
   // The noreply address of the account that holds RENOVATE_TOKEN.
   gitAuthor: "Jordan Hoare <57948967+jordanhoare@users.noreply.github.com>",
   // Every manifest in the repository. Nothing under home/ or config/ is a manifest for any other manager.
-  enabledManagers: ["nix", "mise", "github-actions", "pre-commit", "custom.regex"],
+  enabledManagers: ["nix", "mise", "github-actions", "pre-commit"],
   // These two managers are opt-in: listing them above alone extracts nothing.
   nix: { enabled: true },
   "pre-commit": { enabled: true },
@@ -49,19 +49,18 @@
       enabled: false,
     },
     {
-      description: "GitHub Actions digests, in the workflows and the composite action: one pull request, automerged",
+      description: "GitHub Actions digests, in the workflows and the composite action, and the renovate image tag: one pull request, automerged",
       matchManagers: ["github-actions"],
       matchUpdateTypes: ["digest", "pin", "pinDigest", "patch", "minor"],
       groupName: "github actions",
       automerge: true,
     },
     {
-      description: "The renovate version the workflow pins: grouped with the actions",
-      matchManagers: ["custom.regex"],
-      matchDepNames: ["renovate"],
-      matchUpdateTypes: ["patch", "minor"],
-      groupName: "github actions",
-      automerge: true,
+      // The github-actions manager reads `renovate-version` as the tag of the image the action
+      // pulls, so the version is covered above; a `@sha256` suffix on that input is not wanted.
+      description: "The renovate image the workflows pin: no digest on the tag",
+      matchPackageNames: ["ghcr.io/renovatebot/renovate"],
+      pinDigests: false,
     },
     {
       description: "The three mise tool tables and the remote hook repositories in .pre-commit-config.yaml: one weekly pull request, automerged once ci resolves every pin",
@@ -73,7 +72,8 @@
     },
     {
       // A 0.x minor may break under semver; Renovate still types it `minor`, so it is listed here.
-      description: "Majors, and 0.x minors: one pull request each, never automerged, a person merges",
+      // Action majors keep the group above and arrive as one `github actions (major)` pull request.
+      description: "Majors, and 0.x minors: never automerged, a person merges",
       matchUpdateTypes: ["major"],
       groupName: null,
       automerge: false,
@@ -85,17 +85,6 @@
       groupName: null,
       automerge: false,
       rebaseWhen: "conflicted",
-    },
-  ],
-  customManagers: [
-    {
-      // The github-actions manager pins the action's digest but never reads a `with:` value.
-      description: "The renovate version pinned as renovate-version in renovate.yml and the dry run in ci.yml",
-      customType: "regex",
-      managerFilePatterns: ["/^\\.github/workflows/(renovate|ci)\\.yml$/"],
-      matchStrings: ["renovate-version: (?<currentValue>\\d+\\.\\d+\\.\\d+)"],
-      depNameTemplate: "renovate",
-      datasourceTemplate: "npm",
     },
   ],
 }
