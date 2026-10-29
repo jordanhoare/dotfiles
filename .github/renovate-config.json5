@@ -65,8 +65,7 @@
     },
     {
       // A 0.x minor may break under semver; Renovate still types it `minor`, so it is listed here.
-      // Action majors keep the group above and arrive as one `github actions (major)` pull request.
-      description: "Majors, and 0.x minors: never automerged, a person merges",
+      description: "Majors, and 0.x minors: one pull request each, never automerged, a person merges",
       matchUpdateTypes: ["major"],
       groupName: null,
       automerge: false,
