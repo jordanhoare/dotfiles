@@ -52,6 +52,7 @@ $links = @(
     @{ Source = Join-Path $repo 'config\git\attributes';               Target = Join-Path $env:USERPROFILE '.config\git\attributes';               Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'config\git\personal';                 Target = Join-Path $env:USERPROFILE '.config\git\personal';                 Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'config\git\hooks\agent-push-guard';   Target = Join-Path $env:USERPROFILE '.config\git\hooks\agent-push-guard';   Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'config\git\tidy';                     Target = Join-Path $env:USERPROFILE '.config\git\tidy';                     Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'home\.ssh\config';                    Target = Join-Path $env:USERPROFILE '.ssh\config';                           Mode = 'Copy' }
     @{ Source = Join-Path $repo 'home\.claude\AGENTS.md';              Target = Join-Path $env:USERPROFILE '.claude\AGENTS.md';                     Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'home\.claude\CLAUDE.md';              Target = Join-Path $env:USERPROFILE '.claude\CLAUDE.md';                     Mode = 'Symlink' }

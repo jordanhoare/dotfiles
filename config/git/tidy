@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Override per repo with `git config tidy.branch develop`.
+default=$(git config --get tidy.branch || true)
+if [[ -z ${default} ]]; then
+  git symbolic-ref --quiet refs/remotes/origin/HEAD >/dev/null || git remote set-head origin --auto >/dev/null
+  default=$(git symbolic-ref --short refs/remotes/origin/HEAD)
+  default=${default#origin/}
+fi
+
+git checkout "${default}"
+git pull --ff-only --prune
+git worktree prune
+
+# Squash merges never satisfy -d.
+git for-each-ref --format='%(refname:short)%09%(upstream:track)%09%(worktreepath)' refs/heads |
+  awk -F'\t' '$2 == "[gone]"' |
+  while IFS=$'\t' read -r branch _ path; do
+    if [[ -n ${path} ]]; then
+      dirty=$(git -C "${path}" status --porcelain)
+      if [[ -n ${dirty} ]]; then
+        echo "keep ${path}: uncommitted changes on gone branch ${branch}"
+        continue
+      fi
+      git worktree remove "${path}" || continue
+    fi
+    git branch -D "${branch}"
+  done

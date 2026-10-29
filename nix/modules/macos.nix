@@ -236,9 +236,9 @@
       '';
     };
 
-    # Kick LaunchServices to re-scan after the LSHandlers plist is updated by
-    # setDarwinDefaults. Without this flush, the new bindings sit in the plist
-    # but Finder/Spotlight keep using the cached defaults until next login.
+    # Re-register the app folders so the LSHandlers written by setDarwinDefaults
+    # take effect before next login. Never -kill: wiping the database also drops
+    # System Settings panes and Control Center extensions until they re-register.
     home.activation.refreshLaunchServices = {
       after = [
         "setDarwinDefaults"
@@ -247,7 +247,7 @@
       before = [ ];
       data = ''
         $DRY_RUN_CMD /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister \
-          -kill -r -domain local -domain system -domain user 2>/dev/null || true
+          -f -R /Applications "$HOME/Applications" 2>/dev/null || true
       '';
     };
 
