@@ -16,7 +16,7 @@
         { "PackageIdentifier": "Kitware.CMake" },
         { "PackageIdentifier": "Microsoft.VisualStudio.2022.BuildTools" },
         { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
-        { "PackageIdentifier": "ezwinports.make" },
+        { "PackageIdentifier": "Git.Git" },
         { "PackageIdentifier": "jdx.mise" },
         { "PackageIdentifier": "Microsoft.PowerShell" },
         { "PackageIdentifier": "Bitwarden.CLI" },
