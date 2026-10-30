@@ -48,7 +48,7 @@ gclone() { gh repo clone "$1"; }
 gh() {
   local target lower="${(L)PWD}"
   case "$lower" in
-    /mnt/d/repositories/private/* | /mnt/e/poe/*)
+    /mnt/d/repositories/private/*)
       target=$(command git config --file ~/.config/git/private github.user 2>/dev/null) ;;
     *) target=$(command git config github.user 2>/dev/null) ;;
   esac
