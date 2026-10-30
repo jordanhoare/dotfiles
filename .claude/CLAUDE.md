@@ -52,6 +52,7 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 |---|---|
 | `win/winget.json` | Declarative Windows app list |
 | `win/apply.ps1` | Windows body of `mise run apply`: winget import plus config links (ADR 0011, 0014) |
+| `win/profile.ps1` | PowerShell profile (`dot`, `zed`), linked for PowerShell 7 and Windows PowerShell |
 | `win/mise.toml` | Windows global mise config, mirrors `config/mise/config.toml` minus the winget-owned and WSL-only tools |
 
 ### Non-managed directories

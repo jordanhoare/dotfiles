@@ -7,7 +7,7 @@ Counterpart to the Home Manager activation on Linux/WSL/macOS. Intentionally nix
 
 .DESCRIPTION
 Runs 'winget import' against win/winget.json and installs the configs managed
-cross-platform: Zed, mise, uv, git, ssh and Claude Code. Files mutated at runtime (e.g.
+cross-platform: Zed, PowerShell, mise, uv, git, ssh and Claude Code. Files mutated at runtime (e.g.
 settings.json, which it rewrites with wsl_connections recent-project paths)
 are copied so local writes never bleed back into the repo. Static files are
 symlinked. Idempotent: re-running is safe. Real files at a symlink target are
@@ -38,6 +38,9 @@ Write-Host "Importing winget packages from $wingetManifest" -ForegroundColor Cya
 # Upgrades belong to 'mise run upgrade'; apply only installs what the manifest lacks.
 winget import --import-file $wingetManifest --no-upgrade --accept-package-agreements --accept-source-agreements
 
+# OneDrive can redirect Documents, which moves both PowerShell profile folders with it.
+$documents = [Environment]::GetFolderPath('MyDocuments')
+
 # Mode: 'Symlink' for files the app treats as read-only; 'Copy' for files the
 # app rewrites at runtime, so local writes never bleed back into the repo.
 $links = @(
@@ -46,6 +49,8 @@ $links = @(
     @{ Source = Join-Path $repo 'config\zed\tasks.json';    Target = Join-Path $env:APPDATA 'Zed\tasks.json';    Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'config\zed\snippets';      Target = Join-Path $env:APPDATA 'Zed\snippets';      Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'win\wslconfig';            Target = Join-Path $env:USERPROFILE '.wslconfig';    Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'win\profile.ps1';                     Target = Join-Path $documents 'PowerShell\Microsoft.PowerShell_profile.ps1';        Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'win\profile.ps1';                     Target = Join-Path $documents 'WindowsPowerShell\Microsoft.PowerShell_profile.ps1'; Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'win\mise.toml';                       Target = Join-Path $env:USERPROFILE '.config\mise\config.toml';             Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'config\uv\uv.toml';                   Target = Join-Path $env:APPDATA 'uv\uv.toml';                                Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'config\git\config';                   Target = Join-Path $env:USERPROFILE '.config\git\config';                   Mode = 'Symlink' }

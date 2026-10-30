@@ -42,6 +42,14 @@ alias reload='source ~/.zshrc'
 
 gclone() { gh repo clone "$1"; }
 
+# nixpkgs names the Zed cli `zeditor`. Under WSL, `zed` is the Windows install's
+# script, which opens a WSL remote session.
+zed() {
+  local cli=zed
+  (( $+commands[zed] )) || cli=zeditor
+  command $cli "${@:-.}"
+}
+
 # Keep the active gh account on the identity git would commit with here.
 # Outside a repo, git's [includeIf] cannot fire, so the private paths are
 # matched by hand to cover `gh repo clone` and `gh repo create`.
