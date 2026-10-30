@@ -134,6 +134,17 @@
     "font_family": "IosevkaTerm Nerd Font",
     "font_size": 13,
   },
+  // A WSL project's terminal reads the shell from the remote server's settings, so this only reaches local Windows terminals.
+  "windows": {
+    "terminal": {
+      "shell": {
+        "with_arguments": {
+          "program": "C:\\Program Files\\Git\\bin\\bash.exe",
+          "args": ["--login", "-i"],
+        },
+      },
+    },
+  },
   "languages": {
     "Nix": {
       "language_servers": ["nil"],
