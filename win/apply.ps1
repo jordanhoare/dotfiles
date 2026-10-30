@@ -118,6 +118,23 @@ foreach ($link in $links) {
     }
 }
 
+# Zed settings cannot expand variables, so the repo names the default Git for
+# Windows path and the copied settings are pointed at the actual install.
+$gitRoot = foreach ($hive in 'HKLM', 'HKCU') {
+    (Get-ItemProperty "${hive}:\SOFTWARE\GitForWindows" -ErrorAction SilentlyContinue).InstallPath
+}
+$gitRoot = $gitRoot | Where-Object { $_ } | Select-Object -First 1
+$zedSettings = Join-Path $env:APPDATA 'Zed\settings.json'
+if ($gitRoot) {
+    $bash = Join-Path $gitRoot 'bin\bash.exe'
+    $text = [IO.File]::ReadAllText($zedSettings)
+    # WriteAllText writes UTF-8 without a BOM, unlike Set-Content on Windows PowerShell.
+    [IO.File]::WriteAllText($zedSettings, $text.Replace('C:\\Program Files\\Git\\bin\\bash.exe', $bash.Replace('\', '\\')))
+    Write-Host "zed    terminal shell -> $bash" -ForegroundColor Green
+} else {
+    Write-Host 'warn   Git for Windows not found: Zed terminals will fail to spawn bash' -ForegroundColor Yellow
+}
+
 $shims = Join-Path $env:LOCALAPPDATA 'mise\shims'
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
 if (($userPath -split ';') -notcontains $shims) {
