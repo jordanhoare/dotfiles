@@ -12,7 +12,8 @@
   editor = zed --wait
   preloadindex = true
   fscache = true
-  autocrlf = input
+  # Git for Windows sets autocrlf=input system-wide; false here overrides it.
+  autocrlf = false
   trustctime = false
   ignorecase = false
   pager = delta
