@@ -137,8 +137,18 @@ if ($gitRoot) {
     # WriteAllText writes UTF-8 without a BOM, unlike Set-Content on Windows PowerShell.
     [IO.File]::WriteAllText($zedSettings, $text.Replace('C:\\Program Files\\Git\\bin\\bash.exe', $bash.Replace('\', '\\')))
     Write-Host "zed    terminal shell -> $bash" -ForegroundColor Green
+
+    # The Claude hooks are bash scripts. Claude Code looks for Git Bash at the default
+    # install path and, when that fails, hands the .sh file to Windows, which opens it in
+    # the editor registered for .sh on every tool call. This variable names bash for it.
+    if ([Environment]::GetEnvironmentVariable('CLAUDE_CODE_GIT_BASH_PATH', 'User') -ne $bash) {
+        [Environment]::SetEnvironmentVariable('CLAUDE_CODE_GIT_BASH_PATH', $bash, 'User')
+        Write-Host "env    CLAUDE_CODE_GIT_BASH_PATH = $bash (open a new shell)" -ForegroundColor Green
+    } else {
+        Write-Host "ok     CLAUDE_CODE_GIT_BASH_PATH" -ForegroundColor DarkGray
+    }
 } else {
-    Write-Host 'warn   Git for Windows not found: Zed terminals will fail to spawn bash' -ForegroundColor Yellow
+    Write-Host 'warn   Git for Windows not found: Zed terminals will fail to spawn bash and Claude hooks will not run' -ForegroundColor Yellow
 }
 
 $shims = Join-Path $env:LOCALAPPDATA 'mise\shims'

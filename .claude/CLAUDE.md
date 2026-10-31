@@ -51,7 +51,7 @@ reach the harness. Adding a skill, or a whole new bucket, needs no Nix change.
 | File | Purpose |
 |---|---|
 | `win/winget.json` | Declarative Windows app list |
-| `win/apply.ps1` | Windows body of `mise run apply`: winget import plus config links (ADR 0011, 0014) |
+| `win/apply.ps1` | Windows body of `mise run apply`: winget import, config links, and the Git Bash path for Claude hooks (ADR 0011, 0014, 0020) |
 | `win/profile.ps1` | PowerShell profile (`dot`, `zed`, the `gh` identity wrapper), linked for PowerShell 7 and Windows PowerShell |
 | `win/bashrc` | Git Bash `~/.bashrc`: the `gh` identity wrapper, which Claude Code shells also load |
 | `win/mise.toml` | Windows global mise config, mirrors `config/mise/config.toml` minus the winget-owned and WSL-only tools |
