@@ -43,11 +43,20 @@ alias reload='source ~/.zshrc'
 gclone() { gh repo clone "$1"; }
 
 # nixpkgs names the Zed cli `zeditor`. Under WSL, `zed` is the Windows install's
-# script, which opens a WSL remote session.
+# script, which opens a WSL remote session. zed.exe resolves a relative path
+# against its Windows cwd and opens it locally, so paths go absolute.
 zed() {
   local cli=zed
+  local arg
+  local -a args
   (( $+commands[zed] )) || cli=zeditor
-  command $cli "${@:-.}"
+  for arg in "${@:-.}"; do
+    case $arg in
+      -*|*://*) args+=("$arg") ;;
+      *) args+=("${arg:a}") ;;
+    esac
+  done
+  command $cli "${args[@]}"
 }
 
 # Keep the active gh account on the identity git would commit with here.
