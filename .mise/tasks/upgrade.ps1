@@ -10,6 +10,9 @@ if ($LASTEXITCODE -ne 0) { throw 'git pull failed' }
 mise run apply
 mise install
 
-mise self-update -y
+# winget owns mise on Windows, so `mise self-update` refuses to run; the
+# winget upgrade below covers it. The shim launcher is copied from the old
+# binary until a forced reshim replaces it.
 winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements
+mise reshim --force
 uv tool upgrade --all
