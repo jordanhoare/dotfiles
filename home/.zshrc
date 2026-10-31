@@ -43,14 +43,18 @@ alias reload='source ~/.zshrc'
 gclone() { gh repo clone "$1"; }
 
 # nixpkgs names the Zed cli `zeditor`. Under WSL, `zed` is the Windows install's
-# script, which opens a WSL remote session. Paths go absolute because zed.exe
-# resolves a relative one against its Windows cwd and opens it locally.
+# script, which opens a WSL remote session. zed.exe resolves a relative path
+# against its Windows cwd and opens it locally, so paths go absolute.
 zed() {
-  local cli=zed arg
+  local cli=zed
+  local arg
   local -a args
   (( $+commands[zed] )) || cli=zeditor
   for arg in "${@:-.}"; do
-    [[ $arg == -* ]] && args+=("$arg") || args+=("${arg:a}")
+    case $arg in
+      -*|*://*) args+=("$arg") ;;
+      *) args+=("${arg:a}") ;;
+    esac
   done
   command $cli "${args[@]}"
 }
