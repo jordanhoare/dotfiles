@@ -1,0 +1,13 @@
+# Git Bash on Windows. Keep the active gh account on the identity git would
+# commit with here. Outside a repo, git's [includeIf] cannot fire, so the
+# private path is matched by hand to cover `gh repo clone` and `gh repo create`.
+gh() {
+  local target
+  case "${PWD,,}" in
+    /d/repositories/private | /d/repositories/private/*)
+      target=$(command git config --file ~/.config/git/private github.user 2>/dev/null) ;;
+    *) target=$(command git config github.user 2>/dev/null) ;;
+  esac
+  [ -n "$target" ] && command gh auth switch --user "$target" >/dev/null 2>&1
+  command gh "$@"
+}

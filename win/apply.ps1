@@ -51,6 +51,7 @@ $links = @(
     @{ Source = Join-Path $repo 'win\wslconfig';            Target = Join-Path $env:USERPROFILE '.wslconfig';    Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'win\profile.ps1';                     Target = Join-Path $documents 'PowerShell\Microsoft.PowerShell_profile.ps1';        Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'win\profile.ps1';                     Target = Join-Path $documents 'WindowsPowerShell\Microsoft.PowerShell_profile.ps1'; Mode = 'Symlink' }
+    @{ Source = Join-Path $repo 'win\bashrc';                         Target = Join-Path $env:USERPROFILE '.bashrc';                              Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'win\mise.toml';                       Target = Join-Path $env:USERPROFILE '.config\mise\config.toml';             Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'config\uv\uv.toml';                   Target = Join-Path $env:APPDATA 'uv\uv.toml';                                Mode = 'Symlink' }
     @{ Source = Join-Path $repo 'config\git\config';                   Target = Join-Path $env:USERPROFILE '.config\git\config';                   Mode = 'Symlink' }

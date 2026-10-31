@@ -29,6 +29,7 @@ Switching:
 - `git personal` switches identity and runs `gh auth switch`
 - `git private` switches to the anon profile
 - Auto-switches for repos under `D:\repositories\private\` via `includeIf`, on WSL (`/mnt/d/...`) and native Windows; macOS and native Linux switch explicitly
+- `gh` follows git: a `gh` wrapper in zsh, Git Bash, and the PowerShell profile switches the account before each call, agent shells included. Projects assume the identity is right and never check it themselves
 
 Worktrees:
 
