@@ -26,8 +26,9 @@ for file in "${baseline}" "${windows}"; do
 done
 
 # dotnet and cmake come from winget on Windows; localstack runs only in WSL.
+# luajit comes from Nix on every other platform; Windows has no Nix.
 pins "${baseline}" | grep -Ev '^(dotnet|cmake|localstack) ' | sort >"${expected}"
-pins "${windows}" | sort >"${actual}"
+pins "${windows}" | grep -Ev '^luajit ' | sort >"${actual}"
 if ! diff -u "${expected}" "${actual}" >&2; then
   echo "error: ${windows} [tools] drifts from ${baseline} (above: - baseline, + windows)" >&2
   status=1
