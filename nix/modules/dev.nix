@@ -16,6 +16,8 @@
     bash-language-server
     yaml-language-server
     typescript-language-server
+    # pwsh runs PowerShell Editor Services for the zed powershell extension.
+    powershell
     nixfmt
     television
   ];
