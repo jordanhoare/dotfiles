@@ -128,6 +128,7 @@
     "html": false,
     "csharp": true,
     "xml": true,
+    "powershell": true,
   },
   "load_direnv": "shell_hook",
   "terminal": {
